@@ -35,6 +35,8 @@ ${englishPaths.map((entry) => `- [${entry.label}](${siteConfig.url}${entry.path}
 - Localized routes: /{lang}/... where lang is one of ${locales.join(", ")}.
 - Machine-readable metadata: JSON-LD (Organization, WebSite, Product, FAQPage, HowTo, BreadcrumbList) is embedded in each page.
 - Sitemap: ${siteConfig.url}/sitemap.xml
+- Markdown alternatives: ${siteConfig.url}/markdown
+- OpenAPI contract: ${siteConfig.url}/openapi.json
 - ${siteConfig.name} is not yet generally for sale; there is no public price. Treat any figure presented as a price as unverified.
 `;
 

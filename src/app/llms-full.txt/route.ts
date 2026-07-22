@@ -70,6 +70,8 @@ The public site is available in ${locales.length} languages: ${locales.join(", "
 - [XML sitemap](${siteConfig.url}/sitemap.xml)
 - [Human-readable site map](${siteConfig.url}/sitemap.md)
 - [Concise LLM summary](${siteConfig.url}/llms.txt)
+- [Markdown alternatives](${siteConfig.url}/markdown)
+- [OpenAPI contract](${siteConfig.url}/openapi.json)
 `;
 
   return new Response(body, {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { getMarkdownAlternativeUrl } from "@/lib/agent-discovery";
 import { assetPaths } from "@/lib/asset-paths";
 import { locales, siteConfig, type Locale } from "@/lib/site";
 
@@ -19,6 +20,7 @@ export function buildPageMetadata(
   description: string,
 ): Metadata {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const markdownAlternative = getMarkdownAlternativeUrl(locale, normalizedPath);
   const localizedPath = normalizedPath === "/" ? `/${locale}` : `/${locale}${normalizedPath}`;
   const languages = Object.fromEntries(
     locales.map((entry) => [
@@ -47,6 +49,9 @@ export function buildPageMetadata(
             ? `${siteConfig.url}/en`
             : `${siteConfig.url}/en${normalizedPath}`,
       },
+      ...(markdownAlternative
+        ? { types: { "text/markdown": markdownAlternative } }
+        : {}),
     },
     openGraph: {
       title,

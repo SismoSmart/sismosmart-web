@@ -41,6 +41,8 @@ ${pages}
 - [XML sitemap](${siteConfig.url}/sitemap.xml)
 - [LLM summary](${siteConfig.url}/llms.txt)
 - [Expanded LLM context](${siteConfig.url}/llms-full.txt)
+- [Markdown alternatives](${siteConfig.url}/markdown)
+- [OpenAPI contract](${siteConfig.url}/openapi.json)
 `;
 
   return new Response(body, {

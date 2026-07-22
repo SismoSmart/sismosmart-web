@@ -357,7 +357,7 @@ test("production CSP supports Cloudflare browser insights without console errors
 
 test("product hero requests its LCP device image eagerly", () => {
   const productVisual = readText("src/components/product-visual.tsx");
-  const localizedSubpage = readText("src/components/localized-subpage.tsx");
+  const productPage = readText("src/components/localized-pages/product-page.tsx");
 
   assert.match(
     productVisual,
@@ -388,7 +388,7 @@ test("product hero requests its LCP device image eagerly", () => {
     /\.product-panel--compact \.product-panel__meter[\s\S]*?backdrop-filter: none/,
   );
   assert.match(
-    localizedSubpage,
+    productPage,
     /meterTopValue=\{page\.meterTopValue\}\s+priority/,
   );
 
@@ -684,9 +684,9 @@ test("GitHub automation files are present", () => {
 });
 
 test("product comparison remains keyboard-scrollable on narrow viewports", async () => {
-  const source = readText("src/components/localized-subpage.tsx");
+  const productPage = readText("src/components/localized-pages/product-page.tsx");
   assert.match(
-    source,
+    productPage,
     /aria-label=\{page\.comparisonTitle\}[\s\S]*className="mt-8 overflow-x-auto"[\s\S]*tabIndex=\{0\}/,
   );
 });

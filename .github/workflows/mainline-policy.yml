@@ -1,0 +1,44 @@
+name: Mainline Policy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verify-pr-origin:
+    name: governance/pr-origin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify main commit came through a merged pull request
+        if: ${{ github.event_name == 'push' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          merged_pr_count="$({
+            gh api \
+              -H 'Accept: application/vnd.github+json' \
+              "/repos/$REPOSITORY/commits/$COMMIT_SHA/pulls" \
+              --jq '[.[] | select(.merged_at != null and .base.ref == "main")] | length'
+          })"
+
+          if [ "$merged_pr_count" -lt 1 ]; then
+            echo "::error::main commit $COMMIT_SHA is not associated with a merged pull request."
+            echo "The current private/free plan cannot block this push server-side; this failing check is the detective control."
+            exit 1
+          fi
+
+          echo "main commit $COMMIT_SHA is associated with $merged_pr_count merged pull request(s)."
+
+      - name: Explain manual invocation
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "Mainline policy is enforced automatically on pushes to main."

@@ -1,0 +1,153 @@
+import type { BaseRoutePagesCopy } from "@/lib/page-copy";
+
+export const idPages: BaseRoutePagesCopy = {
+  product: {
+    meta: { title: "Perangkat SismoSmart", description: "Perangkat pemantauan seismik kecil untuk rumah atau kantor. Membaca guncangan dan merekam perilaku bangunan setelah gempa." },
+    eyebrow: "Produk",
+    title: "Perangkat",
+    description: "Perangkat dinding bertenaga USB-C, ukuran 100 x 100 x 27 mm. Dibuat untuk pengukuran gerakan yang tetap dan hati-hati di rumah dan bangunan kecil.",
+    deviceDescription:
+      "Di dalam kotak ada perangkatnya, kabel USB-C, dan perekat dua sisi untuk memasang. Anda tidak perlu alat lain untuk memasangnya.",
+    meterTopLabel: "Sensor",
+    meterTopValue: "MEMS presisi",
+    meterBottomLabel: "Data",
+    meterBottomValue: "Terenkripsi, minimal",
+    imageAlt: "Perangkat SismoSmart, tampak depan",
+    specs: [
+      { label: "Sensor", value: "MEMS presisi tinggi" },
+      { label: "Koneksi", value: "Wi-Fi + Bluetooth" },
+      { label: "Pemasangan", value: "Lima menit, lewat app" },
+      { label: "Status", value: "LED RGB + app" },
+    ],
+    useCases: [
+      { title: "Rumah dan apartemen", description: "Satu perangkat per unit, atau pilot multi-perangkat bersama pengelola gedung." },
+      { title: "Kampus dan pabrik", description: "Organisasi dengan beberapa gedung memantau semuanya dari satu dashboard." },
+      { title: "Bengkel dan kantor", description: "Pemantauan terjangkau dan cepat dipasang untuk bisnis kecil." },
+      { title: "Kemitraan universitas", description: "Kelompok riset gempa dapat mengakses data anonim." },
+    ],
+    comparisonTitle: "Perbandingan",
+    comparisonDescription: "Di antara seismograf profesional dan app ponsel. Kami tidak mengganti keduanya; kami menawarkan perangkat nyata untuk skala rumah.",
+    comparisonRows: [
+      { label: "Pemasangan", sismosmart: "Lima menit, sendiri", traditional: "Butuh insinyur", mobile: "Tidak ada, hanya app" },
+      { label: "Perangkat tetap", sismosmart: "Ya, menempel ke bangunan", traditional: "Ya", mobile: "Tidak, ponsel bergerak" },
+      { label: "Bacaan kesehatan struktur", sismosmart: "Ya, laporan sederhana", traditional: "Ya, laporan ahli", mobile: "Tidak" },
+      { label: "Harga", sismosmart: "Skala rumah", traditional: "Skala perusahaan", mobile: "Gratis" },
+    ],
+    ctaLabel: "Daftar pilot",
+    ctaHref: "/pilot-program",
+  },
+  howItWorks: {
+    meta: { title: "Cara kerja SismoSmart", description: "Pasang perangkat, pasangkan ponsel, bangunan dikenali. Anda mendapat notifikasi saat guncangan terjadi, lalu laporan setelahnya." },
+    eyebrow: "Cara kerja",
+    title: "Perangkat, cloud, app: bersama.",
+    description: "Ada tiga bagian. Perangkat mengukur getaran bangunan. Cloud menerima data terenkripsi dan membandingkan dengan perangkat lain. App hanya menunjukkan yang penting.",
+    flow: [
+      { title: "Pasang perangkat", description: "Dinding dalam ruangan, idealnya dekat elemen struktur." },
+      { title: "Pasangkan dengan ponsel", description: "Temukan lewat Bluetooth dari app. Bagikan kredensial Wi-Fi dengan aman." },
+      { title: "Bangunan dipelajari", description: "Selama hari pertama, perangkat merekam profil getaran normal bangunan." },
+      { title: "Laporan saat kejadian", description: "Anda mendapat push saat guncangan terdeteksi. Laporan detail siap di app setelahnya." },
+    ],
+    signals: [
+      { title: "Deteksi di perangkat", description: "Perangkat tidak menunggu cloud. Saat guncangan nyata mulai, ia bertindak lokal lalu mengonfirmasi." },
+      { title: "Laporan pascagempa", description: "Satu ringkasan: akselerasi puncak, durasi, dan pergeseran frekuensi alami bangunan." },
+      { title: "Hanya data yang perlu", description: "Kami tidak memantau aktivitas Anda. Perangkat membagikan getaran, suhu, kelembapan, tekanan, dan statusnya." },
+    ],
+    network: [
+      { title: "Jaringan lingkungan", description: "Saat tiga perangkat atau lebih di area yang sama aktif bersama, kejadian ditandai terkonfirmasi. Alarm palsu turun tajam." },
+      { title: "Pelacakan kesehatan struktur", description: "Profil getaran bangunan berubah selama minggu dan bulan. Perubahan mendadak bisa berarti masalah." },
+      { title: "Antarmuka sederhana", description: "Perangkat melakukan kerja rumit di belakang. Anda melihat status sederhana: hijau, kuning, merah." },
+    ],
+  },
+  about: {
+    meta: { title: "Tentang", description: "Siapa yang membuat SismoSmart dan mengapa. Tim, sudut pandang, dan arah kami." },
+    eyebrow: "Tentang",
+    title: "Kami tinggal di Türkiye. Kami ingin bangunan kami sehat.",
+    description: "Kami berkumpul setelah gempa Kahramanmaraş 2023 dan İstanbul 2026. Kami ingin tahu bagaimana rumah dan kota kami merespons gempa. Jadi kami membuat perangkat ini.",
+    story: [
+      "Setelah gempa besar di Türkiye, pemeriksaan bangunan bisa memakan minggu atau bulan. Selama itu, keluarga tidak tahu apakah mereka bisa pulang.",
+      "Kami tidak menghapus masa tunggu itu sepenuhnya. Pada akhirnya, insinyur harus datang. Namun sebelum itu, kami ingin lapisan data yang menandai bangunan yang tampak baik atau harus diprioritaskan.",
+      "Tim kami punya penasihat akademik teknik sipil, dua peneliti MSc teknik sipil, dan pendiri di embedded dan software. Kami semua berbasis di Türkiye. Kami menguji perangkat di rumah sendiri.",
+    ],
+    principles: [
+      { title: "Memberi informasi tanpa menakuti", description: "Tidak ada pemasaran bencana. Perangkat menciptakan kesiapan, bukan panik." },
+      { title: "Jelas soal batas", description: "Kami akan menyebut apa yang tidak kami lakukan. Bukan peringatan resmi. Bukan pengganti laporan insinyur." },
+      { title: "Mengembalikan data ke pemilik", description: "Data bangunan Anda milik Anda. Agregat anonim dapat dipakai akademia atau pemerintah. Data pribadi tidak dijual." },
+    ],
+    timeline: [
+      { period: "Q1 2026", title: "Tim dan visi produk", description: "Tim inti terbentuk, keputusan utama dibuat, arsitektur sistem ditulis." },
+      { period: "Q2 2026", title: "Prototipe dan persiapan pilot", description: "Prototipe hardware pertama, kerangka app mobile, percakapan lokasi pilot pertama." },
+      { period: "Q3 2026", title: "Instalasi pilot pertama", description: "Lima sampai sepuluh bangunan, tiga bulan data, masukan, produk akhir." },
+      { period: "Q4 2026 / Q1 2027", title: "Sertifikasi dan produksi", description: "Sertifikasi CE, 1.000 perangkat pertama, peluncuran luas." },
+    ],
+    team: [
+      { name: "Pendiri", role: "Hardware, software, produk", bio: "Bertanggung jawab atas embedded systems, IoT, cloud, dan produk." },
+      { name: "Penasihat akademik", role: "Teknik gempa", bio: "PhD teknik sipil. Memvalidasi algoritma kesehatan struktur secara ilmiah." },
+      { name: "Insinyur sipil", role: "Kesehatan struktur dan lokasi pilot", bio: "Dua peneliti MSc teknik sipil. Memimpin algoritma bangunan dan validasi pilot." },
+    ],
+  },
+  contact: {
+    meta: { title: "Kontak", description: "Ingin bicara dengan SismoSmart? Ini kanal yang tepat. Produk, pilot, media, atau investor." },
+    eyebrow: "Kontak",
+    title: "Tulis, kami balas.",
+    description: "Kanal tercepat saat ini adalah email. Subjek yang jelas sampai ke orang yang tepat.",
+    channels: [
+      { title: "Umum", description: "Pertanyaan produk, aplikasi pilot, minat pembelian", value: "info@sismosmart.com", href: "mailto:info@sismosmart.com" },
+      { title: "Media", description: "Wawancara, press kit, kerja sama", value: "press@sismosmart.com", href: "mailto:press@sismosmart.com" },
+      { title: "LinkedIn", description: "Update profesional dan kabar perusahaan", value: "linkedin.com/company/sismosmart", href: "https://www.linkedin.com/company/sismosmart" },
+    ],
+    form: {
+      nameLabel: "Nama Anda",
+      emailLabel: "Email",
+      subjectLabel: "Subjek",
+      messageLabel: "Pesan Anda",
+      buttonLabel: "Kirim",
+      consentLabel: "Saya setuju informasi ini diproses agar pesan saya dapat ditinjau dan dibalas.",
+      note: "Kami hanya memakai informasi ini untuk membalas pesan Anda.",
+      loadingLabel: "Mengirim...",
+      successMessage: "Pesan Anda sudah terkirim. Kami akan membalas secepatnya.",
+      errorMessage: "Ada masalah. Coba lagi.",
+      missingEndpointMessage: "Form belum terhubung. Silakan email info@sismosmart.com.",
+      rateLimitedMessage:
+        "Terlalu banyak percobaan. Silakan coba lagi beberapa menit lagi.",
+    },
+  },
+  privacy: {
+    meta: { title: "Privasi", description: "Data apa yang kami kumpulkan, mengapa dipakai, dan dengan siapa dibagikan. Dijelaskan jelas." },
+    eyebrow: "Privasi",
+    title: "Kebijakan privasi",
+    description: "Kami tidak mengumpulkan data yang tidak diperlukan. Data yang dikumpulkan dipakai hanya untuk tujuan yang disebutkan. Tidak dijual.",
+    sections: [
+      { title: "Data yang dikumpulkan", description: "Di situs: email, isi formulir kontak, dan pilihan cookie. Dari perangkat setelah peluncuran: getaran, suhu, kelembapan, tekanan, status, dan lokasi perkiraan." },
+      { title: "Untuk apa dipakai", description: "Membalas pesan, mengelola pilot, mengirim pengumuman, menjaga perangkat online, membandingkan kejadian, dan memperbaiki produk." },
+      { title: "Dengan siapa dibagikan", description: "Form bisa melewati penyedia formulir. Data perangkat diproses di lingkungan cloud yang dipilih. Kami tidak menjual data pribadi." },
+      { title: "Hak Anda", description: "Anda dapat mengakses, memperbaiki, menghapus, atau mengekspor data. Tulis ke info@sismosmart.com." },
+    ],
+  },
+  terms: {
+    meta: { title: "Syarat penggunaan", description: "Syarat dasar untuk memakai situs dan informasi sebelum peluncuran." },
+    eyebrow: "Syarat",
+    title: "Syarat penggunaan",
+    description: "Situs ini belum diluncurkan penuh. Syarat berikut berlaku untuk fase ini.",
+    sections: [
+      { title: "Informasi", description: "Situs ini memberi informasi tentang SismoSmart dan menerima aplikasi pilot. Ini bukan layanan seismik resmi atau kanal peringatan gempa." },
+      { title: "Bukan jaminan", description: "Perangkat mendukung kesiapan gempa. Tidak menggantikan peringatan resmi, instruksi darurat, atau laporan insinyur struktur." },
+      { title: "Kekayaan intelektual", description: "Nama, logo, desain produk, dan isi situs SismoSmart milik SismoSmart. Tidak boleh disalin tanpa izin." },
+      { title: "Kontak", description: "Pertanyaan ke info@sismosmart.com." },
+    ],
+  },
+  press: {
+    meta: { title: "Press kit", description: "Informasi, visual, dan kontak untuk media." },
+    eyebrow: "Media",
+    title: "Press kit",
+    description: "Satu halaman sumber untuk media, mitra, dan permintaan wawancara.",
+    sections: [
+      { title: "Deskripsi singkat", description: "SismoSmart membuat perangkat pemantauan seismik untuk rumah dan bangunan kecil. Perangkat mengukur bangunan, memberi notifikasi saat gempa, dan merekam kondisi setelahnya. Pilot pada 2026, peluncuran 2027." },
+      { title: "Kontak media", description: "Untuk wawancara, gambar, atau demo: press@sismosmart.com." },
+    ],
+    links: [
+      { title: "Logo", description: "Logo vektor SVG", href: "/logo-symbol.svg" },
+      { title: "Gambar produk", description: "Render resolusi tinggi", href: "/images/device/sismosmart-device-front.png" },
+      { title: "Gambar media sosial", description: "Kartu 1200x630", href: "/images/og/sismosmart-og.png" },
+    ],
+  },
+};

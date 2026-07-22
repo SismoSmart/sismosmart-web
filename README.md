@@ -2,42 +2,39 @@
 
 SismoSmart için `Next.js + TypeScript + Tailwind CSS` temelli, çok dilli public web uygulaması ve operasyon otomasyonları.
 
-## Yerel geliştirme
+## Production-only doğrulama
+
+Bu repository için kalıcı yerel secret akışı kullanılmaz. Production build ve
+kalite kapıları açıkça `ci` Doppler config'ini seçer:
 
 ```bash
-npm install
-npm run dev
+npm ci
+npm run doppler:ci
 ```
 
-Site varsayılan olarak `http://localhost:3000/en` rotasına yönlenir. Şu anda 6 locale hazır:
-
-- `tr`
-- `en`
-- `es`
-- `it`
-- `id`
-- `pt`
+Browser smoke testleri izole süreç içinde `http://localhost:3000/en` rotasını
+kullanabilir; bu bir local secret veya ayrı development config gerektirmez.
 
 ## Arayüz açmadan deploy
 
 Bu repo, shared hosting üstündeki doğrulanmış `SSH + SFTP + CloudLinux Node.js Selector + Passenger` yapısına göre hazırlanıyor.
 
-Önce `.env.example` dosyasını referans alıp kendi `.env` dosyanızdaki değerleri doldurun.
+`.env.example` yalnızca boş değerli public schema dosyasıdır. Production status kontrolü explicit `prd_ops` config ile çalışır:
 
 ```bash
-npm run deploy:status
+npm run doppler:ops:status
 ```
 
 cPanel API üzerinden mevcut Passenger uygulamalarını listeler.
 
 ```bash
-npm run deploy:register
+node scripts/doppler/run.mjs prd_deploy -- npm run deploy:register
 ```
 
 Sunucuda henüz Node uygulaması yoksa CloudLinux selector ile kaydeder.
 
 ```bash
-npm run deploy:server
+node scripts/doppler/run.mjs prd_deploy -- npm run deploy:server
 ```
 
 Bu komut şunları yapar:
@@ -51,7 +48,13 @@ Bu komut şunları yapar:
 Geri alma için:
 
 ```bash
-npm run deploy:rollback
+node scripts/doppler/run.mjs prd_deploy -- npm run deploy:rollback
+```
+
+Deploy öncesi non-activating doğrulama için:
+
+```bash
+npm run doppler:deploy:validate
 ```
 
 Deploy sonrası doğrulama için:

@@ -29,3 +29,50 @@ test("label-heavy localized pages own their rendering dependencies", () => {
     assert.doesNotMatch(dispatcher, new RegExp(`const ${labels}`));
   }
 });
+
+const remainingModules = [
+  ["pilot-program-page.tsx", "PilotProgramPage"],
+  ["faq-page.tsx", "FaqPage"],
+  ["contact-page.tsx", "ContactPage"],
+  ["info-page.tsx", "InfoPage"],
+];
+
+test("remaining localized page renderers are focused modules", () => {
+  const dispatcher = readText("src/components/localized-subpage.tsx");
+
+  for (const [file, component] of remainingModules) {
+    const source = readText(`src/components/localized-pages/${file}`);
+    assert.match(source, new RegExp(`export function ${component}`));
+    assert.match(dispatcher, new RegExp(component));
+  }
+});
+
+test("localized page dispatcher contains routing only", () => {
+  const dispatcher = readText("src/components/localized-subpage.tsx");
+
+  assert.ok(
+    dispatcher.split("\n").length <= 90,
+    "localized-subpage.tsx must remain a small dispatcher",
+  );
+  assert.doesNotMatch(dispatcher, /<main\b/);
+  assert.doesNotMatch(
+    dispatcher,
+    /const (frequencyTrendLabels|productLabels|howItWorksLabels|aboutLabels)/,
+  );
+  for (const pageKey of [
+    "product",
+    "technology",
+    "investors",
+    "security",
+    "howItWorks",
+    "pilotProgram",
+    "faq",
+    "about",
+    "contact",
+    "press",
+    "privacy",
+    "terms",
+  ]) {
+    assert.match(dispatcher, new RegExp(`case "${pageKey}"`));
+  }
+});

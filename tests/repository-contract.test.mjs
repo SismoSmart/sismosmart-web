@@ -517,6 +517,7 @@ test("DNS cutover audit protects delegation, origin services, and legacy isolati
 test("governance workflows gate production in a production-only repository", () => {
   const production = readText(".github/workflows/deploy-prod.yml");
   const mainline = readText(".github/workflows/mainline-policy.yml");
+  const mainlineVerifier = readText("scripts/ci/verify-mainline-pr-origin.mjs");
   const deployConfig = readText("scripts/deploy/config.mjs");
   const deployServer = readText("scripts/deploy/deploy-server.mjs");
   const governance = readText("docs/operations/repository-governance.md");
@@ -527,8 +528,10 @@ test("governance workflows gate production in a production-only repository", () 
   assert.match(production, /validate-production/);
   assert.match(production, /git rev-parse origin\/main/);
   assert.doesNotMatch(production, /(^|\n)\s*push:/);
-  assert.match(mainline, /commits\/\$COMMIT_SHA\/pulls/);
-  assert.match(mainline, /not associated with a merged pull request/);
+  assert.match(mainline, /node scripts\/ci\/verify-mainline-pr-origin\.mjs/);
+  assert.match(mainlineVerifier, /commits\/\$\{commitSha\}\/pulls/);
+  assert.match(mainlineVerifier, /not associated with a merged pull request/);
+  assert.match(mainlineVerifier, /attempts = DEFAULT_ATTEMPTS/);
   assert.match(deployConfig, /remoteAppDomain:/);
   assert.match(deployServer, /preflightMount/);
   assert.equal(packageJson.scripts["staging:bootstrap"], undefined);

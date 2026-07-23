@@ -157,7 +157,7 @@ export {
 } from "./production-health-inspection.mjs";
 ```
 
-- [ ] Remove deploy config/helper imports that are now inspection-only, but retain `requireConfig`, `requireSshAuth`, and the orchestrator `path` import used by the CLI.
+- [ ] Remove the Node `path` import and deploy config/helper imports that are now inspection-only, while retaining `requireConfig`, `requireSshAuth`, and `pathToFileURL` from `node:url`.
 - [ ] Run focused tests:
 
 ```bash

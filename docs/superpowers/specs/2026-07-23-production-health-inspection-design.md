@@ -62,7 +62,7 @@ inspectRemoteProduction({
 
 `production-health.mjs` imports `inspectRemoteProduction` for the default runtime dependency and re-exports all three inspection functions so existing imports remain compatible.
 
-The new module owns the Node `path` dependency and the deploy helpers/config imports used only by inspection. The orchestrator keeps its own `path` import because the CLI entry point still uses `pathToFileURL` and path-independent configuration flow.
+The new module owns the Node `path` dependency and the deploy helpers/config imports used only by inspection. The orchestrator removes its Node `path` import; the CLI continues to use the separate `pathToFileURL` import from `node:url`.
 
 ## Components and data flow
 

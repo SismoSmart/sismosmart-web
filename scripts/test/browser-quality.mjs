@@ -19,6 +19,9 @@ import {
   summarizeForwardRequest,
 } from "./browser-quality-lib.mjs";
 
+import { publishBrowserQualityReport } from "./browser-quality-report.mjs";
+export { formatBrowserSafeSummary } from "./browser-quality-report.mjs";
+
 const require = createRequire(import.meta.url);
 const PROJECT_ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -107,29 +110,6 @@ export function isAddressInUseFailure(error) {
   return /EADDRINUSE|address already in use/i.test(
     String(error?.message || error || ""),
   );
-}
-
-export function formatBrowserSafeSummary(report) {
-  const safe = sanitizeBrowserResult({
-    blockedExternalHosts: report?.blockedExternalHosts || [],
-    failures: (report?.failures || []).map((failure) => ({
-      key: failure.key,
-      message: failure.message,
-    })),
-    forwarding: report?.forwarding || [],
-    ok: Boolean(report?.ok),
-    scenarios: (report?.scenarios || []).map((scenario) => ({
-      blockingAxeCount: scenario.blockingAxeCount || 0,
-      duplicateIds: scenario.duplicateIds || [],
-      key: scenario.key,
-      layout: scenario.layout || null,
-      locale: scenario.locale || null,
-      path: scenario.path || null,
-      status: scenario.status ?? null,
-      viewport: scenario.viewport || null,
-    })),
-  });
-  return `BROWSER_QUALITY_SAFE ${JSON.stringify(safe)}`;
 }
 
 function appendBounded(current, chunk) {
@@ -769,18 +749,6 @@ async function runFormScenarios({
   return results;
 }
 
-async function writeReport(report) {
-  await fs.mkdir(ARTIFACT_ROOT, { recursive: true });
-  const outputPath = path.join(ARTIFACT_ROOT, "result.json");
-  await fs.writeFile(
-    outputPath,
-    `${JSON.stringify(sanitizeBrowserResult(report), null, 2)}\n`,
-    { mode: 0o600 },
-  );
-  await fs.chmod(outputPath, 0o600);
-  return outputPath;
-}
-
 export async function runBrowserQuality() {
   await fs.access(path.join(PROJECT_ROOT, ".next", "BUILD_ID"));
   const browserExecutable = await resolveBrowserExecutable();
@@ -900,11 +868,7 @@ export async function runBrowserQuality() {
     scenarios,
     schemaVersion: 1,
   });
-  const outputPath = await writeReport(report);
-  console.log(formatBrowserSafeSummary(report));
-  console.log(
-    `Browser quality report: ${path.relative(PROJECT_ROOT, outputPath)}`,
-  );
+  await publishBrowserQualityReport(report);
   return { exitCode: report.ok ? 0 : 1, report };
 }
 

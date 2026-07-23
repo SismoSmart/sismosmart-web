@@ -63,7 +63,8 @@ Production callers omit those options, so defaults remain Node's DNS lookup, IP 
 - Preserve `ok: addresses.length > 0` for public DNS success.
 - Preserve duration rounding to two decimal places.
 - Preserve `durationMs` on public DNS failure.
-- Preserve safe error codes matching only uppercase letters, digits, and underscores.
+- Preserve conversion of the supplied error code to a string before validation.
+- Preserve safe error codes matching only uppercase letters, digits, and underscores, including numeric codes after string conversion.
 - Preserve fallback error code `REQUEST_FAILED` for missing or unsafe error codes.
 - Preserve direct return of configured IPv4 or IPv6 SSH hosts using `net.isIP`.
 - Preserve `dns.lookup(config.sshHost)` for hostname-based origin resolution.

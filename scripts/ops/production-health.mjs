@@ -1,7 +1,4 @@
-import dns from "node:dns/promises";
-import net from "node:net";
 import path from "node:path";
-import { performance } from "node:perf_hooks";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
@@ -35,6 +32,16 @@ export {
   probePublicRoutes,
 } from "./production-health-probes.mjs";
 
+import {
+  resolveOriginAddress,
+  resolvePublicDns,
+  safeErrorCode,
+} from "./production-health-resolution.mjs";
+export {
+  resolveOriginAddress,
+  resolvePublicDns,
+} from "./production-health-resolution.mjs";
+
 import { writeProductionHealthReport } from "./production-health-report.mjs";
 export { formatSafeLogSummary } from "./production-health-report.mjs";
 
@@ -47,45 +54,6 @@ const WORKFLOW_TARGETS = {
 
 function shellEscape(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`;
-}
-
-function rounded(value) {
-  return Number.isFinite(value) ? Math.round(value * 100) / 100 : null;
-}
-
-function safeErrorCode(error) {
-  const code = String(error?.code || "REQUEST_FAILED");
-  return /^[A-Z0-9_]+$/.test(code) ? code : "REQUEST_FAILED";
-}
-
-export async function resolvePublicDns({ hostname }) {
-  const startedAt = performance.now();
-  try {
-    const addresses = await dns.lookup(hostname, { all: true });
-    return {
-      durationMs: rounded(performance.now() - startedAt),
-      ok: addresses.length > 0,
-    };
-  } catch (error) {
-    return {
-      durationMs: rounded(performance.now() - startedAt),
-      errorCode: safeErrorCode(error),
-      ok: false,
-    };
-  }
-}
-
-export async function resolveOriginAddress({ config }) {
-  try {
-    const family = net.isIP(config.sshHost);
-    if (family) {
-      return { address: config.sshHost, family, ok: true };
-    }
-    const resolved = await dns.lookup(config.sshHost);
-    return { address: resolved.address, family: resolved.family, ok: true };
-  } catch (error) {
-    return { errorCode: safeErrorCode(error), ok: false };
-  }
 }
 
 export function parseRemoteInspection(stdout, passenger) {

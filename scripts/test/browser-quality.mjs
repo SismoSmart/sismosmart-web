@@ -1,7 +1,4 @@
-import { spawn } from "node:child_process";
-import { createServer } from "node:http";
 import fs from "node:fs/promises";
-import net from "node:net";
 import path from "node:path";
 import process from "node:process";
 import { createRequire } from "node:module";
@@ -15,7 +12,6 @@ import {
   findDuplicateIds,
   isLoopbackUrl,
   sanitizeBrowserResult,
-  summarizeForwardRequest,
 } from "./browser-quality-lib.mjs";
 
 import {
@@ -27,6 +23,12 @@ export {
   getBrowserExecutableCandidates,
   resolveBrowserExecutable,
 } from "./browser-quality-executable.mjs";
+import {
+  safeFailureMessage,
+  startMockReceiver,
+  startNextServer,
+} from "./browser-quality-server.mjs";
+export { isAddressInUseFailure } from "./browser-quality-server.mjs";
 import { publishBrowserQualityReport } from "./browser-quality-report.mjs";
 export { formatBrowserSafeSummary } from "./browser-quality-report.mjs";
 
@@ -36,216 +38,7 @@ const PROJECT_ROOT = path.resolve(
   "../..",
 );
 const ARTIFACT_ROOT = path.join(PROJECT_ROOT, ".artifacts", "browser-quality");
-const TEST_TOKEN = "browser-quality-local-token";
 const CONSENT_KEY = "sismosmart_cookie_consent";
-const MAX_MOCK_BODY_BYTES = 128 * 1024;
-const SERVER_READY_TIMEOUT_MS = 45_000;
-const PROCESS_LOG_LIMIT = 64 * 1024;
-const MAX_APP_START_ATTEMPTS = 4;
-
-function safeFailureMessage(error) {
-  const message = String(error?.message || error || "browser scenario failed");
-  return message
-    .replaceAll(PROJECT_ROOT, "<repo>")
-    .replace(/https?:\/\/(?:127\.0\.0\.1|localhost|\[::1\]):\d+/g, "<loopback>")
-    .slice(0, 500);
-}
-
-export function isAddressInUseFailure(error) {
-  return /EADDRINUSE|address already in use/i.test(
-    String(error?.message || error || ""),
-  );
-}
-
-function appendBounded(current, chunk) {
-  if (current.length >= PROCESS_LOG_LIMIT) return current;
-  return `${current}${String(chunk)}`.slice(-PROCESS_LOG_LIMIT);
-}
-
-async function findOpenPort() {
-  return new Promise((resolve, reject) => {
-    const server = net.createServer();
-    server.unref();
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", () => {
-      const address = server.address();
-      const port = typeof address === "object" && address ? address.port : null;
-      server.close((error) => {
-        if (error) reject(error);
-        else if (!port)
-          reject(new Error("Could not allocate a loopback port."));
-        else resolve(port);
-      });
-    });
-  });
-}
-
-async function readJsonBody(request) {
-  const chunks = [];
-  let size = 0;
-  for await (const chunk of request) {
-    size += chunk.length;
-    if (size > MAX_MOCK_BODY_BYTES)
-      throw new Error("Mock payload exceeded limit.");
-    chunks.push(chunk);
-  }
-  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
-}
-
-async function startMockReceiver() {
-  const records = [];
-  const server = createServer(async (request, response) => {
-    const route =
-      request.url === "/contact"
-        ? "contact"
-        : request.url === "/waitlist"
-          ? "waitlist"
-          : null;
-    if (request.method !== "POST" || !route) {
-      response.writeHead(404, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ok: false }));
-      return;
-    }
-
-    try {
-      const envelope = await readJsonBody(request);
-      const summary = summarizeForwardRequest({
-        authorization: request.headers.authorization,
-        contentType: request.headers["content-type"],
-        expectedToken: TEST_TOKEN,
-        payload: envelope?.payload,
-        route,
-      });
-      const valid =
-        envelope?.form === route &&
-        summary.authorizationMatches &&
-        summary.contentTypeMatches;
-      records.push({ ...summary, formMatches: envelope?.form === route });
-      response.writeHead(valid ? 200 : 400, {
-        "content-type": "application/json",
-      });
-      response.end(JSON.stringify({ ok: valid }));
-    } catch {
-      response.writeHead(400, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ok: false }));
-    }
-  });
-
-  await new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", resolve);
-  });
-  const address = server.address();
-  if (!address || typeof address !== "object") {
-    server.close();
-    throw new Error("Mock receiver did not expose a loopback address.");
-  }
-
-  return {
-    baseUrl: `http://127.0.0.1:${address.port}`,
-    close: () => new Promise((resolve) => server.close(resolve)),
-    records,
-  };
-}
-
-async function waitForApp(baseUrl, child) {
-  const deadline = Date.now() + SERVER_READY_TIMEOUT_MS;
-  let lastError = null;
-  while (Date.now() < deadline) {
-    if (child.exitCode !== null) {
-      throw new Error(
-        `Next server exited before readiness with code ${child.exitCode}.`,
-      );
-    }
-    try {
-      const response = await fetch(`${baseUrl}/en`, {
-        redirect: "manual",
-        signal: AbortSignal.timeout(2_000),
-      });
-      if (response.status === 200) return;
-      lastError = new Error(`Next readiness returned ${response.status}.`);
-    } catch (error) {
-      lastError = error;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 300));
-  }
-  throw lastError || new Error("Next server readiness timed out.");
-}
-
-async function stopChild(child) {
-  if (!child || child.exitCode !== null) return;
-  child.kill("SIGTERM");
-  const stopped = await Promise.race([
-    new Promise((resolve) => child.once("exit", () => resolve(true))),
-    new Promise((resolve) => setTimeout(() => resolve(false), 5_000)),
-  ]);
-  if (!stopped && child.exitCode === null) {
-    child.kill("SIGKILL");
-    await new Promise((resolve) => child.once("exit", resolve));
-  }
-}
-
-async function startNextServerAttempt(mockBaseUrl, port) {
-  const nextBin = path.join(
-    PROJECT_ROOT,
-    "node_modules",
-    "next",
-    "dist",
-    "bin",
-    "next",
-  );
-  let stdout = "";
-  let stderr = "";
-  const child = spawn(
-    process.execPath,
-    [nextBin, "start", "--hostname", "127.0.0.1", "--port", String(port)],
-    {
-      cwd: PROJECT_ROOT,
-      env: {
-        ...process.env,
-        CONTACT_FORM_ENDPOINT: `${mockBaseUrl}/contact`,
-        FORM_FORWARD_AUTH_TOKEN: TEST_TOKEN,
-        NODE_ENV: "production",
-        WAITLIST_FORM_ENDPOINT: `${mockBaseUrl}/waitlist`,
-      },
-      stdio: ["ignore", "pipe", "pipe"],
-    },
-  );
-  child.stdout.on("data", (chunk) => {
-    stdout = appendBounded(stdout, chunk);
-  });
-  child.stderr.on("data", (chunk) => {
-    stderr = appendBounded(stderr, chunk);
-  });
-
-  const baseUrl = `http://127.0.0.1:${port}`;
-  try {
-    await waitForApp(baseUrl, child);
-  } catch (error) {
-    await stopChild(child);
-    const details = `${safeFailureMessage(error)} Next stdout=${stdout.slice(-500)} stderr=${stderr.slice(-500)}`;
-    const wrapped = new Error(details);
-    wrapped.cause = error;
-    throw wrapped;
-  }
-  return { baseUrl, child, stop: () => stopChild(child) };
-}
-
-async function startNextServer(mockBaseUrl) {
-  let lastError = null;
-  for (let attempt = 1; attempt <= MAX_APP_START_ATTEMPTS; attempt += 1) {
-    const port = await findOpenPort();
-    try {
-      return await startNextServerAttempt(mockBaseUrl, port);
-    } catch (error) {
-      lastError = error;
-      if (!isAddressInUseFailure(error) || attempt === MAX_APP_START_ATTEMPTS) {
-        throw error;
-      }
-    }
-  }
-  throw lastError || new Error("Next server could not start.");
-}
 
 async function readAxeSource() {
   const axePath = require.resolve("axe-core/axe.min.js");

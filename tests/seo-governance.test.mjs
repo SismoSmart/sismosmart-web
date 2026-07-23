@@ -109,7 +109,13 @@ test("all locales expose equivalent safety and pre-launch notices", () => {
 });
 
 test("public technical copy avoids unsupported absolute detection and residency claims", async () => {
-  const pages = await read("src/lib/pages.ts");
+  const pageSources = await Promise.all([
+    read("src/lib/pages.ts"),
+    ...locales.map((locale) =>
+      read(`src/lib/page-content/extra-pages/${locale}.ts`),
+    ),
+  ]);
+  const pages = pageSources.join("\n");
   assert.doesNotMatch(pages, /won't cross the threshold|Kapı çarpması ya da ayak sesi eşiği geçmez/);
   assert.doesNotMatch(pages, /AWS(?:'s|\'nin| de)? (?:Turkey|Türkiye|Turquía|Turki|Turchia|Turquia)/i);
   assert.match(pages, /false positives and missed events remain possible/);

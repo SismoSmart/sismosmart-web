@@ -64,18 +64,24 @@ function restoreEnvironment(name, original) {
 test("production health runtime delegates workflow reads to a focused module", () => {
   const runtime = readText("scripts/ops/production-health.mjs");
   const adapter = readText("scripts/ops/production-health-workflows.mjs");
+  const aggregation = readText("scripts/ops/production-health-aggregation.mjs");
 
   assert.match(adapter, /export const productionHealthWorkflowTargets/);
   assert.match(adapter, /export async function readTargetWorkflowRuns/);
   assert.match(
     runtime,
-    /import \{[\s\S]*productionHealthWorkflowTargets,[\s\S]*readTargetWorkflowRuns,[\s\S]*\} from "\.\/production-health-workflows\.mjs"/,
+    /import \{ readTargetWorkflowRuns \} from "\.\/production-health-workflows\.mjs"/,
   );
   assert.match(
     runtime,
     /export \{ readTargetWorkflowRuns \} from "\.\/production-health-workflows\.mjs"/,
   );
-  assert.match(runtime, /Object\.keys\(productionHealthWorkflowTargets\)/);
+  assert.match(
+    aggregation,
+    /import \{ productionHealthWorkflowTargets \} from "\.\/production-health-workflows\.mjs"/,
+  );
+  assert.match(aggregation, /Object\.keys\(productionHealthWorkflowTargets\)/);
+  assert.doesNotMatch(runtime, /productionHealthWorkflowTargets/);
   assert.doesNotMatch(runtime, /const WORKFLOW_TARGETS/);
   assert.doesNotMatch(runtime, /export async function readTargetWorkflowRuns/);
 });

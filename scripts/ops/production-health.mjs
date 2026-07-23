@@ -6,11 +6,8 @@ import {
   requireSshAuth,
 } from "../deploy/config.mjs";
 import {
-  aggregateFormAccess,
   classifyHealth,
   evaluateReleaseState,
-  evaluateThreshold,
-  evaluateWorkflowStreak,
   normalizeQuota,
   normalizeResourceUsage,
   sanitizeReport,
@@ -46,154 +43,19 @@ export {
 import { readCpanelHealth } from "./production-health-cpanel.mjs";
 export { readCpanelHealth } from "./production-health-cpanel.mjs";
 
-import {
-  productionHealthWorkflowTargets,
-  readTargetWorkflowRuns,
-} from "./production-health-workflows.mjs";
+import { readTargetWorkflowRuns } from "./production-health-workflows.mjs";
 export { readTargetWorkflowRuns } from "./production-health-workflows.mjs";
+
+import {
+  buildProductionHealthCapacityResult,
+  buildProductionHealthFormsResult,
+  buildProductionHealthWorkflowResult,
+  findWarmRoute,
+  summarizeProductionHealthRouteSet,
+} from "./production-health-aggregation.mjs";
 
 import { writeProductionHealthReport } from "./production-health-report.mjs";
 export { formatSafeLogSummary } from "./production-health-report.mjs";
-
-const GIB = 1024 ** 3;
-function warmRoute(routeSet, key) {
-  return routeSet?.routes?.find((route) => route.key === key)?.warm;
-}
-
-function summarizeProbe(probe) {
-  if (!probe) return null;
-  return {
-    cacheStatus: probe.cacheStatus || null,
-    cloudflare: Boolean(probe.cloudflare),
-    configured:
-      typeof probe.configured === "boolean" ? probe.configured : undefined,
-    connectMs: probe.connectMs ?? null,
-    errorCode: probe.errorCode || null,
-    lookupMs: probe.lookupMs ?? null,
-    ok: Boolean(probe.ok),
-    status: probe.status ?? null,
-    target: probe.target,
-    tlsMs: probe.tlsMs ?? null,
-    totalMs: probe.totalMs ?? null,
-    ttfbMs: probe.ttfbMs ?? null,
-  };
-}
-
-function summarizeRouteSet(routeSet) {
-  return {
-    ok: Boolean(routeSet?.ok),
-    routes: (routeSet?.routes || []).map((route) => ({
-      cold: summarizeProbe(route.cold),
-      key: route.key,
-      warm: summarizeProbe(route.warm),
-    })),
-  };
-}
-
-function capacityResult(remote, quota, resources, warnings) {
-  const filesystem = evaluateThreshold(remote?.filesystemUsagePercent, {
-    critical: 95,
-    warning: 85,
-  });
-  const releaseCount = evaluateThreshold(remote?.releaseCount, {
-    critical: 13,
-    warning: 9,
-  });
-  const releaseBytes = evaluateThreshold(remote?.releaseBytes, {
-    critical: 2 * GIB + 1,
-    warning: GIB + 1,
-  });
-  const quotaThreshold = quota.available
-    ? evaluateThreshold(quota.usagePercent, { critical: 90, warning: 80 })
-    : null;
-  const normalizedResources = resources.map((resource) => {
-    const usagePercent =
-      resource.maximum > 0
-        ? Math.round((resource.usage / resource.maximum) * 10_000) / 100
-        : null;
-    return {
-      ...resource,
-      usagePercent,
-    };
-  });
-
-  for (const [label, measurement] of [
-    ["filesystem usage", filesystem],
-    ["release count", releaseCount],
-    ["release bytes", releaseBytes],
-    ["account quota", quotaThreshold],
-  ]) {
-    if (measurement?.severity === "warning") {
-      warnings.push(`${label} is above the warning threshold`);
-    }
-    if (measurement?.severity === "error") {
-      warnings.push(`${label} is above the critical threshold`);
-    }
-    if (measurement?.severity === "unavailable") {
-      warnings.push(`${label} measurement is unavailable`);
-    }
-  }
-
-  if (!quota.available) warnings.push("account quota limit is unavailable");
-
-  return {
-    blocking: [filesystem, releaseCount, releaseBytes, quotaThreshold].some(
-      (measurement) => measurement?.severity === "error",
-    ),
-    filesystem,
-    quota: { ...quota, severity: quotaThreshold?.severity || "unavailable" },
-    releaseBytes,
-    releaseCount,
-    resources: normalizedResources,
-  };
-}
-
-function formsResult(publicSet, remote, warnings) {
-  const contact = warmRoute(publicSet, "contact");
-  const waitlist = warmRoute(publicSet, "waitlist");
-  const runtimeOk = Boolean(
-    contact?.ok &&
-      contact?.configured &&
-      contact?.target === "contact" &&
-      waitlist?.ok &&
-      waitlist?.configured &&
-      waitlist?.target === "waitlist",
-  );
-  const access = aggregateFormAccess(remote?.formRecords || []);
-  const blocking =
-    access.serverError >= 5 && access.serverErrorRate >= 0.2;
-
-  if (!remote?.formLogAvailable && access.total === 0) {
-    warnings.push("form access-log aggregation is unavailable");
-  } else if (access.serverError > 0) {
-    warnings.push("form access logs contain server errors");
-  }
-
-  return {
-    access,
-    blocking,
-    ok: runtimeOk,
-    runtime: {
-      contact: Boolean(contact?.ok && contact?.configured),
-      waitlist: Boolean(waitlist?.ok && waitlist?.configured),
-    },
-  };
-}
-
-function workflowResult(runsByTarget, warnings) {
-  const targets = {};
-  for (const key of Object.keys(productionHealthWorkflowTargets)) {
-    const result = evaluateWorkflowStreak(runsByTarget?.[key] || [], 2);
-    targets[key] = result;
-    if (result.consecutiveFailures === 1) {
-      warnings.push(`${key} workflow latest run failed once`);
-    }
-  }
-  return {
-    blocking: Object.values(targets).some((target) => target.blocking),
-    targets,
-  };
-}
 
 async function callOrFallback(task, fallback) {
   try {
@@ -259,10 +121,10 @@ export async function runProductionHealth({
     workflowPromise,
   ]);
 
-  const publicResult = summarizeRouteSet(publicRaw);
-  const originResult = summarizeRouteSet(originRaw);
-  const publicWarmTtfb = warmRoute(publicRaw, "en")?.ttfbMs;
-  const originWarmTtfb = warmRoute(originRaw, "en")?.ttfbMs;
+  const publicResult = summarizeProductionHealthRouteSet(publicRaw);
+  const originResult = summarizeProductionHealthRouteSet(originRaw);
+  const publicWarmTtfb = findWarmRoute(publicRaw, "en")?.ttfbMs;
+  const originWarmTtfb = findWarmRoute(originRaw, "en")?.ttfbMs;
   if (Number.isFinite(publicWarmTtfb) && publicWarmTtfb > 1500) {
     warnings.push("public warm TTFB is above 1500 ms");
   }
@@ -280,12 +142,12 @@ export async function runProductionHealth({
   const quota = normalizeQuota(cpanelRaw?.quotaPayload);
   const resources = normalizeResourceUsage(cpanelRaw?.resourcePayload);
   warnings.push(...(cpanelRaw?.warnings || []));
-  const capacity = capacityResult(remoteRaw, quota, resources, warnings);
-  const forms = formsResult(publicRaw, remoteRaw, warnings);
+  const capacity = buildProductionHealthCapacityResult(remoteRaw, quota, resources, warnings);
+  const forms = buildProductionHealthFormsResult(publicRaw, remoteRaw, warnings);
 
   let workflows;
   if (workflowRuns) {
-    workflows = workflowResult(workflowRuns, warnings);
+    workflows = buildProductionHealthWorkflowResult(workflowRuns, warnings);
   } else {
     warnings.push("target workflow history could not be read");
     workflows = { blocking: false, targets: {} };

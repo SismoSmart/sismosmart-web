@@ -1,4 +1,3 @@
-import { Browser, computeExecutablePath } from "@puppeteer/browsers";
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import fs from "node:fs/promises";
@@ -19,6 +18,15 @@ import {
   summarizeForwardRequest,
 } from "./browser-quality-lib.mjs";
 
+import {
+  browserQualityRevision,
+  resolveBrowserExecutable,
+} from "./browser-quality-executable.mjs";
+export {
+  browserQualityRevision,
+  getBrowserExecutableCandidates,
+  resolveBrowserExecutable,
+} from "./browser-quality-executable.mjs";
 import { publishBrowserQualityReport } from "./browser-quality-report.mjs";
 export { formatBrowserSafeSummary } from "./browser-quality-report.mjs";
 
@@ -28,75 +36,12 @@ const PROJECT_ROOT = path.resolve(
   "../..",
 );
 const ARTIFACT_ROOT = path.join(PROJECT_ROOT, ".artifacts", "browser-quality");
-const BROWSER_CACHE_DIR = path.join(PROJECT_ROOT, ".cache", "puppeteer");
-const BROWSER_REVISION = "150.0.7871.24";
 const TEST_TOKEN = "browser-quality-local-token";
 const CONSENT_KEY = "sismosmart_cookie_consent";
 const MAX_MOCK_BODY_BYTES = 128 * 1024;
 const SERVER_READY_TIMEOUT_MS = 45_000;
 const PROCESS_LOG_LIMIT = 64 * 1024;
 const MAX_APP_START_ATTEMPTS = 4;
-
-function unique(values) {
-  return [...new Set(values.filter(Boolean))];
-}
-
-export function getBrowserExecutableCandidates({
-  cacheDir = BROWSER_CACHE_DIR,
-  env = process.env,
-  platform = process.platform,
-} = {}) {
-  let cachedExecutable = "";
-  try {
-    cachedExecutable = computeExecutablePath({
-      browser: Browser.CHROMEHEADLESSSHELL,
-      buildId: BROWSER_REVISION,
-      cacheDir,
-    });
-  } catch {
-    cachedExecutable = "";
-  }
-
-  const systemCandidates =
-    platform === "darwin"
-      ? [
-          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-          "/Applications/Chromium.app/Contents/MacOS/Chromium",
-        ]
-      : platform === "win32"
-        ? [
-            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-            "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-          ]
-        : [
-            "/usr/bin/google-chrome",
-            "/usr/bin/google-chrome-stable",
-            "/usr/bin/chromium",
-            "/usr/bin/chromium-browser",
-          ];
-
-  return unique([
-    env.PUPPETEER_EXECUTABLE_PATH,
-    env.CHROME_PATH,
-    cachedExecutable,
-    ...systemCandidates,
-  ]);
-}
-
-export async function resolveBrowserExecutable(options = {}) {
-  for (const candidate of getBrowserExecutableCandidates(options)) {
-    try {
-      await fs.access(candidate);
-      return candidate;
-    } catch {
-      // Continue to the next explicit, cached, or system candidate.
-    }
-  }
-
-  throw new Error(
-    `Chrome Headless Shell ${BROWSER_REVISION} is not installed. Run npm run browser:install.`,
-  );
-}
 
 function safeFailureMessage(error) {
   const message = String(error?.message || error || "browser scenario failed");
@@ -860,7 +805,7 @@ export async function runBrowserQuality() {
 
   const report = sanitizeBrowserResult({
     blockedExternalHosts: [...blockedExternalHosts].sort(),
-    browserRevision: BROWSER_REVISION,
+    browserRevision: browserQualityRevision,
     failures,
     forwarding: mock.records,
     generatedAt: new Date().toISOString(),
@@ -885,5 +830,3 @@ if (isCli) {
     process.exitCode = 1;
   });
 }
-
-export const browserQualityRevision = BROWSER_REVISION;

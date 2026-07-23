@@ -709,6 +709,7 @@ test("browser accessibility checks run in CI with a pinned local browser", () =>
 
 test("browser runner is portable, animation-stable, and retry-safe", () => {
   const runner = readText("scripts/test/browser-quality.mjs");
+  const forms = readText("scripts/test/browser-quality-forms.mjs");
   const pageQuality = readText("scripts/test/browser-quality-page.mjs");
   const server = readText("scripts/test/browser-quality-server.mjs");
   assert.match(runner, /fileURLToPath/);
@@ -717,8 +718,8 @@ test("browser runner is portable, animation-stable, and retry-safe", () => {
   assert.match(pageQuality, /document\.fonts\?\.ready/);
   assert.match(server, /MAX_APP_START_ATTEMPTS/);
   assert.match(server, /isAddressInUseFailure/);
-  assert.match(runner, /new URL\(value, window\.location\.origin\)/);
-  assert.match(runner, /\/invalid-url/);
+  assert.match(forms, /new URL\(value, window\.location\.origin\)/);
+  assert.match(forms, /\/invalid-url/);
 
   const governance = readText("tests/seo-governance.test.mjs");
   assert.match(governance, /fileURLToPath/);

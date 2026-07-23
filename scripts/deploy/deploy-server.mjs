@@ -1,7 +1,10 @@
-import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+
+import {
+  cleanNextBuildArtifacts,
+  createReleaseArtifact,
+} from "./deploy-artifact.mjs";
 
 import {
   getConfig,
@@ -40,55 +43,6 @@ function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-}
-
-async function cleanNextBuildArtifacts() {
-  await fs.rm(path.resolve(".next"), { recursive: true, force: true });
-}
-
-async function sha256File(filePath) {
-  const hash = createHash("sha256");
-  const stream = createReadStream(filePath);
-
-  for await (const chunk of stream) {
-    hash.update(chunk);
-  }
-
-  return hash.digest("hex");
-}
-
-async function createReleaseArtifact(localDeployRoot, releaseId) {
-  const artifactRoot = path.resolve(".deploy", "artifacts");
-  const artifactPath = path.join(artifactRoot, `${releaseId}.tar.gz`);
-  const checksumPath = `${artifactPath}.sha256`;
-
-  await fs.mkdir(artifactRoot, { recursive: true });
-  await fs.rm(artifactPath, { force: true });
-  await fs.rm(checksumPath, { force: true });
-
-  runLocalCommand(
-    `tar -czf ${shellEscape(artifactPath)} -C ${shellEscape(localDeployRoot)} .`,
-  );
-
-  const checksum = await sha256File(artifactPath);
-  await fs.writeFile(
-    checksumPath,
-    `${checksum}  ${path.basename(artifactPath)}\n`,
-    "utf8",
-  );
-
-  const [artifactStat, checksumStat] = await Promise.all([
-    fs.stat(artifactPath),
-    fs.stat(checksumPath),
-  ]);
-
-  return {
-    artifactBytes: artifactStat.size,
-    artifactPath,
-    checksum,
-    checksumBytes: checksumStat.size,
-    checksumPath,
-  };
 }
 
 async function removeRouteAliases(config) {

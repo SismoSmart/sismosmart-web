@@ -709,11 +709,12 @@ test("browser accessibility checks run in CI with a pinned local browser", () =>
 
 test("browser runner is portable, animation-stable, and retry-safe", () => {
   const runner = readText("scripts/test/browser-quality.mjs");
+  const pageQuality = readText("scripts/test/browser-quality-page.mjs");
   const server = readText("scripts/test/browser-quality-server.mjs");
   assert.match(runner, /fileURLToPath/);
   assert.doesNotMatch(runner, /new URL\(import\.meta\.url\)\.pathname/);
-  assert.match(runner, /prefers-reduced-motion/);
-  assert.match(runner, /document\.fonts\?\.ready/);
+  assert.match(pageQuality, /prefers-reduced-motion/);
+  assert.match(pageQuality, /document\.fonts\?\.ready/);
   assert.match(server, /MAX_APP_START_ATTEMPTS/);
   assert.match(server, /isAddressInUseFailure/);
   assert.match(runner, /new URL\(value, window\.location\.origin\)/);

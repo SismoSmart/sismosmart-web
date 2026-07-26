@@ -61,6 +61,30 @@ export function countPageViewRequests(requests) {
   }).length;
 }
 
+export function countDataLayerCommands(dataLayer, command, argument = null) {
+  return dataLayer.filter((entry) => {
+    const normalized = normalizeDataLayerEntry(entry);
+    return (
+      Array.isArray(normalized) &&
+      normalized[0] === command &&
+      (argument === null || normalized[1] === argument)
+    );
+  }).length;
+}
+
+export function getLogicalPageViewEvidence(dataLayer, requests, measurementId) {
+  const configCommandCount = countDataLayerCommands(dataLayer, "config", measurementId);
+  const beaconCount = countPageViewRequests(requests);
+  const networkFanoutBounded = beaconCount <= 2;
+  return {
+    configCommandCount,
+    beaconCount,
+    logicalPageViewCount:
+      configCommandCount === 1 && beaconCount >= 1 && networkFanoutBounded ? 1 : 0,
+    networkFanoutBounded,
+  };
+}
+
 export function buildCheck(name, ok, details, severity = "error") {
   return { name, ok: Boolean(ok), severity, details };
 }

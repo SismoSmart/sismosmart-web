@@ -9,6 +9,7 @@ import {
   classifyAnalyticsRequest,
   countPageViewRequests,
   countRequests,
+  getLogicalPageViewEvidence,
   summarizeChecks,
 } from "../scripts/ops/analytics-audit-lib.mjs";
 
@@ -49,6 +50,33 @@ test("page-view counting accepts unlabeled beacon collects before form submissio
   ];
 
   assert.equal(countPageViewRequests(requests), 2);
+});
+
+test("logical page-view evidence deduplicates mirrored beacons behind one config command", () => {
+  const dataLayer = [
+    ["consent", "default", { analytics_storage: "denied" }],
+    ["config", "G-TEST", { send_page_view: true }],
+  ];
+  const requests = [
+    { kind: "ga-collect", eventName: null },
+    { kind: "ga-collect", eventName: "page_view" },
+  ];
+
+  assert.deepEqual(getLogicalPageViewEvidence(dataLayer, requests, "G-TEST"), {
+    configCommandCount: 1,
+    beaconCount: 2,
+    logicalPageViewCount: 1,
+    networkFanoutBounded: true,
+  });
+
+  assert.equal(
+    getLogicalPageViewEvidence(
+      [...dataLayer, ["config", "G-TEST", { send_page_view: true }]],
+      requests,
+      "G-TEST",
+    ).logicalPageViewCount,
+    0,
+  );
 });
 
 test("analytics request counts can target a specific GA event", () => {

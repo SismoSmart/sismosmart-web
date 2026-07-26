@@ -18,9 +18,9 @@ Use read-only Google scopes for routine status and audit operations. Edit or pub
 
 ## Tag ownership
 
-GTM owns the primary production loading path for GA4 and Clarity. The application loads the GTM container only after analytics consent. Direct `gtag.js` and direct Clarity loading are fallback paths used only when GTM is not configured.
+GTM owns the production container bootstrap and the configured Clarity tag. The current GTM workspace does not contain a GA4 tag, so the application queues exactly one consented GA `config` command before loading the container. Direct `gtag.js` and direct Clarity loading remain fallback paths when GTM is not configured.
 
-This avoids duplicate GA configuration and duplicate `page_view` events.
+The observability audit treats one GA config command plus one or two mirrored transport beacons as one logical `page_view`. Duplicate config commands and unbounded beacon fanout remain blocking.
 
 ## Consent model
 
@@ -62,7 +62,7 @@ The `Analytics Observability` GitHub workflow runs manually, weekly, and after a
 1. validates GA4, GTM, Search Console, and Clarity resource access;
 2. checks all six locales with a real Chrome browser;
 3. confirms no analytics requests before consent or under necessary-only consent;
-4. confirms one GTM loader, no duplicate GA loader, exactly one GA page view, and one Clarity loader after acceptance;
+4. confirms one GTM loader element, one GA config command, one logical GA page view, bounded network fanout, and one Clarity loader after acceptance;
 5. verifies the consent command ordering, reset behavior, and form-success event;
 6. uploads a redacted JSON artifact.
 

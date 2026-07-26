@@ -154,7 +154,15 @@ function consentScript(config: {
 
   function loadAnalytics() {
     if (config.gtmId) {
+      if (document.getElementById("sismosmart-gtm-loader")) return;
       ensureGtag();
+      if (config.gaId) {
+        window.gtag("js", new Date());
+        window.gtag("config", config.gaId, {
+          anonymize_ip: true,
+          send_page_view: true,
+        });
+      }
       window.dataLayer.push({ event: "gtm.js", "gtm.start": new Date().getTime() });
       loadScript(
         "sismosmart-gtm-loader",

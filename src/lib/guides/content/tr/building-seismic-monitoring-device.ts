@@ -13,7 +13,7 @@ export const buildingSeismicMonitoringDeviceTr: GuideContent = {
     "Bina deprem sensörü, sabit bir ivmeölçerdir ve belirli bir yapının deprem ile günlük titreşim sırasındaki hareketini kaydeder. Sahibiyle birlikte hareket eden bir telefonun aksine, kalıcı olarak monte edilmiş bir sensör, kurulum noktasında sabit bir referans noktası sağlar. Elde edilen veri, mühendislerin yapının farklı bölümlerinin sarsıntılara nasıl tepki verdiğini anlamasına yardımcı olabilir ancak cihazın kendisi bir güvenlik sertifikası veya resmi alarm sistemi değil, bir ölçüm aracıdır.",
   keyTakeaways: [
     "Sabit ivmeölçerler, monte edildikleri noktada hareketi kaydederek mühendislere güvenilir bir konum referansı sağlar.",
-    "Birçok katlı binalarda sensör dizileri, yapının diferentes noktalarındaki hareketi karşılaştırmaya yardımcı olur.",
+    "Birçok katlı binalarda sensör dizileri, yapının farklı noktalarındaki hareketi karşılaştırmaya yardımcı olur.",
     "Tüketici tipi bir izleme cihazı, yetkili bir yapı mühendisinin veya resmi incelemenin yerine geçmez.",
   ],
   sections: [
@@ -26,7 +26,7 @@ export const buildingSeismicMonitoringDeviceTr: GuideContent = {
     {
       heading: "Cihaz ne ölçer",
       paragraphs: [
-        "Cihaz içindeki sensör, dikey ve iki yatay olmak üzere üç eksende ivmelenmeyi kaydeder. Her okumayı zaman damgasıyla işaretleyerek mühendislerin bir olay sırasında hareketin zaman serjisini yeniden oluşturmasını sağlar. Frekans içeriği, tepe ivme ve süre, bu kayıtlardan çıkarılarak yapının ne kadar şiddetli ve ne kadar süre hareket ettiği tanımlanır.",
+        "Cihaz içindeki sensör, dikey ve iki yatay olmak üzere üç eksende ivmelenmeyi kaydeder. Her okumayı zaman damgasıyla işaretleyerek mühendislerin bir olay sırasında hareketin zaman serisini yeniden oluşturmasını sağlar. Frekans içeriği, tepe ivme ve süre, bu kayıtlardan çıkarılarak yapının ne kadar şiddetli ve ne kadar süre hareket ettiği tanımlanır.",
       ],
       bullets: [
         "Montaj noktasında tepe zemin veya kat ivmesi.",
@@ -44,7 +44,7 @@ export const buildingSeismicMonitoringDeviceTr: GuideContent = {
     {
       heading: "Nerede faydalıdır",
       paragraphs: [
-        "Sabit izleme, çok katlı konut binalarında, temelinin bilinmediği eski yapılarda, küçük ticari mülklerde ve sismik aktiviteye yakın konumlarda faydalıdır. Elde edilen veri, yöneticilerin bir olay sonrasında profesyonel inceleme gerekip gerekmediğine karar vermesine yardımcı olur. Şeffaf ve doğrulanabilir kayıtlar, sakinlerin binanın ne yaşadığını anlamasını sağlar.",
+        "Sabit izleme, çok katlı konut binalarında, referans titreşim davranışı henüz bilinmeyen eski yapılarda, küçük ticari mülklerde ve sismik aktiviteye yakın konumlarda faydalıdır. Elde edilen veri, yöneticilerin bir olay sonrasında profesyonel inceleme gerekip gerekmediğine karar vermesine yardımcı olur. Şeffaf ve doğrulanabilir kayıtlar, sakinlerin binanın ne yaşadığını anlamasını sağlar.",
       ],
     },
     {

@@ -10,7 +10,7 @@ export const seismicSensorPlacementTr: GuideContent = {
   eyebrow: "Rehberler",
   h1: "Binada Sismik Sensör Yerleşimi: Sabit Montaj ve Pratik Rehberlik",
   summary:
-    "Binada sismik sensör yerleşimi, ölçüm hedefiyle başlar. Sağlam bir yüzeye güvenli şekilde monte edilmiş sensör güvenilir bir referans noktası sağlarken, birden fazla kata yerleştirilmiş sensörler yapının diferentes noktalarındaki hareketi ortaya koyar. Yerleşim veri kalitesini etkiler: gevşek montaj gürültü üretir ve ağır makinelerin yakınında bulunan bir sensör, mühendislerin aslında ihtiyaç duyduğu sinyalleri gizleyebilir. Binayı sertifikalandıran evrensel bir yerleşim yoktur; hedef, sorulan sorulara anlamlı hareket yakalayabilecek noktalara sensör yerleştirmektir.",
+    "Binada sismik sensör yerleşimi, ölçüm hedefiyle başlar. Sağlam bir yüzeye güvenli şekilde monte edilmiş sensör güvenilir bir referans noktası sağlarken, birden fazla kata yerleştirilmiş sensörler yapının farklı noktalarındaki hareketi ortaya koyar. Yerleşim veri kalitesini etkiler: gevşek montaj gürültü üretir ve ağır makinelerin yakınında bulunan bir sensör, mühendislerin aslında ihtiyaç duyduğu sinyalleri gizleyebilir. Binayı sertifikalandıran evrensel bir yerleşim yoktur; hedef, sorulan sorulara anlamlı hareket yakalayabilecek noktalara sensör yerleştirmektir.",
   keyTakeaways: [
     "Yerleşim, ölçüm hedefine bağlıdır: nereye monte edeceğinize karar vermeden önce neyi öğrenmek istediğinizi belirleyin.",
     "Sağlam bina yüzeyine güvenli şekilde tutturulması güvenilir veri için gereklidir.",
@@ -26,7 +26,7 @@ export const seismicSensorPlacementTr: GuideContent = {
     {
       heading: "Sabit montaj",
       paragraphs: [
-        "Bir sensör, mobilya, bölmeler veya gevşek kaplamalarla değil, yapıyla birlikte hareket eden yapısal bir elemana sağlam şekilde tutturulmalıdır. Beton, çelik veya sağlam duvar yüzeyleri tercih edilir. Montaj yöntemi titreşimi titreşimsiz olarak iletmeli ve gevşeme veya kayma üretmemelidir.",
+        "Bir sensör, mobilya, bölmeler veya gevşek kaplamalarla değil, yapıyla birlikte hareket eden yapısal bir elemana sağlam şekilde tutturulmalıdır. Beton, çelik veya sağlam duvar yüzeyleri tercih edilir. Montaj yöntemi bina hareketini sensöre doğru biçimde aktarmalı; kendi rezonansını, gevşemeyi veya kaymayı ölçüme eklememelidir.",
       ],
       bullets: [
         "Yapısal elemanlara monte edin, yapısal olmayan bölmelere değil.",

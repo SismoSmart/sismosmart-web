@@ -41,6 +41,12 @@ export const earthquakeAppVsFixedSensorTr: GuideContent = {
         "Uyarılar, bir depremin olduğunu veya yaklaştığını insanlara bildirir. Bina kayıtları ise yapının aslında ne yaşadığını tanımlar. İkisi tamamlayıcıdır: biri doğrudan koruyucu eylem için, diğeri ise olay sonrası anlayış ve inceleme kararları için destek sağlar.",
       ],
     },
+    {
+      heading: "Doğru aracı seçme",
+      paragraphs: [
+        "Telefon uygulamaları kişisel farkındalık ve topluluk katılımı için faydalıdır. Sabit sensörler bina bazlı ölçüm, uzun vadeli izleme ve profesyonel analiz için uygundur. Bir olay sonrası yapısal tepkileri değerlendiren bir bina yöneticisi, telefonun verebileceği yaklaşık bilgi değil, sabit sensörün sağladığı veri türüne ihtiyaç duyar.",
+      ],
+    },
   ],
   limitations: [
     "Telefon sensörleri yapı izleme için kalibre edilmemiştir ve cihazlar arasında farklılık gösterir.",

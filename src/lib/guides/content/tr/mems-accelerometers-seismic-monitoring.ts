@@ -26,7 +26,7 @@ export const memsAccelerometersSeismicMonitoringTr: GuideContent = {
     {
       heading: "MEMS ivme ölçümü nasıl çalışır",
       paragraphs: [
-        "MEMS elemanının içinde, kanıt kütlesi silikon substrat üzerindeki küçük elektrotlarla süspansiyona alınmıştır. İvme, kütlenin substrata göre hareket etmesine neden olur ve bu da elektroslar arasındaki kapasitansı değiştirir. Bu kapasitans değişimi kalibre edilmiş bir ivme okumasına dönüştürülür. Üç eksenli yapı, dikey ve iki yatay yönde eş zamanlı ölçüm sağlar.",
+        "MEMS elemanının içinde, kanıt kütlesi silikon substrat üzerindeki küçük elektrotlarla süspansiyona alınmıştır. İvme, kütlenin substrata göre hareket etmesine neden olur ve bu da elektrotlar arasındaki kapasitansı değiştirir. Bu kapasitans değişimi kalibre edilmiş bir ivme okumasına dönüştürülür. Üç eksenli yapı, dikey ve iki yatay yönde eş zamanlı ölçüm sağlar.",
       ],
     },
     {
@@ -55,7 +55,7 @@ export const memsAccelerometersSeismicMonitoringTr: GuideContent = {
     {
       heading: "Sınırlamalar",
       paragraphs: [
-        "MEMS sensörleri, araştırma düzeyindeki özel enstrümanlara kıyasla sınırlılıklara sahiptir. Daha yüksek gürültü zeminleri, daha dar bant genişliği veya daha az hassas zamanlama içerebilirler. Sıcaklık gibi çevresel faktörler okumaları etkileyebilir. Dikkatli spesifikasyon seçimi ve montaj uygulamaları yardımcı olur ancak bu içsel farklılıkları ortadan kaldırmaz.",
+        "MEMS sensörleri, araştırma sınıfı enstrümanlara kıyasla sınırlılıklara sahiptir. Daha yüksek gürültü zeminleri, daha dar bant genişliği veya daha az hassas zamanlama içerebilirler. Sıcaklık gibi çevresel faktörler okumaları etkileyebilir. Dikkatli spesifikasyon seçimi ve montaj uygulamaları yardımcı olur ancak bu içsel farklılıkları ortadan kaldırmaz.",
       ],
     },
   ],
@@ -67,7 +67,7 @@ export const memsAccelerometersSeismicMonitoringTr: GuideContent = {
   ],
   sismosmartFit: [
     "SismoSmart, aralık, gürültü ve örnekleme için hedef spesifikasyonlarla üç eksenli MEMS ivmeölçerler etrafında tasarlanmış bir ön lansman sistemidir.",
-    "Bu tasarım hedefleri, seçilen MEMS bileşenlerinin yerleşik binalarda gerçek dünya izleme gereksinimlerini karşıladığını pilot doğrulama onaylayana kadar bekler.",
+    "Bu tasarım hedefleri, pilot doğrulama seçilen MEMS bileşenlerinin yerleşik binalarda gerçek dünya izleme gereksinimlerini karşıladığını onaylayana kadar tasarım hedefi olarak kalır.",
   ],
   references: [
     {

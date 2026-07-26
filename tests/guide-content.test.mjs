@@ -90,6 +90,30 @@ test("every guide satisfies content completeness requirements", () => {
   }
 });
 
+test("each translation key has equal section counts in English and Turkish", () => {
+  for (const key of guideTranslationKeys) {
+    const en = getGuideByTranslationKey("en", key);
+    const tr = getGuideByTranslationKey("tr", key);
+    assert.equal(
+      en.sections.length,
+      tr.sections.length,
+      `Section count mismatch for key "${key}": en=${en.sections.length} tr=${tr.sections.length}`,
+    );
+  }
+});
+
+test("Turkish guides do not contain accidental foreign tokens", () => {
+  const turkishCopy = getGuides("tr").map(JSON.stringify).join("\n");
+  const prohibited = ["diferentes", "elektroslar", "serjisini"];
+  for (const token of prohibited) {
+    assert.doesNotMatch(
+      turkishCopy,
+      new RegExp(token, "i"),
+      `Turkish copy contains prohibited token "${token}"`,
+    );
+  }
+});
+
 test("no guide contains prohibited claims", () => {
   const publicCopy = guideLocales
     .flatMap(getGuides)

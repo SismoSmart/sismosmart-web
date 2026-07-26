@@ -48,6 +48,10 @@ test("canonical metadata and hreflang stay aligned for every locale and route", 
       const suffix = routePath === "/" ? "" : routePath;
       const canonical = `${siteConfig.url}/${locale}${suffix}`;
       assert.equal(metadata.alternates?.canonical, canonical);
+      assert.equal(
+        metadata.alternates?.types?.["text/markdown"],
+        `${canonical}.md`,
+      );
       assert.equal(metadata.openGraph?.url, canonical);
       assert.equal(metadata.alternates?.languages?.["x-default"], `${siteConfig.url}/en${suffix}`);
       for (const alternateLocale of locales) {

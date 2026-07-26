@@ -1,25 +1,23 @@
-import { getPages, routeSegments, staticPageKeys } from "@/lib/pages";
+import {
+  getAgentPageDescriptor,
+  agentPageKeys,
+} from "@/lib/agent-discovery";
 import { localeLabels, locales, siteConfig } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-const englishPages = getPages("en");
-
-function pageUrl(locale: string, segment: string) {
-  return segment === "/"
-    ? `${siteConfig.url}/${locale}`
-    : `${siteConfig.url}/${locale}${segment}`;
-}
-
 export function GET(): Response {
   const languages = locales
-    .map((locale) => `- [${localeLabels[locale]}](${pageUrl(locale, routeSegments.home)})`)
+    .map((locale) => {
+      const home = getAgentPageDescriptor(locale, "home");
+      return `- [${localeLabels[locale]}](${home.canonicalUrl}) ([Markdown](${home.markdownUrl}))`;
+    })
     .join("\n");
 
-  const pages = staticPageKeys
-    .map((key) => {
-      const page = englishPages[key];
-      return `- [${page.title}](${pageUrl("en", routeSegments[key])}): ${page.description}`;
+  const englishPages = agentPageKeys
+    .map((pageKey) => {
+      const page = getAgentPageDescriptor("en", pageKey);
+      return `- [${page.title}](${page.canonicalUrl}): ${page.description} ([Markdown](${page.markdownUrl}))`;
     })
     .join("\n");
 
@@ -33,15 +31,16 @@ ${languages}
 
 ## English key pages
 
-- [Home](${pageUrl("en", routeSegments.home)}): ${siteConfig.description}
-${pages}
+${englishPages}
 
 ## Machine-readable indexes
 
 - [XML sitemap](${siteConfig.url}/sitemap.xml)
 - [LLM summary](${siteConfig.url}/llms.txt)
 - [Expanded LLM context](${siteConfig.url}/llms-full.txt)
-- [Markdown alternatives](${siteConfig.url}/markdown)
+- [Public agent guidance](${siteConfig.url}/AGENTS.md)
+- [Terminology glossary](${siteConfig.url}/en/glossary)
+- [Markdown alternatives index](${siteConfig.url}/markdown)
 - [OpenAPI contract](${siteConfig.url}/openapi.json)
 `;
 

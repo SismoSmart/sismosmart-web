@@ -100,8 +100,9 @@ test("Markdown index lists every priority page for every locale", async () => {
   assert.match(body, /^# SismoSmart Markdown alternatives/m);
 
   for (const locale of ["en", "tr", "es", "id", "pt", "it"]) {
-    for (const segment of ["product", "how-it-works", "technology", "faq", "privacy", "security"]) {
-      assert.match(body, new RegExp(`https://sismosmart\\.com/markdown/${locale}/${segment}`));
+    assert.match(body, new RegExp(`https://sismosmart\\.com/${locale}\\.md`));
+    for (const segment of expectedAgentSegments.filter(Boolean)) {
+      assert.match(body, new RegExp(`https://sismosmart\\.com/${locale}/${segment}\\.md`));
     }
   }
   assertPublicOutput(body);
@@ -118,7 +119,7 @@ test("localized Markdown route renders current page copy and rejects unsupported
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("content-type"), "text/markdown; charset=utf-8");
   assert.match(response.headers.get("cache-control") ?? "", /max-age=3600/);
-  assert.match(body, new RegExp(`^# ${getPages("en").product.title}`, "m"));
+  assert.match(body, new RegExp(`^# ${getPages("en").product.meta.title}`, "m"));
   assert.match(body, new RegExp(getPages("en").product.deviceDescription.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   assert.match(body, /https:\/\/sismosmart\.com\/en\/product/);
   assertPublicOutput(body);
@@ -129,9 +130,15 @@ test("localized Markdown route renders current page copy and rejects unsupported
   );
   assert.equal(invalidLocale.status, 404);
 
-  const unsupportedPage = await route.GET(
+  const aboutPage = await route.GET(
     new Request("https://sismosmart.com/markdown/en/about"),
     { params: Promise.resolve({ locale: "en", page: "about" }) },
+  );
+  assert.equal(aboutPage.status, 200);
+
+  const unsupportedPage = await route.GET(
+    new Request("https://sismosmart.com/markdown/en/missing"),
+    { params: Promise.resolve({ locale: "en", page: "missing" }) },
   );
   assert.equal(unsupportedPage.status, 404);
 });
@@ -140,11 +147,14 @@ test("priority HTML pages advertise Markdown alternates", () => {
   const product = buildPageMetadata("en", "/product", "Product", "Description");
   assert.equal(
     product.alternates?.types?.["text/markdown"],
-    "https://sismosmart.com/markdown/en/product",
+    "https://sismosmart.com/en/product.md",
   );
 
   const about = buildPageMetadata("en", "/about", "About", "Description");
-  assert.equal(about.alternates?.types, undefined);
+  assert.equal(
+    about.alternates?.types?.["text/markdown"],
+    "https://sismosmart.com/en/about.md",
+  );
 });
 
 test("existing machine-readable indexes link to Markdown and OpenAPI discovery", async () => {
@@ -155,7 +165,9 @@ test("existing machine-readable indexes link to Markdown and OpenAPI discovery",
   ]) {
     const { GET } = await loadRoute(relativePath);
     const body = await GET().text();
-    assert.match(body, /https:\/\/sismosmart\.com\/markdown/);
+    assert.match(body, /https:\/\/sismosmart\.com\/en(?:\/product)?\.md/);
+    assert.match(body, /https:\/\/sismosmart\.com\/AGENTS\.md/);
+    assert.match(body, /https:\/\/sismosmart\.com\/en\/glossary/);
     assert.match(body, /https:\/\/sismosmart\.com\/openapi\.json/);
     assertPublicOutput(body);
   }

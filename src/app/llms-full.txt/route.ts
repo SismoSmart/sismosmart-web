@@ -1,3 +1,4 @@
+import { getAgentPageDescriptor } from "@/lib/agent-discovery";
 import { getPages, routeSegments } from "@/lib/pages";
 import { locales, siteConfig } from "@/lib/site";
 
@@ -62,6 +63,7 @@ The public website uses consent-controlled analytics. Form submissions are valid
 - [Privacy](${absolutePath(routeSegments.privacy)}): ${pages.privacy.description}
 - [Security](${absolutePath(routeSegments.security)}): ${pages.security.description}
 - [Contact](${absolutePath(routeSegments.contact)}): ${pages.contact.description}
+- [Glossary](${absolutePath(routeSegments.glossary)}): ${pages.glossary.description}
 
 ## Languages and indexes
 
@@ -70,7 +72,11 @@ The public site is available in ${locales.length} languages: ${locales.join(", "
 - [XML sitemap](${siteConfig.url}/sitemap.xml)
 - [Human-readable site map](${siteConfig.url}/sitemap.md)
 - [Concise LLM summary](${siteConfig.url}/llms.txt)
-- [Markdown alternatives](${siteConfig.url}/markdown)
+- [English home Markdown](${getAgentPageDescriptor("en", "home").markdownUrl})
+- [English product Markdown](${getAgentPageDescriptor("en", "product").markdownUrl})
+- [Public agent guidance](${siteConfig.url}/AGENTS.md)
+- [Terminology glossary](${siteConfig.url}/en/glossary)
+- [Markdown alternatives index](${siteConfig.url}/markdown)
 - [OpenAPI contract](${siteConfig.url}/openapi.json)
 `;
 

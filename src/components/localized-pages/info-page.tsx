@@ -6,6 +6,7 @@ import { getPages } from "@/lib/pages";
 import type { Locale } from "@/lib/site";
 
 export type InfoPageKey =
+  | "glossary"
   | "investors"
   | "press"
   | "privacy"

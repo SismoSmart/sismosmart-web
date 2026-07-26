@@ -296,6 +296,23 @@ export function getPageStructuredData(locale: Locale, pageKey: StaticPageKey) {
           inLanguage: locale,
         },
       ];
+    case "glossary":
+      return [
+        breadcrumb(locale, pageKey, pages.glossary.title),
+        {
+          "@context": "https://schema.org",
+          "@type": "DefinedTermSet",
+          name: pages.glossary.title,
+          description: pages.glossary.description,
+          url: absolutePath(locale, routeSegments.glossary),
+          inLanguage: locale,
+          hasDefinedTerm: pages.glossary.sections.map((term) => ({
+            "@type": "DefinedTerm",
+            name: term.title,
+            description: term.description,
+          })),
+        },
+      ];
     case "press":
       return [
         breadcrumb(locale, pageKey, pages.press.title),

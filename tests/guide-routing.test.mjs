@@ -20,11 +20,17 @@ import {
   getGuideByTranslationKey,
   getGuideCanonicalPath,
   getGuideMarkdownPath,
+  getGuideHub,
   getGuides,
   getGuidesByCategory,
 } from "../src/lib/guides/catalog.ts";
 
 import { getGuideUiStrings } from "../src/lib/guides/ui-strings.ts";
+
+import {
+  getGuideHubStructuredData,
+  getGuideStructuredData,
+} from "../src/lib/guides/structured-data.ts";
 
 import {
   getHubStaticParams,
@@ -513,4 +519,156 @@ test("catalog source does not use unsafe Record casts", () => {
     /Object\.keys\(guidesByKey\) as GuideTranslationKey\[\]/,
     "Catalog must not use Object.keys cast for guidesByKey iteration"
   );
+});
+
+test("detail structured data returns exactly Article and BreadcrumbList for each guide", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const entities = getGuideStructuredData(guide);
+      assert.equal(entities.length, 2, `Expected 2 entities for ${guide.translationKey} in ${locale}`);
+      assert.equal(entities[0]["@type"], "Article", `First entity must be Article for ${guide.translationKey}`);
+      assert.equal(entities[1]["@type"], "BreadcrumbList", `Second entity must be BreadcrumbList for ${guide.translationKey}`);
+      for (const entity of entities) {
+        assert.equal(entity["@context"], "https://schema.org", `Entity must have @context for ${guide.translationKey}`);
+      }
+    }
+  }
+});
+
+test("detail Article has required fields", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const entities = getGuideStructuredData(guide);
+      const article = entities[0];
+      assert.equal(article["@type"], "Article");
+      assert.equal(article.headline, guide.h1, `headline must match h1 for ${guide.translationKey}`);
+      assert.equal(article.description, guide.description, `description must match for ${guide.translationKey}`);
+      assert.equal(article.url, `https://sismosmart.com${getGuideCanonicalPath(guide)}`, `url must be canonical for ${guide.translationKey}`);
+      assert.equal(article.datePublished, guide.publishedAt, `datePublished must match publishedAt for ${guide.translationKey}`);
+      assert.equal(article.dateModified, guide.updatedAt, `dateModified must match updatedAt for ${guide.translationKey}`);
+      assert.equal(article.inLanguage, guide.locale, `inLanguage must match locale for ${guide.translationKey}`);
+      assert.deepEqual(article.author, { "@type": "Organization", name: "SismoSmart", url: "https://sismosmart.com" }, `author must be SismoSmart Organization for ${guide.translationKey}`);
+      assert.deepEqual(article.publisher, article.author, `publisher must equal author for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("detail breadcrumb has exactly three ListItems at positions 1, 2, 3", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const entities = getGuideStructuredData(guide);
+      const breadcrumb = entities[1];
+      assert.equal(breadcrumb["@type"], "BreadcrumbList");
+      const items = breadcrumb.itemListElement;
+      assert.equal(items.length, 3, `Breadcrumb must have 3 items for ${guide.translationKey}`);
+      assert.equal(items[0].position, 1, `Position 1 for ${guide.translationKey}`);
+      assert.equal(items[0].name, ui.home, `Position 1 name must be ${ui.home} for ${guide.translationKey}`);
+      assert.equal(items[0].item, `https://sismosmart.com/${locale}`, `Position 1 URL for ${guide.translationKey}`);
+      assert.equal(items[1].position, 2, `Position 2 for ${guide.translationKey}`);
+      assert.equal(items[1].name, ui.guides, `Position 2 name must be ${ui.guides} for ${guide.translationKey}`);
+      assert.equal(items[1].item, `https://sismosmart.com/${locale}/guides`, `Position 2 URL for ${guide.translationKey}`);
+      assert.equal(items[2].position, 3, `Position 3 for ${guide.translationKey}`);
+      assert.equal(items[2].name, guide.h1, `Position 3 name must be guide h1 for ${guide.translationKey}`);
+      assert.equal(items[2].item, `https://sismosmart.com${getGuideCanonicalPath(guide)}`, `Position 3 URL for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("hub structured data returns exactly CollectionPage and BreadcrumbList", () => {
+  for (const locale of ["en", "tr"]) {
+    const entities = getGuideHubStructuredData(locale);
+    assert.equal(entities.length, 2, `Expected 2 entities for hub ${locale}`);
+    assert.equal(entities[0]["@type"], "CollectionPage", `First entity must be CollectionPage for ${locale}`);
+    assert.equal(entities[1]["@type"], "BreadcrumbList", `Second entity must be BreadcrumbList for ${locale}`);
+    for (const entity of entities) {
+      assert.equal(entity["@context"], "https://schema.org", `Entity must have @context for ${locale}`);
+    }
+  }
+});
+
+test("hub CollectionPage has required fields", () => {
+  for (const locale of ["en", "tr"]) {
+    const hub = getGuideHub(locale);
+    const entities = getGuideHubStructuredData(locale);
+    const collection = entities[0];
+    assert.equal(collection["@type"], "CollectionPage");
+    assert.equal(collection.name, hub.h1, `name must match hub h1 for ${locale}`);
+    assert.equal(collection.description, hub.description, `description must match hub description for ${locale}`);
+    assert.equal(collection.url, `https://sismosmart.com/${locale}/guides`, `url must be canonical for ${locale}`);
+    assert.equal(collection.inLanguage, locale, `inLanguage must match locale`);
+  }
+});
+
+test("hub breadcrumb has exactly two ListItems at positions 1 and 2", () => {
+  for (const locale of ["en", "tr"]) {
+    const ui = getGuideUiStrings(locale);
+    const entities = getGuideHubStructuredData(locale);
+    const breadcrumb = entities[1];
+    assert.equal(breadcrumb["@type"], "BreadcrumbList");
+    const items = breadcrumb.itemListElement;
+    assert.equal(items.length, 2, `Hub breadcrumb must have 2 items for ${locale}`);
+    assert.equal(items[0].position, 1, `Position 1 for ${locale}`);
+    assert.equal(items[0].name, ui.home, `Position 1 name must be ${ui.home} for ${locale}`);
+    assert.equal(items[0].item, `https://sismosmart.com/${locale}`, `Position 1 URL for ${locale}`);
+    assert.equal(items[1].position, 2, `Position 2 for ${locale}`);
+    assert.equal(items[1].name, ui.guides, `Position 2 name must be ${ui.guides} for ${locale}`);
+    assert.equal(items[1].item, `https://sismosmart.com/${locale}/guides`, `Position 2 URL for ${locale}`);
+  }
+});
+
+test("detail structured data contains no forbidden properties", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const entities = getGuideStructuredData(guide);
+      const serialized = JSON.stringify(entities);
+      assert.doesNotMatch(serialized, /"@type"\s*:\s*"Person"/, `No Person type for ${guide.translationKey}`);
+      assert.doesNotMatch(serialized, /aggregateRating/, `No aggregateRating for ${guide.translationKey}`);
+      assert.doesNotMatch(serialized, /"@type"\s*:\s*"Review"/, `No Review type for ${guide.translationKey}`);
+      assert.doesNotMatch(serialized, /"@type"\s*:\s*"Offer"/, `No Offer type for ${guide.translationKey}`);
+      assert.doesNotMatch(serialized, /"price"/, `No price for ${guide.translationKey}`);
+      assert.doesNotMatch(serialized, /"certification"/, `No certification for ${guide.translationKey}`);
+      assert.doesNotMatch(serialized, /"endorsement"/, `No endorsement for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("hub structured data contains no forbidden properties", () => {
+  for (const locale of ["en", "tr"]) {
+    const entities = getGuideHubStructuredData(locale);
+    const serialized = JSON.stringify(entities);
+    assert.doesNotMatch(serialized, /"@type"\s*:\s*"Person"/, `No Person type for hub ${locale}`);
+    assert.doesNotMatch(serialized, /aggregateRating/, `No aggregateRating for hub ${locale}`);
+    assert.doesNotMatch(serialized, /"@type"\s*:\s*"Review"/, `No Review type for hub ${locale}`);
+    assert.doesNotMatch(serialized, /"@type"\s*:\s*"Offer"/, `No Offer type for hub ${locale}`);
+    assert.doesNotMatch(serialized, /"price"/, `No price for hub ${locale}`);
+    assert.doesNotMatch(serialized, /"certification"/, `No certification for hub ${locale}`);
+    assert.doesNotMatch(serialized, /"endorsement"/, `No endorsement for hub ${locale}`);
+  }
+});
+
+test("hub route source imports and uses StructuredData component", () => {
+  const source = readText("src/app/[locale]/guides/page.tsx");
+  assert.match(source, /import.*StructuredData/, "Hub route must import StructuredData");
+  assert.match(source, /<StructuredData/, "Hub route must render StructuredData component");
+});
+
+test("hub route source imports and uses getGuideHubStructuredData helper", () => {
+  const source = readText("src/app/[locale]/guides/page.tsx");
+  assert.match(source, /getGuideHubStructuredData/, "Hub route must import and use getGuideHubStructuredData");
+});
+
+test("detail route source imports and uses StructuredData component", () => {
+  const source = readText("src/app/[locale]/guides/[slug]/page.tsx");
+  assert.match(source, /import.*StructuredData/, "Detail route must import StructuredData");
+  assert.match(source, /<StructuredData/, "Detail route must render StructuredData component");
+});
+
+test("detail route source imports and uses getGuideStructuredData helper", () => {
+  const source = readText("src/app/[locale]/guides/[slug]/page.tsx");
+  assert.match(source, /getGuideStructuredData/, "Detail route must import and use getGuideStructuredData");
 });

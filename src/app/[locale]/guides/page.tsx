@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { StructuredData } from "@/components/structured-data";
 import { getGuideHub } from "@/lib/guides/catalog";
 import { buildGuideHubMetadata } from "@/lib/guides/metadata";
 import { getHubStaticParams, resolveHubLocale } from "@/lib/guides/routing";
+import { getGuideHubStructuredData } from "@/lib/guides/structured-data";
 import { GuideHubPage } from "@/components/guides/guide-hub-page";
 
 type GuideHubProps = {
@@ -28,5 +30,13 @@ export default async function GuideHubRoute({ params }: GuideHubProps) {
 
   const hub = getGuideHub(resolved);
 
-  return <GuideHubPage locale={resolved} hub={hub} />;
+  return (
+    <>
+      <StructuredData
+        data={getGuideHubStructuredData(resolved)}
+        id={`${resolved}-guides-structured-data`}
+      />
+      <GuideHubPage locale={resolved} hub={hub} />
+    </>
+  );
 }

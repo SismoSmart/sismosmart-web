@@ -119,12 +119,18 @@ test("contribution guidance follows the production-only Doppler model", () => {
   assert.doesNotMatch(contributing, /create (?:a )?persistent \.env/i);
 });
 
-test("request routing has no no-op proxy and defaults to English", () => {
+test("request routing negotiates Markdown narrowly and defaults HTML to English", () => {
   const nextConfig = readText("next.config.ts");
+  const proxy = readText("src/proxy.ts");
   const readme = readText("README.md");
   const sentryEdgeConfig = readText("src/sentry.edge.config.ts");
 
-  assert.equal(fs.existsSync(path.join(rootDir, "src/proxy.ts")), false);
+  assert.match(proxy, /request\.method !== "GET" && request\.method !== "HEAD"/);
+  assert.match(proxy, /text\/markdown/);
+  assert.match(proxy, /NextResponse\.rewrite/);
+  assert.match(proxy, /resolveAgentPage/);
+  assert.ok(proxy.includes("api(?:/|$)"));
+  assert.doesNotMatch(proxy, /user-agent/i);
   assert.match(
     nextConfig,
     /destination:\s*basePath\s*\?\s*basePath\.concat\(\s*["']\/en["']\s*\)\s*:\s*["']\/en["']/,

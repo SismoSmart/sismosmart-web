@@ -5,6 +5,7 @@ import { itPages } from "@/lib/page-content/it";
 import { ptPages } from "@/lib/page-content/pt";
 import { trPages } from "@/lib/page-content/tr";
 import { extraPagesByLocale } from "@/lib/page-content/extra-pages/index";
+import { glossaryPagesByLocale } from "@/lib/page-content/glossary";
 import type { BaseRoutePagesCopy } from "@/lib/page-copy";
 import type { Locale, SiteLink } from "@/lib/site";
 
@@ -22,6 +23,7 @@ export const routeSegments = {
   terms: "/terms",
   security: "/security",
   press: "/press",
+  glossary: "/glossary",
 } as const;
 
 export type PageKey = keyof typeof routeSegments;
@@ -40,6 +42,7 @@ export const staticPageKeys: StaticPageKey[] = [
   "terms",
   "security",
   "press",
+  "glossary",
 ];
 
 const pagesByLocale: Record<Locale, BaseRoutePagesCopy> = {
@@ -65,6 +68,7 @@ const navigationLabels: Record<Locale, Record<Exclude<PageKey, "home">, string>>
     terms: "Şartlar",
     security: "Güvenlik",
     press: "Basın",
+    glossary: "Sözlük",
   },
   en: {
     product: "Product",
@@ -79,6 +83,7 @@ const navigationLabels: Record<Locale, Record<Exclude<PageKey, "home">, string>>
     terms: "Terms",
     security: "Security",
     press: "Press",
+    glossary: "Glossary",
   },
   es: {
     product: "Producto",
@@ -93,6 +98,7 @@ const navigationLabels: Record<Locale, Record<Exclude<PageKey, "home">, string>>
     terms: "Términos",
     security: "Seguridad",
     press: "Prensa",
+    glossary: "Glosario",
   },
   it: {
     product: "Prodotto",
@@ -107,6 +113,7 @@ const navigationLabels: Record<Locale, Record<Exclude<PageKey, "home">, string>>
     terms: "Termini",
     security: "Sicurezza",
     press: "Stampa",
+    glossary: "Glossario",
   },
   id: {
     product: "Produk",
@@ -121,6 +128,7 @@ const navigationLabels: Record<Locale, Record<Exclude<PageKey, "home">, string>>
     terms: "Syarat",
     security: "Keamanan",
     press: "Media",
+    glossary: "Glosarium",
   },
   pt: {
     product: "Produto",
@@ -135,6 +143,7 @@ const navigationLabels: Record<Locale, Record<Exclude<PageKey, "home">, string>>
     terms: "Termos",
     security: "Segurança",
     press: "Imprensa",
+    glossary: "Glossário",
   },
 };
 
@@ -237,6 +246,7 @@ export function getPages(locale: Locale) {
   return {
     ...pagesByLocale[locale],
     ...extraPagesByLocale[locale],
+    glossary: glossaryPagesByLocale[locale],
   };
 }
 
@@ -271,6 +281,7 @@ export function getFooterNavigation(locale: Locale): SiteLink[] {
     { label: labels.faq, href: routeSegments.faq },
     { label: labels.about, href: routeSegments.about },
     { label: labels.press, href: routeSegments.press },
+    { label: labels.glossary, href: routeSegments.glossary },
     { label: labels.privacy, href: routeSegments.privacy },
     { label: labels.terms, href: routeSegments.terms },
     { label: labels.security, href: routeSegments.security },

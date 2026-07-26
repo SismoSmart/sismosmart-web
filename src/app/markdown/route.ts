@@ -1,8 +1,7 @@
 import {
-  getMarkdownUrl,
-  markdownPageKeys,
+  agentPageKeys,
+  getAgentPageDescriptor,
 } from "@/lib/agent-discovery";
-import { getPages } from "@/lib/pages";
 import { localeLabels, locales, siteConfig } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -10,12 +9,11 @@ export const dynamic = "force-static";
 export function GET(): Response {
   const sections = locales
     .map((locale) => {
-      const pages = getPages(locale);
-      const links = markdownPageKeys
-        .map(
-          (pageKey) =>
-            `- [${pages[pageKey].title}](${getMarkdownUrl(locale, pageKey)})`,
-        )
+      const links = agentPageKeys
+        .map((pageKey) => {
+          const page = getAgentPageDescriptor(locale, pageKey);
+          return `- [${page.title}](${page.markdownUrl})`;
+        })
         .join("\n");
 
       return `## ${localeLabels[locale]}\n\n${links}`;
@@ -30,6 +28,8 @@ ${sections}
 
 ## Other machine-readable resources
 
+- [Public agent guidance](${siteConfig.url}/AGENTS.md)
+- [Human-readable sitemap](${siteConfig.url}/sitemap.md)
 - [OpenAPI contract](${siteConfig.url}/openapi.json)
 - [Concise LLM summary](${siteConfig.url}/llms.txt)
 - [Expanded LLM context](${siteConfig.url}/llms-full.txt)

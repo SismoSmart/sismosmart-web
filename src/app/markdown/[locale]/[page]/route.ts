@@ -1,13 +1,11 @@
 import {
-  isMarkdownPageKey,
-  markdownPageKeys,
+  agentPageKeys,
+  getAgentPageDescriptor,
+  resolveAgentPage,
 } from "@/lib/agent-discovery";
-import { renderPageMarkdown } from "@/lib/markdown-content";
-import {
-  resolveStaticPageKey,
-  routeSegments,
-} from "@/lib/pages";
-import { isLocale, locales } from "@/lib/site";
+import { renderAgentPageMarkdown } from "@/lib/markdown-content";
+import { routeSegments } from "@/lib/pages";
+import { locales } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -17,11 +15,18 @@ type MarkdownRouteContext = {
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
-    markdownPageKeys.map((pageKey) => ({
+    agentPageKeys.map((pageKey) => ({
       locale,
-      page: routeSegments[pageKey].slice(1),
+      page: pageKey === "home" ? "home" : routeSegments[pageKey].slice(1),
     })),
   );
+}
+
+function notFoundResponse() {
+  return new Response("Not found\n", {
+    headers: { "content-type": "text/plain; charset=utf-8" },
+    status: 404,
+  });
 }
 
 export async function GET(
@@ -29,26 +34,21 @@ export async function GET(
   { params }: MarkdownRouteContext,
 ): Promise<Response> {
   const { locale, page } = await params;
-
-  if (!isLocale(locale)) {
-    return new Response("Not found\n", {
-      headers: { "content-type": "text/plain; charset=utf-8" },
-      status: 404,
-    });
+  const resolved = resolveAgentPage(locale, page);
+  if (!resolved) {
+    return notFoundResponse();
   }
 
-  const pageKey = resolveStaticPageKey(page);
-  if (!pageKey || !isMarkdownPageKey(pageKey)) {
-    return new Response("Not found\n", {
-      headers: { "content-type": "text/plain; charset=utf-8" },
-      status: 404,
-    });
-  }
-
-  return new Response(renderPageMarkdown(locale, pageKey), {
-    headers: {
-      "cache-control": "public, max-age=3600",
-      "content-type": "text/markdown; charset=utf-8",
+  const descriptor = getAgentPageDescriptor(resolved.locale, resolved.pageKey);
+  return new Response(
+    renderAgentPageMarkdown(resolved.locale, resolved.pageKey),
+    {
+      headers: {
+        "cache-control": "public, max-age=3600",
+        "content-type": "text/markdown; charset=utf-8",
+        link: `<${descriptor.canonicalUrl}>; rel="canonical"`,
+        vary: "Accept",
+      },
     },
-  });
+  );
 }

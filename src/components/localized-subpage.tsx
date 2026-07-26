@@ -19,6 +19,7 @@ export function renderStaticPage(locale: Locale, pageKey: StaticPageKey) {
     case "technology":
     case "investors":
     case "security":
+    case "glossary":
       return <InfoPage locale={locale} pageKey={pageKey} />;
     case "howItWorks":
       return <HowItWorksPage locale={locale} />;

@@ -48,6 +48,9 @@ export async function runNavigationScenario({
     if (currentPath !== "/en/product") {
       throw new Error(`Navigation ended at ${currentPath}.`);
     }
+    await page.waitForSelector('[data-locale-switch="tr"]', {
+      timeout: 15_000,
+    });
     const trHref = await page.$eval('[data-locale-switch="tr"]', (link) =>
       link.getAttribute("href"),
     );

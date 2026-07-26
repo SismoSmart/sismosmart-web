@@ -129,4 +129,5 @@ export type RoutePagesCopy = BaseRoutePagesCopy & {
   investors: InfoPageCopy;
   faq: InfoPageCopy;
   security: InfoPageCopy;
+  glossary: InfoPageCopy;
 };

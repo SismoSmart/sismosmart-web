@@ -160,3 +160,150 @@ test("existing machine-readable indexes link to Markdown and OpenAPI discovery",
     assertPublicOutput(body);
   }
 });
+
+
+const expectedAgentSegments = [
+  "",
+  "product",
+  "technology",
+  "how-it-works",
+  "pilot-program",
+  "investors",
+  "faq",
+  "about",
+  "contact",
+  "privacy",
+  "terms",
+  "security",
+  "press",
+  "glossary",
+];
+
+const expectedLocales = ["en", "tr", "es", "id", "pt", "it"];
+
+test("agent page catalog covers home and every localized public page", async () => {
+  const discovery = await import("../src/lib/agent-discovery.ts");
+  assert.equal(
+    typeof discovery.getAgentPageDescriptor,
+    "function",
+    "getAgentPageDescriptor must define the canonical HTML/Markdown contract",
+  );
+  assert.equal(
+    typeof discovery.resolveAgentPage,
+    "function",
+    "resolveAgentPage must validate localized public routes",
+  );
+
+  for (const locale of expectedLocales) {
+    for (const segment of expectedAgentSegments) {
+      const resolved = discovery.resolveAgentPage(locale, segment || null);
+      assert.ok(resolved, `${locale}/${segment || "home"} must resolve`);
+      const descriptor = discovery.getAgentPageDescriptor(locale, resolved.pageKey);
+      const canonicalPath = segment ? `/${locale}/${segment}` : `/${locale}`;
+      const markdownPath = segment ? `${canonicalPath}.md` : `/${locale}.md`;
+      assert.equal(descriptor.canonicalPath, canonicalPath);
+      assert.equal(descriptor.canonicalUrl, `https://sismosmart.com${canonicalPath}`);
+      assert.equal(descriptor.markdownPath, markdownPath);
+      assert.equal(descriptor.markdownUrl, `https://sismosmart.com${markdownPath}`);
+    }
+  }
+
+  assert.equal(discovery.resolveAgentPage("xx", "product"), null);
+  assert.equal(discovery.resolveAgentPage("en", "missing"), null);
+});
+
+test("every public page renders frontmatter markdown with sitemap and safety context", async () => {
+  const markdown = await import("../src/lib/markdown-content.ts");
+  const discovery = await import("../src/lib/agent-discovery.ts");
+  assert.equal(typeof markdown.renderAgentPageMarkdown, "function");
+
+  for (const locale of expectedLocales) {
+    for (const segment of expectedAgentSegments) {
+      const resolved = discovery.resolveAgentPage(locale, segment || null);
+      assert.ok(resolved);
+      const descriptor = discovery.getAgentPageDescriptor(locale, resolved.pageKey);
+      const body = markdown.renderAgentPageMarkdown(locale, resolved.pageKey);
+      assert.match(body, /^---\n/);
+      assert.match(body, /\ntitle: /);
+      assert.match(body, /\ndescription: /);
+      assert.match(body, new RegExp(`\\nlocale: ${locale}\\n`));
+      assert.match(
+        body,
+        new RegExp(
+          `\\ncanonical_url: ${descriptor.canonicalUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\n`,
+        ),
+      );
+      assert.match(body, /\nlast_updated: "\d{4}-\d{2}-\d{2}"\n/);
+      assert.match(body, /\n## Sitemap\n/);
+      assert.match(body, /https:\/\/sismosmart\.com\/sitemap\.md/);
+      assert.match(body, /https:\/\/sismosmart\.com\/[a-z]{2}\/glossary/);
+      assertPublicOutput(body);
+    }
+  }
+});
+
+test("localized Markdown route serves every page with canonical response headers", async () => {
+  const route = await loadRoute("src/app/markdown/[locale]/[page]/route.ts");
+
+  for (const locale of expectedLocales) {
+    for (const segment of expectedAgentSegments) {
+      const page = segment || "home";
+      const response = await route.GET(
+        new Request(`https://sismosmart.com/markdown/${locale}/${page}`),
+        { params: Promise.resolve({ locale, page }) },
+      );
+      assert.equal(response.status, 200, `${locale}/${page}`);
+      assert.equal(response.headers.get("content-type"), "text/markdown; charset=utf-8");
+      assert.equal(response.headers.get("vary"), "Accept");
+      const canonicalPath = segment ? `/${locale}/${segment}` : `/${locale}`;
+      assert.equal(
+        response.headers.get("link"),
+        `<https://sismosmart.com${canonicalPath}>; rel="canonical"`,
+      );
+      assert.match(await response.text(), /\n## Sitemap\n/);
+    }
+  }
+});
+
+test("every localized HTML page advertises a same-path Markdown alternate", () => {
+  for (const locale of expectedLocales) {
+    for (const segment of expectedAgentSegments) {
+      const path = segment ? `/${segment}` : "/";
+      const metadata = buildPageMetadata(
+        locale,
+        path,
+        "Title",
+        "A sufficiently descriptive public page description.",
+      );
+      const expected = segment
+        ? `https://sismosmart.com/${locale}/${segment}.md`
+        : `https://sismosmart.com/${locale}.md`;
+      assert.equal(metadata.alternates?.types?.["text/markdown"], expected);
+    }
+  }
+});
+
+test("public AGENTS.md exposes required sections without private operations data", async () => {
+  const relativePath = "src/app/AGENTS.md/route.ts";
+  assert.equal(
+    fs.existsSync(path.join(rootDir, relativePath)),
+    true,
+    `${relativePath} must exist`,
+  );
+  const { GET } = await loadRoute(relativePath);
+  const response = GET();
+  const body = await response.text();
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("content-type"), "text/markdown; charset=utf-8");
+  for (const heading of [
+    "Overview",
+    "Installation",
+    "Configuration",
+    "Usage",
+    "Validation",
+    "Safety and limitations",
+  ]) {
+    assert.match(body, new RegExp(`^## ${heading}$`, "m"));
+  }
+  assertPublicOutput(body);
+});

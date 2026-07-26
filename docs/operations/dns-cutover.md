@@ -78,24 +78,19 @@ The audit verifies:
 3. Mail, cPanel, webmail, autodiscovery, FTP, WebDisk, WHM, contacts, and calendar hosts resolve only to `<origin-ip-redacted>`.
 4. Every public MX exchange resolves only to `<origin-ip-redacted>`.
 5. Both authoritative Cloudflare nameservers return the expected delegation, web, service, and MX results.
-6. The former nameservers do not return `<retired-origin-ip-redacted>` for apex or `www`.
+6. The former nameservers are queried and their apex and `www` answers are recorded for migration evidence.
 7. Production web, cPanel, webmail, and IMAPS TLS paths validate without certificate errors.
-8. No observed DNS answer references the legacy address.
+8. When a verified `DNS_LEGACY_IPV4` is configured, no observed DNS answer references it and its endpoint is isolated from production.
 
-The scheduled `DNS Cutover Audit` GitHub Actions workflow stores a 30-day JSON report artifact.
+The scheduled `DNS Cutover Audit` GitHub Actions workflow stores a 14-day JSON report artifact.
 
-## Legacy provider endpoint
+## Optional legacy provider endpoint
 
-The former provider nameservers resolve to `<retired-origin-ip-redacted>`. They no longer return an apex or `www` A record for `sismosmart.com`.
+No distinct retired web-origin address is currently documented. The former nameserver host address identifies a historical DNS service and must not be treated as proof of a former web server. `DNS_LEGACY_IPV4` therefore remains unset unless a retired origin is verified from provider records, an old zone export, or another authoritative source.
 
-Directly pinning an arbitrary Host value to the retired origin returns the same generic `DNS Yönetimi - Hosting Dünyam` page and an expired self-signed Plesk certificate. The page is therefore classified as a provider-wide catch-all, not a SismoSmart-specific virtual host. It is isolated from production because:
+When `DNS_LEGACY_IPV4` is unset, the audit records `legacyEndpoint.configured: false` with classification `not-configured`. It still runs every registry, Cloudflare, resolver, service-DNS, HTTPS, and TLS check. Former nameserver responses remain visible in the JSON report, while IP-specific endpoint and DNS-reference checks are skipped without warning or failure.
 
-- Registry delegation contains only Cloudflare nameservers.
-- Public and local resolvers return only Cloudflare edge addresses for apex and `www`.
-- Cloudflare authoritative records contain no reference to `<retired-origin-ip-redacted>`.
-- The former nameservers no longer publish the legacy A answer.
-
-A provider support request may still ask Hosting Dünyam to return `421`, `404`, or `410` for unknown Host values, but this is defense in depth and is not required for normal DNS reachability.
+If a distinct retired origin is verified later, configure `DNS_LEGACY_IPV4`. The same workflow will then restore the endpoint isolation, certificate, content, and observed-DNS checks automatically.
 
 ## Cutover procedure
 

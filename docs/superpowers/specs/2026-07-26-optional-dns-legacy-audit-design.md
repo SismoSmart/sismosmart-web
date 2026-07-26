@@ -19,6 +19,7 @@ Keep one DNS Cutover Audit workflow and make legacy endpoint inspection conditio
 - IP-specific former-nameserver and endpoint-isolation checks run only when the legacy address exists.
 - The JSON report uses `legacyEndpoint.configured: false` and classification `not-configured` when skipped.
 - The console summary uses `legacy=not-configured` when skipped.
+- The apex HTTPS check accepts the application's permanent locale redirect response.
 - No warning or failure is emitted merely because no retired origin is known.
 
 ## Error handling

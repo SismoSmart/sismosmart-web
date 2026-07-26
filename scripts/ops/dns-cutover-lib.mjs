@@ -85,6 +85,21 @@ export function classifyLegacyEndpoint({
   };
 }
 
+export function createUnconfiguredLegacyEndpoint() {
+  return {
+    configured: false,
+    ipv4: null,
+    domainResponse: null,
+    randomResponse: null,
+    classification: {
+      acceptable: true,
+      classification: "not-configured",
+      reason: "No distinct legacy origin address is configured; endpoint-specific checks were skipped.",
+    },
+    dnsReferencesLegacy: null,
+  };
+}
+
 export function buildCheck(name, ok, details, severity = "error") {
   return {
     name,

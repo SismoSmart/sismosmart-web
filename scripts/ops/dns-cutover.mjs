@@ -12,6 +12,7 @@ import { hydrateNetworkConfig } from "./network-config.mjs";
 import {
   buildCheck,
   classifyLegacyEndpoint,
+  createUnconfiguredLegacyEndpoint,
   ipv4InAnyCidr,
   normalizeHostname,
   normalizeHostnames,
@@ -329,13 +330,15 @@ async function inspectLegacyNameserver(nameserver, config, observedIps, checks) 
 
   addObservedIps(observedIps, apex);
   addObservedIps(observedIps, www);
-  checks.push(
-    buildCheck(
-      `${nameserver}: no legacy apex/www answer`,
-      ![...apex, ...www].includes(config.legacyIpv4),
-      { apex, www, legacyIpv4: config.legacyIpv4 },
-    ),
-  );
+  if (config.legacyIpv4) {
+    checks.push(
+      buildCheck(
+        `${nameserver}: no legacy apex/www answer`,
+        ![...apex, ...www].includes(config.legacyIpv4),
+        { apex, www, legacyIpv4: config.legacyIpv4 },
+      ),
+    );
+  }
 
   return {
     name: nameserver,
@@ -353,7 +356,6 @@ async function main() {
   const config = hydrateNetworkConfig(
     JSON.parse(await fs.readFile(configPath, "utf8")),
     process.env,
-    { requireLegacy: true },
   );
   const checks = [];
   const observedIps = new Set();
@@ -442,42 +444,53 @@ async function main() {
     );
   }
 
-  const randomHostname = `unassigned-${Date.now()}.invalid`;
-  const legacyDomain = await requestHttps({
-    hostname: config.domain,
-    connectAddress: config.legacyIpv4,
-    rejectUnauthorized: false,
-  });
-  const legacyRandom = await requestHttps({
-    hostname: randomHostname,
-    servername: randomHostname,
-    connectAddress: config.legacyIpv4,
-    rejectUnauthorized: false,
-  });
-  const dnsReferencesLegacy = observedIps.has(config.legacyIpv4);
-  const legacyClassification = classifyLegacyEndpoint({
-    dnsReferencesLegacy,
-    domainBodyHash: legacyDomain.bodyHash,
-    randomBodyHash: legacyRandom.bodyHash,
-    certificateAuthorized: legacyDomain.certificate.authorized,
-  });
-  checks.push(
-    buildCheck("legacy endpoint isolation", legacyClassification.acceptable, {
-      ...legacyClassification,
-      legacyIpv4: config.legacyIpv4,
-      domainStatusCode: legacyDomain.statusCode,
-      randomStatusCode: legacyRandom.statusCode,
-      bodyHashesMatch: legacyDomain.bodyHash === legacyRandom.bodyHash,
-      certificate: legacyDomain.certificate,
-    }),
-  );
+  let legacyEndpoint = createUnconfiguredLegacyEndpoint();
 
-  checks.push(
-    buildCheck("no current DNS answer references legacy IPv4", !dnsReferencesLegacy, {
-      legacyIpv4: config.legacyIpv4,
-      observedIps: [...observedIps].sort(),
-    }),
-  );
+  if (config.legacyIpv4) {
+    const randomHostname = `unassigned-${Date.now()}.invalid`;
+    const legacyDomain = await requestHttps({
+      hostname: config.domain,
+      connectAddress: config.legacyIpv4,
+      rejectUnauthorized: false,
+    });
+    const legacyRandom = await requestHttps({
+      hostname: randomHostname,
+      servername: randomHostname,
+      connectAddress: config.legacyIpv4,
+      rejectUnauthorized: false,
+    });
+    const dnsReferencesLegacy = observedIps.has(config.legacyIpv4);
+    const legacyClassification = classifyLegacyEndpoint({
+      dnsReferencesLegacy,
+      domainBodyHash: legacyDomain.bodyHash,
+      randomBodyHash: legacyRandom.bodyHash,
+      certificateAuthorized: legacyDomain.certificate.authorized,
+    });
+
+    checks.push(
+      buildCheck("legacy endpoint isolation", legacyClassification.acceptable, {
+        ...legacyClassification,
+        legacyIpv4: config.legacyIpv4,
+        domainStatusCode: legacyDomain.statusCode,
+        randomStatusCode: legacyRandom.statusCode,
+        bodyHashesMatch: legacyDomain.bodyHash === legacyRandom.bodyHash,
+        certificate: legacyDomain.certificate,
+      }),
+      buildCheck("no current DNS answer references legacy IPv4", !dnsReferencesLegacy, {
+        legacyIpv4: config.legacyIpv4,
+        observedIps: [...observedIps].sort(),
+      }),
+    );
+
+    legacyEndpoint = {
+      configured: true,
+      ipv4: config.legacyIpv4,
+      domainResponse: legacyDomain,
+      randomResponse: legacyRandom,
+      classification: legacyClassification,
+      dnsReferencesLegacy,
+    };
+  }
 
   const summary = summarizeChecks(checks);
   const report = {
@@ -491,13 +504,7 @@ async function main() {
     legacyNameservers: legacyNameserverResults,
     https: httpsResults,
     tls: tlsResults,
-    legacyEndpoint: {
-      ipv4: config.legacyIpv4,
-      domainResponse: legacyDomain,
-      randomResponse: legacyRandom,
-      classification: legacyClassification,
-      dnsReferencesLegacy,
-    },
+    legacyEndpoint,
     checks,
     summary,
   };
@@ -531,7 +538,7 @@ async function main() {
   }
 
   console.log(
-    `DNS_CUTOVER_RESULT ok=${summary.ok} passed=${summary.passed} failed=${summary.failed} warnings=${summary.warnings} legacy=${legacyClassification.classification}`,
+    `DNS_CUTOVER_RESULT ok=${summary.ok} passed=${summary.passed} failed=${summary.failed} warnings=${summary.warnings} legacy=${legacyEndpoint.classification.classification}`,
   );
 
   if (!summary.ok) {

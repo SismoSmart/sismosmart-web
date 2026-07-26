@@ -326,16 +326,30 @@ test("analytics observability uses canonical public config and fail-closed conse
     /if \(config\.gtmId\) \{([\s\S]*?)\n      return;\n    \}/,
   )?.[1];
   assert.ok(gtmBranch, "GTM loading branch must remain explicit");
-  assert.doesNotMatch(
+  assert.match(
     gtmBranch,
-    /window\.gtag\("config"/,
-    "GTM owns the page-view configuration and must not be duplicated by direct gtag config",
+    /if \(document\.getElementById\("sismosmart-gtm-loader"\)\) return;/,
+    "GTM bootstrap must guard the GA config command and loader together",
+  );
+  assert.equal(
+    (gtmBranch.match(/window\.gtag\("config"/g) || []).length,
+    1,
+    "GTM bootstrap must queue exactly one GA config command",
+  );
+  assert.match(
+    gtmBranch,
+    /if \(config\.gaId\) \{[\s\S]*?window\.gtag\("js", new Date\(\)\);[\s\S]*?window\.gtag\("config", config\.gaId,[\s\S]*?send_page_view: true/,
+    "GTM bootstrap must queue the consented GA page view before loading the container",
   );
   assert.match(
     consent,
     /if \(config\.gaId\) \{[\s\S]*?window\.gtag\("js", new Date\(\)\);[\s\S]*?window\.gtag\("config", config\.gaId,[\s\S]*?send_page_view: true/,
     "GA-only fallback must retain its direct page-view configuration",
   );
+  const analyticsAudit = readText("scripts/ops/analytics-audit.mjs");
+  assert.match(analyticsAudit, /getLogicalPageViewEvidence/);
+  assert.match(analyticsAudit, /GTM loader network fanout/);
+  assert.match(analyticsAudit, /networkFanoutBounded/);
   assert.match(formScript, /sismosmart_form_success/);
   assert.ok(formScript.includes("analytics?.track"));
   assert.match(contactForm, /data-analytics-form="contact"/);

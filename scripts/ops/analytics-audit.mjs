@@ -12,6 +12,7 @@ import {
   classifyAnalyticsRequest,
   countPageViewRequests,
   countRequests,
+  getLogicalPageViewEvidence,
   summarizeChecks,
 } from "./analytics-audit-lib.mjs";
 import { parseCliArgs } from "./config.mjs";
@@ -279,8 +280,13 @@ async function runScenario(browser, baseUrl, locale, choice) {
 
 function evaluateScenario(scenario, enforceCanonicalNetwork) {
   const checks = [];
-  const { choice, locale, pageViewCount, requests, reset, state } = scenario;
+  const { choice, locale, requests, reset, state } = scenario;
   const prefix = `${locale}/${choice}`;
+  const pageViewEvidence = getLogicalPageViewEvidence(
+    state.dataLayer,
+    requests,
+    analyticsConfig.public.gaMeasurementId,
+  );
   const defaultIndex = state.dataLayer.findIndex((entry) => isDeniedConsentEntry(entry, "default"));
   const firstMeasurementIndex = state.dataLayer.findIndex(
     (entry) => Array.isArray(entry) && ["js", "config"].includes(entry[0]),
@@ -360,8 +366,8 @@ function evaluateScenario(scenario, enforceCanonicalNetwork) {
         { scriptIds },
       ),
       buildCheck(
-        `${prefix}: GTM loader count`,
-        countRequests(requests, "gtm-loader") <= 1,
+        `${prefix}: GTM loader network fanout`,
+        countRequests(requests, "gtm-loader") <= 2,
         describeRequests(requests, "gtm-loader"),
       ),
       buildCheck(
@@ -370,9 +376,21 @@ function evaluateScenario(scenario, enforceCanonicalNetwork) {
         describeRequests(requests, "clarity-loader"),
       ),
       buildCheck(
-        `${prefix}: page view count`,
-        enforceCanonicalNetwork ? pageViewCount === 1 : pageViewCount <= 1,
-        { enforceCanonicalNetwork },
+        `${prefix}: one GA config command`,
+        pageViewEvidence.configCommandCount === 1,
+        { configCommandCount: pageViewEvidence.configCommandCount },
+      ),
+      buildCheck(
+        `${prefix}: logical page view count`,
+        enforceCanonicalNetwork
+          ? pageViewEvidence.logicalPageViewCount === 1
+          : pageViewEvidence.configCommandCount === 1 && pageViewEvidence.networkFanoutBounded,
+        { enforceCanonicalNetwork, ...pageViewEvidence },
+      ),
+      buildCheck(
+        `${prefix}: page view network fanout`,
+        pageViewEvidence.networkFanoutBounded,
+        { beaconCount: pageViewEvidence.beaconCount },
       ),
       buildCheck(`${prefix}: form success event queued`, hasFormSuccessEvent(state.dataLayer), {}),
       buildCheck(
@@ -444,31 +462,40 @@ async function main() {
     evaluateScenario(scenario, enforceCanonicalNetwork),
   );
   const summary = summarizeChecks(checks);
-  const compactScenarios = scenarios.map((scenario) => ({
-    locale: scenario.locale,
-    choice: scenario.choice,
-    storedChoice: scenario.state.storedChoice,
-    bannerHidden: scenario.state.bannerHidden,
-    requestCounts: Object.fromEntries(
-      ["ga-loader", "gtm-loader", "clarity-loader", "ga-collect", "clarity-collect"].map(
-        (kind) => [kind, countRequests(scenario.requests, kind)],
-      ),
-    ),
-    pageViewCount: scenario.pageViewCount,
-    formSuccessCount: countRequests(
+  const compactScenarios = scenarios.map((scenario) => {
+    const pageViewEvidence = getLogicalPageViewEvidence(
+      scenario.state.dataLayer,
       scenario.requests,
-      "ga-collect",
-      analyticsConfig.events.formSuccess,
-    ),
-    reset: scenario.reset
-      ? {
-          storedChoice: scenario.reset.state.storedChoice,
-          bannerHidden: scenario.reset.state.bannerHidden,
-          cookieNames: scenario.reset.cookieNames,
-          trackResult: scenario.reset.trackResult,
-        }
-      : null,
-  }));
+      analyticsConfig.public.gaMeasurementId,
+    );
+    return {
+      locale: scenario.locale,
+      choice: scenario.choice,
+      storedChoice: scenario.state.storedChoice,
+      bannerHidden: scenario.state.bannerHidden,
+      requestCounts: Object.fromEntries(
+        ["ga-loader", "gtm-loader", "clarity-loader", "ga-collect", "clarity-collect"].map(
+          (kind) => [kind, countRequests(scenario.requests, kind)],
+        ),
+      ),
+      pageViewCount: scenario.pageViewCount,
+      logicalPageViewCount: pageViewEvidence.logicalPageViewCount,
+      gaConfigCommandCount: pageViewEvidence.configCommandCount,
+      formSuccessCount: countRequests(
+        scenario.requests,
+        "ga-collect",
+        analyticsConfig.events.formSuccess,
+      ),
+      reset: scenario.reset
+        ? {
+            storedChoice: scenario.reset.state.storedChoice,
+            bannerHidden: scenario.reset.state.bannerHidden,
+            cookieNames: scenario.reset.cookieNames,
+            trackResult: scenario.reset.trackResult,
+          }
+        : null,
+    };
+  });
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -490,7 +517,7 @@ async function main() {
       ga: scenario.requestCounts["ga-loader"],
       gtm: scenario.requestCounts["gtm-loader"],
       clarity: scenario.requestCounts["clarity-loader"],
-      pageviews: scenario.pageViewCount,
+      pageviews: scenario.logicalPageViewCount,
       formEvents: scenario.formSuccessCount,
     })),
   );

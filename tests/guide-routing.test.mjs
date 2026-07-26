@@ -620,19 +620,25 @@ test("hub breadcrumb has exactly two ListItems at positions 1 and 2", () => {
   }
 });
 
+function assertNoForbiddenProperties(serialized, label) {
+  assert.doesNotMatch(serialized, /"@type"\s*:\s*"Person"/i, `No Person type for ${label}`);
+  assert.doesNotMatch(serialized, /"@type"\s*:\s*"Review"/i, `No Review type for ${label}`);
+  assert.doesNotMatch(serialized, /"@type"\s*:\s*"Offer"/i, `No Offer type for ${label}`);
+  assert.doesNotMatch(serialized, /"aggregateRating"\s*:/i, `No aggregateRating property for ${label}`);
+  assert.doesNotMatch(serialized, /"review"\s*:/i, `No review property key for ${label}`);
+  assert.doesNotMatch(serialized, /"offers"\s*:/i, `No offers property key for ${label}`);
+  assert.doesNotMatch(serialized, /"price"\s*:/i, `No price property for ${label}`);
+  assert.doesNotMatch(serialized, /"certification"\s*:/i, `No certification property for ${label}`);
+  assert.doesNotMatch(serialized, /"endorsement"\s*:/i, `No endorsement property for ${label}`);
+}
+
 test("detail structured data contains no forbidden properties", () => {
   for (const locale of ["en", "tr"]) {
     const guides = getGuides(locale);
     for (const guide of guides) {
       const entities = getGuideStructuredData(guide);
       const serialized = JSON.stringify(entities);
-      assert.doesNotMatch(serialized, /"@type"\s*:\s*"Person"/, `No Person type for ${guide.translationKey}`);
-      assert.doesNotMatch(serialized, /aggregateRating/, `No aggregateRating for ${guide.translationKey}`);
-      assert.doesNotMatch(serialized, /"@type"\s*:\s*"Review"/, `No Review type for ${guide.translationKey}`);
-      assert.doesNotMatch(serialized, /"@type"\s*:\s*"Offer"/, `No Offer type for ${guide.translationKey}`);
-      assert.doesNotMatch(serialized, /"price"/, `No price for ${guide.translationKey}`);
-      assert.doesNotMatch(serialized, /"certification"/, `No certification for ${guide.translationKey}`);
-      assert.doesNotMatch(serialized, /"endorsement"/, `No endorsement for ${guide.translationKey}`);
+      assertNoForbiddenProperties(serialized, guide.translationKey);
     }
   }
 });
@@ -641,34 +647,43 @@ test("hub structured data contains no forbidden properties", () => {
   for (const locale of ["en", "tr"]) {
     const entities = getGuideHubStructuredData(locale);
     const serialized = JSON.stringify(entities);
-    assert.doesNotMatch(serialized, /"@type"\s*:\s*"Person"/, `No Person type for hub ${locale}`);
-    assert.doesNotMatch(serialized, /aggregateRating/, `No aggregateRating for hub ${locale}`);
-    assert.doesNotMatch(serialized, /"@type"\s*:\s*"Review"/, `No Review type for hub ${locale}`);
-    assert.doesNotMatch(serialized, /"@type"\s*:\s*"Offer"/, `No Offer type for hub ${locale}`);
-    assert.doesNotMatch(serialized, /"price"/, `No price for hub ${locale}`);
-    assert.doesNotMatch(serialized, /"certification"/, `No certification for hub ${locale}`);
-    assert.doesNotMatch(serialized, /"endorsement"/, `No endorsement for hub ${locale}`);
+    assertNoForbiddenProperties(serialized, `hub ${locale}`);
   }
 });
 
-test("hub route source imports and uses StructuredData component", () => {
+test("forbidden-property matcher rejects review and offers property keys", () => {
+  const withReview = JSON.stringify([{ "@context": "https://schema.org", "@type": "Article", review: [] }]);
+  assert.throws(
+    () => assertNoForbiddenProperties(withReview, "mutation-test"),
+    /No review property key/,
+    "Must reject objects with review property key",
+  );
+  const withOffers = JSON.stringify([{ "@context": "https://schema.org", "@type": "Article", offers: {} }]);
+  assert.throws(
+    () => assertNoForbiddenProperties(withOffers, "mutation-test"),
+    /No offers property key/,
+    "Must reject objects with offers property key",
+  );
+  const valid = JSON.stringify(getGuideStructuredData(getGuideByTranslationKey("en", "building-seismic-monitoring-device")));
+  assertNoForbiddenProperties(valid, "valid-entity-set");
+});
+
+test("hub route StructuredData call uses exact data and id", () => {
   const source = readText("src/app/[locale]/guides/page.tsx");
-  assert.match(source, /import.*StructuredData/, "Hub route must import StructuredData");
-  assert.match(source, /<StructuredData/, "Hub route must render StructuredData component");
+  assert.match(source, /import.*StructuredData.*from\s*["']@\/components\/structured-data["']/, "Hub route must import StructuredData");
+  assert.match(source, /import.*getGuideHubStructuredData.*from\s*["']@\/lib\/guides\/structured-data["']/, "Hub route must import getGuideHubStructuredData");
+  const sdCallMatch = source.match(/<StructuredData[\s\S]*?\/>/);
+  assert.ok(sdCallMatch, "Hub route must render a <StructuredData /> call");
+  assert.match(sdCallMatch[0], /data=\{getGuideHubStructuredData\(resolved\)\}/, "Hub StructuredData must use data={getGuideHubStructuredData(resolved)}");
+  assert.match(sdCallMatch[0], /id=\{`\$\{resolved\}-guides-structured-data`\}/, "Hub StructuredData id must be ${resolved}-guides-structured-data");
 });
 
-test("hub route source imports and uses getGuideHubStructuredData helper", () => {
-  const source = readText("src/app/[locale]/guides/page.tsx");
-  assert.match(source, /getGuideHubStructuredData/, "Hub route must import and use getGuideHubStructuredData");
-});
-
-test("detail route source imports and uses StructuredData component", () => {
+test("detail route StructuredData call uses exact data and id", () => {
   const source = readText("src/app/[locale]/guides/[slug]/page.tsx");
-  assert.match(source, /import.*StructuredData/, "Detail route must import StructuredData");
-  assert.match(source, /<StructuredData/, "Detail route must render StructuredData component");
-});
-
-test("detail route source imports and uses getGuideStructuredData helper", () => {
-  const source = readText("src/app/[locale]/guides/[slug]/page.tsx");
-  assert.match(source, /getGuideStructuredData/, "Detail route must import and use getGuideStructuredData");
+  assert.match(source, /import.*StructuredData.*from\s*["']@\/components\/structured-data["']/, "Detail route must import StructuredData");
+  assert.match(source, /import.*getGuideStructuredData.*from\s*["']@\/lib\/guides\/structured-data["']/, "Detail route must import getGuideStructuredData");
+  const sdCallMatch = source.match(/<StructuredData[\s\S]*?\/>/);
+  assert.ok(sdCallMatch, "Detail route must render a <StructuredData /> call");
+  assert.match(sdCallMatch[0], /data=\{getGuideStructuredData\(guide\)\}/, "Detail StructuredData must use data={getGuideStructuredData(guide)}");
+  assert.match(sdCallMatch[0], /id=\{`\$\{resolved\.locale\}-\$\{guide\.slug\}-structured-data`\}/, "Detail StructuredData id must be ${resolved.locale}-${guide.slug}-structured-data");
 });

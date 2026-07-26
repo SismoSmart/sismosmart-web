@@ -109,5 +109,5 @@ test("no guide contains prohibited claims", () => {
   ];
   for (const pattern of forbiddenPatterns)
     assert.doesNotMatch(publicCopy, pattern);
-  assert.doesNotMatch(publicCopy, /[/\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/u);
+  assert.doesNotMatch(publicCopy, /[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/u);
 });

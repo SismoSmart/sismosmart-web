@@ -52,6 +52,13 @@ test("measurement protocol authentication uses one canonical secret key", () => 
   assert.ok(contractKeysForConfig("prd_ops").includes("GOOGLE_MEASUREMENT_PROTOCOL_API_SECRET"));
 });
 
+test("retired DNS origin evidence is optional in prd_ops", () => {
+  const entry = ENVIRONMENT_CONTRACT.DNS_LEGACY_IPV4;
+  assert.equal(entry.primaryConfig, "prd_ops");
+  assert.deepEqual(entry.configs, ["prd_ops"]);
+  assert.equal(entry.required, false);
+});
+
 test("all historical measurement protocol aliases are rejected", () => {
   assert.deepEqual(LEGACY_ENV_KEYS, [
     "MeasurementProtocolAPI",

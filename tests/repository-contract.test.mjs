@@ -338,8 +338,27 @@ test("analytics observability uses canonical public config and fail-closed conse
   assert.match(quality, /NEXT_PUBLIC_ANALYTICS_ENABLED: "true"/);
   assert.ok(production.includes("vars.NEXT_PUBLIC_GA_ID"));
   assert.ok(!production.includes("secrets.NEXT_PUBLIC_GA_ID"));
-  assert.match(workflow, /npm run ops:analytics-audit/);
-  assert.match(workflow, /npm run ops:analytics-admin-audit/);
+  assert.match(workflow, /dopplerhq\/cli-action@014df23b1329b615816a38eb5f473bb9000700b1/);
+  const workflowLines = workflow.split("\n");
+  assert.equal(
+    workflowLines.filter((line) => line.startsWith("      DOPPLER_TOKEN:")).length,
+    0,
+    "the bootstrap token must not be exposed at job scope",
+  );
+  assert.equal(
+    workflowLines.filter((line) => line.startsWith("          DOPPLER_TOKEN:")).length,
+    4,
+    "only the four Doppler-consuming steps may receive the bootstrap token",
+  );
+  assert.match(workflow, /DOPPLER_TOKEN: \$\{\{ secrets\.DOPPLER_TOKEN_PRD_OPS \}\}/);
+  assert.match(workflow, /DOPPLER_PROJECT: "sismosmart-web"/);
+  assert.match(workflow, /DOPPLER_CONFIG: "prd_ops"/);
+  assert.match(workflow, /npm run doppler:check -- --doppler prd_ops/);
+  assert.match(workflow, /doppler run --project "\$DOPPLER_PROJECT" --config "\$DOPPLER_CONFIG" -- npm run --silent ops:status/);
+  assert.match(workflow, /doppler run --project "\$DOPPLER_PROJECT" --config "\$DOPPLER_CONFIG" --\s+npm run ops:analytics-admin-audit/);
+  assert.match(workflow, /doppler run --project "\$DOPPLER_PROJECT" --config "\$DOPPLER_CONFIG" --\s+npm run ops:analytics-audit/);
+  assert.doesNotMatch(workflow, /vars\.(?:NEXT_PUBLIC|GOOGLE_|CLARITY_)/);
+  assert.doesNotMatch(workflow, /secrets\.(?:GOOGLE_|CLARITY_)/);
   assert.ok(workflow.includes("always()"));
   assert.match(workflow, /schedule:/);
   assert.match(runbook, /GTM owns/);

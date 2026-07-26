@@ -89,7 +89,7 @@ export const ENVIRONMENT_CONTRACT = Object.freeze({
   GOOGLE_ANALYTICS_CURRENCY_CODE: define("prd_ops", ["prd_ops"], "public"),
   CLARITY_PROJECT_ID: define("prd_ops", ["prd_ops"], "public"),
   DNS_ORIGIN_IPV4: define("prd_ops", ["prd_ops"], "secret", true),
-  DNS_LEGACY_IPV4: define("prd_ops", ["prd_ops"], "secret", true),
+  DNS_LEGACY_IPV4: define("prd_ops", ["prd_ops"], "secret"),
   CLARITY_EXPORT_TOKEN: define("prd_ops", ["prd_ops"], "secret"),
 });
 

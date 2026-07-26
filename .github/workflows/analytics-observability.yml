@@ -19,25 +19,8 @@ concurrency:
 
 env:
   NODE_VERSION: "22.18.0"
-  NEXT_PUBLIC_ANALYTICS_ENABLED: "true"
-  NEXT_PUBLIC_CLARITY_ID: ${{ vars.NEXT_PUBLIC_CLARITY_ID }}
-  NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}
-  NEXT_PUBLIC_GTM_ID: ${{ vars.NEXT_PUBLIC_GTM_ID }}
-  GOOGLE_ANALYTICS_ACCOUNT_ID: ${{ vars.GOOGLE_ANALYTICS_ACCOUNT_ID }}
-  GOOGLE_ANALYTICS_PROPERTY_ID: ${{ vars.GOOGLE_ANALYTICS_PROPERTY_ID }}
-  GOOGLE_ANALYTICS_WEB_STREAM_ID: ${{ vars.GOOGLE_ANALYTICS_WEB_STREAM_ID }}
-  GOOGLE_GTM_ACCOUNT_ID: ${{ vars.GOOGLE_GTM_ACCOUNT_ID }}
-  GOOGLE_GTM_CONTAINER_ID: ${{ vars.GOOGLE_GTM_CONTAINER_ID }}
-  GOOGLE_GTM_WORKSPACE_ID: ${{ vars.GOOGLE_GTM_WORKSPACE_ID }}
-  GOOGLE_SEARCH_CONSOLE_SITE: ${{ vars.GOOGLE_SEARCH_CONSOLE_SITE }}
-  GOOGLE_SITEMAP_URL: ${{ vars.GOOGLE_SITEMAP_URL }}
-  CLARITY_PROJECT_ID: ${{ vars.CLARITY_PROJECT_ID }}
-  GOOGLE_AUTH_MODE: ${{ secrets.GOOGLE_AUTH_MODE || 'auto' }}
-  GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
-  GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
-  GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
-  GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-  CLARITY_EXPORT_TOKEN: ${{ secrets.CLARITY_EXPORT_TOKEN }}
+  DOPPLER_PROJECT: "sismosmart-web"
+  DOPPLER_CONFIG: "prd_ops"
 
 jobs:
   audit:
@@ -57,25 +40,41 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@014df23b1329b615816a38eb5f473bb9000700b1  # v3
+
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate read-only operations inventory
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
+        run: npm run doppler:check -- --doppler prd_ops
+
       - name: Record canonical configuration status
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p .artifacts/analytics
-          npm run --silent ops:status > .artifacts/analytics/ops-status.json
-          npm run --silent ops:clarity -- status > .artifacts/analytics/clarity-status.json
+          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" -- npm run --silent ops:status > .artifacts/analytics/ops-status.json
+          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" -- npm run --silent ops:clarity -- status > .artifacts/analytics/clarity-status.json
 
       - name: Verify Google administrative resources
-        run: npm run ops:analytics-admin-audit -- --output-dir .artifacts/analytics
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
+        run: >-
+          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" --
+          npm run ops:analytics-admin-audit -- --output-dir .artifacts/analytics
 
       - name: Audit consent, tag loading, and form events in every locale
         env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
           ANALYTICS_AUDIT_BASE_URL: https://sismosmart.com
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: >-
+          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" --
           npm run ops:analytics-audit --
           --output .artifacts/analytics/browser-audit.json
 

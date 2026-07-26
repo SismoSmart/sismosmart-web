@@ -6,30 +6,13 @@ This runbook covers the production GA4, Google Tag Manager, Microsoft Clarity, S
 
 ## Canonical configuration
 
-Public resource identifiers are not credentials. Their canonical source is `config/analytics.json` and matching GitHub repository variables:
-
-- `NEXT_PUBLIC_GA_ID`
-- `NEXT_PUBLIC_GTM_ID`
-- `NEXT_PUBLIC_CLARITY_ID`
-- `GOOGLE_ANALYTICS_ACCOUNT_ID`
-- `GOOGLE_ANALYTICS_PROPERTY_ID`
-- `GOOGLE_ANALYTICS_WEB_STREAM_ID`
-- `GOOGLE_SEARCH_CONSOLE_SITE`
-- `CLARITY_PROJECT_ID`
-
-Environment values may override the committed public configuration for diagnostics. `npm run ops:status` reports the source of each value without printing unredacted identifiers.
+Public resource identifiers are not credentials. Their canonical public source is `config/analytics.json`. The read-only operations configuration is Doppler project `sismosmart-web`, config `prd_ops`; environment values from that config may override committed public identifiers for controlled diagnostics. `npm run ops:status` reports the source of each value without printing unredacted identifiers.
 
 Production and CI explicitly set `NEXT_PUBLIC_ANALYTICS_ENABLED=true`. The project has no staging target, so only production and local test traffic are relevant.
 
 ## Secret credentials
 
-The following remain GitHub secrets or local uncommitted environment values:
-
-- Google OAuth client secret
-- Google OAuth refresh token
-- service-account JSON or key path
-- Measurement Protocol API secret
-- Clarity export token
+Google OAuth refresh token credentials, optional service-account credentials, Measurement Protocol authentication, and Clarity credentials remain in Doppler `prd_ops`. GitHub stores only the config-scoped read-only bootstrap secret `DOPPLER_TOKEN_PRD_OPS`; it does not duplicate the individual analytics credential inventory.
 
 Use read-only Google scopes for routine status and audit operations. Edit or publish scopes are only appropriate for an explicit administrative operation. Rotate OAuth client secrets and refresh tokens after suspected exposure, operator removal, or at least annually. Revoke the old token only after the replacement passes `ops:ga`, `ops:gtm`, and `ops:search-console` status checks.
 
@@ -74,7 +57,7 @@ npm run ops:clarity -- status
 npm run ops:analytics-audit -- --base-url https://sismosmart.com --output .artifacts/analytics-observability.json
 ```
 
-The `Analytics Observability` GitHub workflow runs manually, weekly, and after a successful production deployment. It:
+The `Analytics Observability` GitHub workflow runs manually, weekly, and after a successful production deployment. It installs the pinned official Doppler CLI action, validates the names-only `prd_ops` inventory, and executes every operational command with explicit `--project sismosmart-web --config prd_ops` selection. It:
 
 1. validates GA4, GTM, Search Console, and Clarity resource access;
 2. checks all six locales with a real Chrome browser;
@@ -130,5 +113,5 @@ If analytics or consent behavior regresses:
 1. Set `NEXT_PUBLIC_ANALYTICS_ENABLED=false` for the affected build and redeploy. This removes the consent component and all application-controlled analytics loaders.
 2. Disable the affected tag in GTM if the defect is container-side.
 3. Roll back the production release through the transactional deploy workflow if the defect is application-side.
-4. Restore the previous `config/analytics.json` and workflow variable mapping through a reviewed PR.
+4. Restore the previous `config/analytics.json` or reviewed `prd_ops` key ownership through the appropriate rollback path; do not copy individual credentials back into GitHub.
 5. Re-run `Analytics Observability` before re-enabling analytics.

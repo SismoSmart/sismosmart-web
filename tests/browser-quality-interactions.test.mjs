@@ -64,6 +64,8 @@ test("navigation scenario preserves paths, wait budget, success evidence, and cl
     url: () => "http://127.0.0.1:3000/en/product",
     waitForFunction: async (_callback, options) =>
       calls.push(["wait", options]),
+    waitForSelector: async (selector, options) =>
+      calls.push(["wait-selector", selector, options]),
   };
 
   const result = await runNavigationScenario({
@@ -92,6 +94,11 @@ test("navigation scenario preserves paths, wait budget, success evidence, and cl
     ],
     ["wait", { timeout: 15_000 }],
     ["click", "/en/product"],
+    [
+      "wait-selector",
+      '[data-locale-switch="tr"]',
+      { timeout: 15_000 },
+    ],
     ["eval", '[data-locale-switch="tr"]'],
     ["close"],
   ]);

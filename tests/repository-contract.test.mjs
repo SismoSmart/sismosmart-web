@@ -322,11 +322,19 @@ test("analytics observability uses canonical public config and fail-closed conse
     consent.indexOf("if (config.gtmId)") < consent.indexOf("if (config.gaId)"),
     "GTM must own the primary production loading path",
   );
-  assert.ok(consent.includes('window.gtag("config", config.gaId'));
+  const gtmBranch = consent.match(
+    /if \(config\.gtmId\) \{([\s\S]*?)\n      return;\n    \}/,
+  )?.[1];
+  assert.ok(gtmBranch, "GTM loading branch must remain explicit");
+  assert.doesNotMatch(
+    gtmBranch,
+    /window\.gtag\("config"/,
+    "GTM owns the page-view configuration and must not be duplicated by direct gtag config",
+  );
   assert.match(
     consent,
-    /if \(config\.gtmId\) \{[\s\S]*?if \(config\.gaId\) \{[\s\S]*?window\.gtag\("js", new Date\(\)\);[\s\S]*?window\.gtag\("config", config\.gaId/,
-    "GTM+GA must initialize gtag before configuring the measurement ID",
+    /if \(config\.gaId\) \{[\s\S]*?window\.gtag\("js", new Date\(\)\);[\s\S]*?window\.gtag\("config", config\.gaId,[\s\S]*?send_page_view: true/,
+    "GA-only fallback must retain its direct page-view configuration",
   );
   assert.match(formScript, /sismosmart_form_success/);
   assert.ok(formScript.includes("analytics?.track"));

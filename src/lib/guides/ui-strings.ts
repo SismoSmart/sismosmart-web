@@ -1,22 +1,24 @@
 import type { GuideLocale } from "@/lib/guides/types";
 
 export interface GuideUiStrings {
-  home: string;
-  guides: string;
-  published: string;
-  updated: string;
-  keyTakeaways: string;
-  limitations: string;
-  sismosmartFit: string;
-  relatedGlossaryTerms: string;
-  relatedGuides: string;
-  references: string;
-  product: string;
-  technology: string;
-  howItWorks: string;
-  faq: string;
-  glossary: string;
-  pilotProgram: string;
+  readonly home: string;
+  readonly guides: string;
+  readonly published: string;
+  readonly updated: string;
+  readonly keyTakeaways: string;
+  readonly limitations: string;
+  readonly sismosmartFit: string;
+  readonly relatedGlossaryTerms: string;
+  readonly relatedGuides: string;
+  readonly references: string;
+  readonly product: string;
+  readonly technology: string;
+  readonly howItWorks: string;
+  readonly faq: string;
+  readonly glossary: string;
+  readonly pilotProgram: string;
+  readonly breadcrumb: string;
+  readonly safetyNotice: string;
 }
 
 const uiStringsByLocale: Record<GuideLocale, GuideUiStrings> = {
@@ -37,6 +39,8 @@ const uiStringsByLocale: Record<GuideLocale, GuideUiStrings> = {
     faq: "FAQ",
     glossary: "Glossary",
     pilotProgram: "Pilot program",
+    breadcrumb: "Breadcrumb",
+    safetyNotice: "Safety notice",
   },
   tr: {
     home: "Ana sayfa",
@@ -55,8 +59,14 @@ const uiStringsByLocale: Record<GuideLocale, GuideUiStrings> = {
     faq: "SSS",
     glossary: "Sözlük",
     pilotProgram: "Pilot program",
+    breadcrumb: "Ekmek kırıntıları",
+    safetyNotice: "Güvenlik notu",
   },
 };
+
+Object.freeze(uiStringsByLocale.en);
+Object.freeze(uiStringsByLocale.tr);
+Object.freeze(uiStringsByLocale);
 
 export function getGuideUiStrings(locale: GuideLocale): GuideUiStrings {
   return uiStringsByLocale[locale];

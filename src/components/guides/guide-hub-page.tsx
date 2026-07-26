@@ -1,5 +1,5 @@
 import { getLocalizedHref } from "@/lib/site";
-import { getGuides, getGuideCanonicalPath } from "@/lib/guides/catalog";
+import { getGuideCanonicalPath, getGuidesByCategory } from "@/lib/guides/catalog";
 import type { GuideHubCopy, GuideLocale } from "@/lib/guides/types";
 import { getGuideUiStrings } from "@/lib/guides/ui-strings";
 
@@ -8,21 +8,20 @@ type GuideHubPageProps = {
   hub: GuideHubCopy;
 };
 
-const commercialCount = 4;
+
 
 export function GuideHubPage({ locale, hub }: GuideHubPageProps) {
-  const guides = getGuides(locale);
-  const commercialGuides = guides.slice(0, commercialCount);
-  const technicalGuides = guides.slice(commercialCount);
+  const commercialGuides = getGuidesByCategory(locale, "commercial");
+  const technicalGuides = getGuidesByCategory(locale, "technical");
   const ui = getGuideUiStrings(locale);
 
   return (
-    <main className="flex min-w-0 flex-1 flex-col gap-12 overflow-x-hidden pb-16 pt-8 sm:gap-16 sm:pt-10" id="content">
+    <main className="flex min-w-0 flex-1 flex-col gap-12 overflow-x-hidden pb-16 pt-8 sm:gap-16 sm:pt-10" id="content" aria-labelledby="guide-hub-title">
       <section className="max-w-3xl space-y-6">
         <p className="text-sm font-semibold uppercase tracking-normal text-[var(--primary-600)]">
           {hub.eyebrow}
         </p>
-        <h1 className="max-w-full break-words font-heading text-3xl leading-tight tracking-normal text-fg sm:text-5xl">
+        <h1 id="guide-hub-title" className="max-w-full break-words font-heading text-3xl leading-tight tracking-normal text-fg sm:text-5xl">
           {hub.h1}
         </h1>
         <p className="max-w-2xl text-lg leading-8 text-fg-muted">

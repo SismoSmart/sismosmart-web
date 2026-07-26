@@ -15,6 +15,8 @@ export const guideTranslationKeys = [
 ] as const;
 export type GuideTranslationKey = (typeof guideTranslationKeys)[number];
 
+export type GuideCategory = "commercial" | "technical";
+
 export type GuideReference = {
   label: string;
   organization: string;

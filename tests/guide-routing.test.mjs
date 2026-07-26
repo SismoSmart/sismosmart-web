@@ -13,13 +13,15 @@ function readText(relativePath) {
   return fs.readFileSync(path.join(rootDir, relativePath), "utf8");
 }
 
-import { isGuideLocale } from "../src/lib/guides/types.ts";
+import { isGuideLocale, guideTranslationKeys } from "../src/lib/guides/types.ts";
 
 import {
   getGuideBySlug,
   getGuideByTranslationKey,
   getGuideCanonicalPath,
   getGuideMarkdownPath,
+  getGuides,
+  getGuidesByCategory,
 } from "../src/lib/guides/catalog.ts";
 
 import { getGuideUiStrings } from "../src/lib/guides/ui-strings.ts";
@@ -35,6 +37,8 @@ import {
   buildGuideHubMetadata,
   buildGuideMetadata,
 } from "../src/lib/guides/metadata.ts";
+
+import { partitionGuideSections } from "../src/lib/guides/presentation.ts";
 
 test("no concrete locale route directories exist under src/app", () => {
   const appDir = path.join(rootDir, "src", "app");
@@ -202,15 +206,39 @@ test("hub component source has semantic structure", () => {
   assert.match(source, /href/, "Hub must contain ordinary anchor links");
 });
 
+test("commercial and technical translation keys are explicit and disjoint", () => {
+  for (const locale of ["en", "tr"]) {
+    const commercial = getGuidesByCategory(locale, "commercial");
+    const technical = getGuidesByCategory(locale, "technical");
+    assert.equal(commercial.length, 4, `Commercial guides count for ${locale}`);
+    assert.equal(technical.length, 2, `Technical guides count for ${locale}`);
+    const commercialKeys = commercial.map(g => g.translationKey);
+    const technicalKeys = technical.map(g => g.translationKey);
+    for (const key of commercialKeys) {
+      assert.ok(!technicalKeys.includes(key), `Key ${key} should not be in both categories`);
+    }
+    const allKeys = [...commercialKeys, ...technicalKeys];
+    assert.equal(allKeys.length, 6, `Total guides for ${locale} should be 6`);
+    for (const key of guideTranslationKeys) {
+      assert.ok(allKeys.includes(key), `Key ${key} missing from categories`);
+    }
+  }
+});
+
 test("detail component source has semantic structure", () => {
   const source = readText("src/components/guides/guide-detail-page.tsx");
   assert.match(source, /<main[\s\S]*id="content"/, "Detail must have <main id=\"content\">");
   assert.match(source, /<article/, "Detail must have <article>");
   assert.match(source, /<h1/, "Detail must have at least one h1");
   assert.match(source, /<time/, "Detail must have <time> element");
-  assert.match(source, /rel=["']noreferrer["']/, "Detail must have rel=noreferrer references");
+  assert.match(source, /rel=["']noopener noreferrer["']/, "Detail must have rel=noopener noreferrer references");
   assert.doesNotMatch(source, /["']use client["']/, "Detail must not use client directive");
   assert.match(source, /href/, "Detail must contain ordinary anchor links");
+});
+
+test("detail references use rel=noopener noreferrer", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  assert.match(source, /rel=["']noopener noreferrer["']/, "References must have rel=\"noopener noreferrer\"");
 });
 
 test("detail component source renders safety notice", () => {
@@ -220,6 +248,43 @@ test("detail component source renders safety notice", () => {
     /safetyNotice/,
     "Detail component must render the safetyNotice field",
   );
+});
+
+test("detail safety aside has aria-labelledby and sr-only heading", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  assert.match(source, /<aside aria-labelledby="guide-safety-title"/, "Safety section must be aside with aria-labelledby");
+  assert.match(source, /<h2 id="guide-safety-title" className="sr-only"/, "Safety heading must be sr-only");
+});
+
+test("partitionGuideSections removes limitations heading and preserves paragraphs", () => {
+  for (const locale of ["en", "tr"]) {
+    const ui = getGuideUiStrings(locale);
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const { contentSections, limitationParagraphs } = partitionGuideSections(guide.sections, ui.limitations);
+      for (const section of contentSections) {
+        assert.notEqual(section.heading, ui.limitations, `Limitations heading should not appear in contentSections for ${guide.translationKey}`);
+      }
+      const originalParagraphs = guide.sections.flatMap(s => s.paragraphs);
+      const resultParagraphs = [...contentSections.flatMap(s => s.paragraphs), ...limitationParagraphs];
+      const sortedOriginal = [...originalParagraphs].sort();
+      const sortedResult = [...resultParagraphs].sort();
+      assert.deepEqual(sortedResult, sortedOriginal, `Paragraphs must be preserved for ${guide.translationKey} in ${locale}`);
+    }
+  }
+});
+
+test("detail component uses partitionGuideSections helper", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  assert.match(source, /import.*partitionGuideSections/, "Detail component must import partitionGuideSections");
+  assert.match(source, /contentSections\.map/, "Detail component must render contentSections");
+});
+
+test("detail CTA wrapper is a div not a section", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  const ctaMatch = source.match(/<div className="space-y-3">[\s\S]*?<a[\s\S]*?{guide\.cta\.label}[\s\S]*?<\/div>/);
+  assert.ok(ctaMatch, "CTA wrapper must be a div");
+  assert.doesNotMatch(ctaMatch[0], /<section/, "CTA wrapper must not be a section");
 });
 
 test("guide-links component source renders ordinary anchors", () => {
@@ -267,7 +332,7 @@ test("hub route links to localized product, technology, how-it-works, FAQ, gloss
 test("detail component renders references with visible organization names", () => {
   const source = readText("src/components/guides/guide-detail-page.tsx");
   assert.match(source, /references/, "Detail must render references");
-  assert.match(source, /rel=["']noreferrer["']/, "References must have rel=noreferrer");
+  assert.match(source, /rel=["']noopener noreferrer["']/, "References must have rel=noopener noreferrer");
   assert.match(source, /organization/, "Detail must display organization names");
 });
 
@@ -298,20 +363,29 @@ test("routing.ts source validates locale against guideLocales", () => {
   );
 });
 
-test("detail breadcrumb Guides link uses getLocalizedHref for hub, not getGuideCanonicalPath", () => {
+test("detail breadcrumb nav uses getLocalizedHref and localized label", () => {
   const source = readText("src/components/guides/guide-detail-page.tsx");
-  const guidesBreadcrumbPattern = /Guides[\s\S]*?<\/a>/;
-  const match = source.match(guidesBreadcrumbPattern);
-  assert.ok(match, "Detail must render a Guides breadcrumb link");
-  const linkHtml = match[0];
-  assert.ok(
-    /getLocalizedHref\(.*["']\/guides["']\)/.test(source),
-    "Breadcrumb Guides href must use getLocalizedHref(locale, '/guides')",
-  );
-  assert.ok(
-    !(/href=\{getGuideCanonicalPath\(.*slug/.test(linkHtml)),
-    "Guides breadcrumb must not use getGuideCanonicalPath for the hub link",
-  );
+  const navMatch = source.match(/<nav[\s\S]*?<\/nav>/);
+  assert.ok(navMatch, "Detail must have a breadcrumb nav");
+  const navHtml = navMatch[0];
+  assert.match(navHtml, /aria-label=\{ui\.breadcrumb\}/, "Breadcrumb nav must have aria-label={ui.breadcrumb}");
+  assert.match(navHtml, /getLocalizedHref\(.*["']\/guides["']\)/, "Breadcrumb Guides href must use getLocalizedHref");
+  assert.match(navHtml, /\{ui\.guides\}/, "Breadcrumb must display ui.guides");
+  assert.doesNotMatch(navHtml, /getGuideCanonicalPath/, "Breadcrumb nav must not use getGuideCanonicalPath");
+});
+
+test("detail breadcrumb current page has aria-current", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  const navMatch = source.match(/<nav[\s\S]*?<\/nav>/);
+  assert.ok(navMatch, "Detail must have a breadcrumb nav");
+  const navHtml = navMatch[0];
+  assert.match(navHtml, /aria-current="page"/, "Current page breadcrumb must have aria-current=\"page\"");
+});
+
+test("detail h1 has id guide-title and article has aria-labelledby", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  assert.match(source, /<h1 id="guide-title"/, "h1 must have id=\"guide-title\"");
+  assert.match(source, /aria-labelledby="guide-title"/, "article must have aria-labelledby=\"guide-title\"");
 });
 
 test("getGuideUiStrings returns localized strings for both EN and TR", () => {
@@ -352,12 +426,37 @@ test("getGuideUiStrings returns localized strings for both EN and TR", () => {
   assert.equal(tr.glossary, "Sözlük");
   assert.equal(en.pilotProgram, "Pilot program");
   assert.equal(tr.pilotProgram, "Pilot program");
+  assert.equal(en.breadcrumb, "Breadcrumb");
+  assert.equal(tr.breadcrumb, "Ekmek kırıntıları");
+  assert.equal(en.safetyNotice, "Safety notice");
+  assert.equal(tr.safetyNotice, "Güvenlik notu");
 });
 
-test("getGuideUiStrings returns the same object reference for same locale (immutable)", () => {
+test("getGuideUiStrings returns frozen singleton and resists mutation", () => {
+  const en = getGuideUiStrings("en");
+  const tr = getGuideUiStrings("tr");
   const a = getGuideUiStrings("en");
   const b = getGuideUiStrings("en");
   assert.equal(a, b, "getGuideUiStrings should return a cached singleton per locale");
+  assert.ok(Object.isFrozen(en), "EN locale object should be frozen");
+  assert.ok(Object.isFrozen(tr), "TR locale object should be frozen");
+  // Mutation attempts should throw
+  assert.throws(() => { en.home = "HACKED"; }, TypeError);
+  assert.throws(() => { tr.home = "HACKED"; }, TypeError);
+  // Values remain unchanged after mutation attempts
+  assert.equal(en.home, "Home");
+  assert.equal(tr.home, "Ana sayfa");
+});
+
+test("getGuideUiStrings locale map is frozen", async () => {
+  const { getGuideUiStrings: fn } = await import("../src/lib/guides/ui-strings.ts");
+  // Access the module's internal map via the function's return values; we cannot directly access the map.
+  // Instead, we test that the function returns the same frozen objects for each locale.
+  const locales = ["en", "tr"];
+  for (const locale of locales) {
+    const obj = fn(locale);
+    assert.ok(Object.isFrozen(obj), `Locale ${locale} object should be frozen`);
+  }
 });
 
 test("getGuideUiStrings is a pure function with all required keys", () => {
@@ -367,9 +466,51 @@ test("getGuideUiStrings is a pure function with all required keys", () => {
     "home", "guides", "published", "updated", "keyTakeaways", "limitations",
     "sismosmartFit", "relatedGlossaryTerms", "relatedGuides", "references",
     "product", "technology", "howItWorks", "faq", "glossary", "pilotProgram",
+    "breadcrumb", "safetyNotice",
   ];
   for (const key of requiredKeys) {
     assert.ok(key in en, `EN string map missing key: ${key}`);
     assert.ok(key in tr, `TR string map missing key: ${key}`);
   }
+});
+
+test("getGuideByTranslationKey returns guides for all locale/key combinations", () => {
+  for (const locale of ["en", "tr"]) {
+    for (const key of guideTranslationKeys) {
+      const guide = getGuideByTranslationKey(locale, key);
+      assert.ok(guide, `Guide must exist for locale ${locale} and key ${key}`);
+      assert.equal(guide.locale, locale, `Guide locale must match for ${key}`);
+      assert.equal(guide.translationKey, key, `Guide translationKey must match for ${key}`);
+    }
+  }
+});
+
+test("getGuideByTranslationKey throws descriptive error for missing key", () => {
+  assert.throws(
+    () => getGuideByTranslationKey("en", "nonexistent-key"),
+    /Guide translation key "nonexistent-key" not found in catalog/,
+    "Should throw descriptive error for missing key"
+  );
+});
+
+test("getGuideByTranslationKey throws descriptive error for missing locale", () => {
+  assert.throws(
+    () => getGuideByTranslationKey("es", "building-seismic-monitoring-device"),
+    /Guide translation key "building-seismic-monitoring-device" missing for locale "es"/,
+    "Should throw descriptive error for missing locale"
+  );
+});
+
+test("catalog source does not use unsafe Record casts", () => {
+  const source = readText("src/lib/guides/catalog.ts");
+  assert.doesNotMatch(
+    source,
+    /\{\} as Record<GuideLocale, GuideContent>/,
+    "Catalog must not use unsafe Record cast for guidesByKey"
+  );
+  assert.doesNotMatch(
+    source,
+    /Object\.keys\(guidesByKey\) as GuideTranslationKey\[\]/,
+    "Catalog must not use Object.keys cast for guidesByKey iteration"
+  );
 });

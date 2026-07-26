@@ -2,6 +2,7 @@ import { getLocalizedHref } from "@/lib/site";
 import type { GuideContent, GuideLocale } from "@/lib/guides/types";
 import { GuideLinks } from "@/components/guides/guide-links";
 import { getGuideUiStrings } from "@/lib/guides/ui-strings";
+import { partitionGuideSections } from "@/lib/guides/presentation";
 
 type GuideDetailPageProps = {
   locale: GuideLocale;
@@ -10,11 +11,12 @@ type GuideDetailPageProps = {
 
 export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
   const ui = getGuideUiStrings(locale);
+  const { contentSections, limitationParagraphs } = partitionGuideSections(guide.sections, ui.limitations);
 
   return (
     <main className="flex min-w-0 flex-1 flex-col gap-12 overflow-x-hidden pb-16 pt-8 sm:gap-16 sm:pt-10" id="content">
-      <article className="max-w-3xl space-y-10">
-        <nav className="space-y-2 text-sm text-fg-muted">
+      <article className="max-w-3xl space-y-10" aria-labelledby="guide-title">
+        <nav className="space-y-2 text-sm text-fg-muted" aria-label={ui.breadcrumb}>
           <a className="hover:text-[var(--primary-600)]" href={getLocalizedHref(locale, "/")}>
             {ui.home}
           </a>
@@ -23,14 +25,14 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
             {ui.guides}
           </a>
           <span aria-hidden="true"> / </span>
-          <span className="text-fg">{guide.title}</span>
+          <span className="text-fg" aria-current="page">{guide.title}</span>
         </nav>
 
         <header className="space-y-4">
           <p className="text-sm font-semibold uppercase tracking-normal text-[var(--primary-600)]">
             {guide.eyebrow}
           </p>
-          <h1 className="max-w-full break-words font-heading text-3xl leading-tight tracking-normal text-fg sm:text-5xl">
+          <h1 id="guide-title" className="max-w-full break-words font-heading text-3xl leading-tight tracking-normal text-fg sm:text-5xl">
             {guide.h1}
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-fg-muted">
@@ -55,7 +57,7 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
           </ul>
         </section>
 
-        {guide.sections.map((section) => (
+        {contentSections.map((section) => (
           <section key={section.heading} className="space-y-4">
             <h2 className="font-heading text-2xl tracking-normal text-fg">{section.heading}</h2>
             {section.paragraphs.map((paragraph) => (
@@ -78,6 +80,11 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
 
         <section className="space-y-4">
           <h2 className="font-heading text-2xl tracking-normal text-fg">{ui.limitations}</h2>
+          {limitationParagraphs.map((paragraph) => (
+            <p key={paragraph} className="text-base leading-7 text-fg-muted">
+              {paragraph}
+            </p>
+          ))}
           <ul className="space-y-3">
             {guide.limitations.map((limitation) => (
               <li key={limitation} className="flex gap-3 text-base leading-7 text-fg-muted">
@@ -127,7 +134,7 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
                 <a
                   className="text-[var(--primary-600)] hover:underline"
                   href={reference.url}
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   target="_blank"
                 >
                   {reference.label}
@@ -140,11 +147,12 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
           </ul>
         </section>
 
-        <section className="rounded-lg border border-amber/30 bg-surface-2 px-5 py-5 text-sm leading-6 text-fg-muted">
+        <aside aria-labelledby="guide-safety-title" className="rounded-lg border border-amber/30 bg-surface-2 px-5 py-5 text-sm leading-6 text-fg-muted">
+          <h2 id="guide-safety-title" className="sr-only">{ui.safetyNotice}</h2>
           <p>{guide.safetyNotice}</p>
-        </section>
+        </aside>
 
-        <section className="space-y-3">
+        <div className="space-y-3">
           <a
             className="inline-flex rounded-full border border-[var(--primary-600)] bg-[var(--primary-600)] px-6 py-3 text-sm font-semibold text-white hover:bg-[var(--primary-700)]"
             href={getLocalizedHref(locale, guide.cta.href)}
@@ -152,7 +160,7 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
             {guide.cta.label}
           </a>
           <p className="text-sm text-fg-muted">{guide.cta.description}</p>
-        </section>
+        </div>
       </article>
     </main>
   );

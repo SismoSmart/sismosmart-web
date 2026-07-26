@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import test from "node:test";
 
 import {
   classifyLegacyEndpoint,
+  createUnconfiguredLegacyEndpoint,
   ipv4InAnyCidr,
   ipv4InCidr,
   normalizeHostnames,
@@ -79,6 +81,31 @@ test("legacy endpoint is acceptable only when DNS is clean and content is generi
     }).classification,
     "legacy-certificate-authorized",
   );
+});
+
+test("an absent retired origin produces a stable non-blocking report state", () => {
+  assert.deepEqual(createUnconfiguredLegacyEndpoint(), {
+    configured: false,
+    ipv4: null,
+    domainResponse: null,
+    randomResponse: null,
+    classification: {
+      acceptable: true,
+      classification: "not-configured",
+      reason: "No distinct legacy origin address is configured; endpoint-specific checks were skipped.",
+    },
+    dnsReferencesLegacy: null,
+  });
+});
+
+test("apex HTTPS audit accepts the permanent locale redirect", async () => {
+  const config = JSON.parse(
+    await fs.readFile(new URL("../config/dns-cutover.json", import.meta.url), "utf8"),
+  );
+  const apex = config.httpsChecks.find((check) => check.hostname === "sismosmart.com");
+
+  assert.ok(apex);
+  assert.ok(apex.allowedStatuses.includes(308));
 });
 
 test("check summaries fail only on error-severity failures", () => {

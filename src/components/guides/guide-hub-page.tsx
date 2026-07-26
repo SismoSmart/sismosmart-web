@@ -1,6 +1,7 @@
 import { getLocalizedHref } from "@/lib/site";
 import { getGuides, getGuideCanonicalPath } from "@/lib/guides/catalog";
 import type { GuideHubCopy, GuideLocale } from "@/lib/guides/types";
+import { getGuideUiStrings } from "@/lib/guides/ui-strings";
 
 type GuideHubPageProps = {
   locale: GuideLocale;
@@ -13,6 +14,7 @@ export function GuideHubPage({ locale, hub }: GuideHubPageProps) {
   const guides = getGuides(locale);
   const commercialGuides = guides.slice(0, commercialCount);
   const technicalGuides = guides.slice(commercialCount);
+  const ui = getGuideUiStrings(locale);
 
   return (
     <main className="flex min-w-0 flex-1 flex-col gap-12 overflow-x-hidden pb-16 pt-8 sm:gap-16 sm:pt-10" id="content">
@@ -81,32 +83,32 @@ export function GuideHubPage({ locale, hub }: GuideHubPageProps) {
         <ul className="space-y-3 text-sm">
           <li>
             <a className="text-[var(--primary-600)] hover:underline" href={getLocalizedHref(locale, "/product")}>
-              Product
+              {ui.product}
             </a>
           </li>
           <li>
             <a className="text-[var(--primary-600)] hover:underline" href={getLocalizedHref(locale, "/technology")}>
-              Technology
+              {ui.technology}
             </a>
           </li>
           <li>
             <a className="text-[var(--primary-600)] hover:underline" href={getLocalizedHref(locale, "/how-it-works")}>
-              How it works
+              {ui.howItWorks}
             </a>
           </li>
           <li>
             <a className="text-[var(--primary-600)] hover:underline" href={getLocalizedHref(locale, "/faq")}>
-              FAQ
+              {ui.faq}
             </a>
           </li>
           <li>
             <a className="text-[var(--primary-600)] hover:underline" href={getLocalizedHref(locale, "/glossary")}>
-              Glossary
+              {ui.glossary}
             </a>
           </li>
           <li>
             <a className="text-[var(--primary-600)] hover:underline" href={getLocalizedHref(locale, "/pilot-program")}>
-              Pilot program
+              {ui.pilotProgram}
             </a>
           </li>
         </ul>

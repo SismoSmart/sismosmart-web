@@ -1,7 +1,7 @@
 import { getLocalizedHref } from "@/lib/site";
-import { getGuideCanonicalPath } from "@/lib/guides/catalog";
 import type { GuideContent, GuideLocale } from "@/lib/guides/types";
 import { GuideLinks } from "@/components/guides/guide-links";
+import { getGuideUiStrings } from "@/lib/guides/ui-strings";
 
 type GuideDetailPageProps = {
   locale: GuideLocale;
@@ -9,16 +9,18 @@ type GuideDetailPageProps = {
 };
 
 export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
+  const ui = getGuideUiStrings(locale);
+
   return (
     <main className="flex min-w-0 flex-1 flex-col gap-12 overflow-x-hidden pb-16 pt-8 sm:gap-16 sm:pt-10" id="content">
       <article className="max-w-3xl space-y-10">
         <nav className="space-y-2 text-sm text-fg-muted">
           <a className="hover:text-[var(--primary-600)]" href={getLocalizedHref(locale, "/")}>
-            Home
+            {ui.home}
           </a>
           <span aria-hidden="true"> / </span>
-          <a className="hover:text-[var(--primary-600)]" href={getGuideCanonicalPath({ locale, slug: guide.slug } as GuideContent)}>
-            Guides
+          <a className="hover:text-[var(--primary-600)]" href={getLocalizedHref(locale, "/guides")}>
+            {ui.guides}
           </a>
           <span aria-hidden="true"> / </span>
           <span className="text-fg">{guide.title}</span>
@@ -37,12 +39,12 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
         </header>
 
         <div className="flex flex-wrap gap-4 text-sm text-fg-muted">
-          <time dateTime={guide.publishedAt}>Published {guide.publishedAt}</time>
-          <time dateTime={guide.updatedAt}>Updated {guide.updatedAt}</time>
+          <time dateTime={guide.publishedAt}>{ui.published} {guide.publishedAt}</time>
+          <time dateTime={guide.updatedAt}>{ui.updated} {guide.updatedAt}</time>
         </div>
 
         <section className="space-y-4">
-          <h2 className="font-heading text-2xl tracking-normal text-fg">Key takeaways</h2>
+          <h2 className="font-heading text-2xl tracking-normal text-fg">{ui.keyTakeaways}</h2>
           <ul className="space-y-3">
             {guide.keyTakeaways.map((takeaway) => (
               <li key={takeaway} className="flex gap-3 text-base leading-7 text-fg">
@@ -75,7 +77,7 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
         ))}
 
         <section className="space-y-4">
-          <h2 className="font-heading text-2xl tracking-normal text-fg">Limitations</h2>
+          <h2 className="font-heading text-2xl tracking-normal text-fg">{ui.limitations}</h2>
           <ul className="space-y-3">
             {guide.limitations.map((limitation) => (
               <li key={limitation} className="flex gap-3 text-base leading-7 text-fg-muted">
@@ -87,7 +89,7 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
         </section>
 
         <section className="space-y-4">
-          <h2 className="font-heading text-2xl tracking-normal text-fg">SismoSmart fit</h2>
+          <h2 className="font-heading text-2xl tracking-normal text-fg">{ui.sismosmartFit}</h2>
           {guide.sismosmartFit.map((paragraph) => (
             <p key={paragraph} className="text-base leading-7 text-fg-muted">
               {paragraph}
@@ -96,7 +98,7 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
         </section>
 
         <section className="space-y-4">
-          <h2 className="font-heading text-2xl tracking-normal text-fg">Related glossary terms</h2>
+          <h2 className="font-heading text-2xl tracking-normal text-fg">{ui.relatedGlossaryTerms}</h2>
           <ul className="space-y-2">
             {guide.relatedGlossaryTerms.map((term) => (
               <li key={term}>
@@ -114,11 +116,11 @@ export function GuideDetailPage({ locale, guide }: GuideDetailPageProps) {
         <GuideLinks
           locale={locale}
           translationKeys={guide.relatedGuides}
-          heading="Related guides"
+          heading={ui.relatedGuides}
         />
 
         <section className="space-y-4">
-          <h2 className="font-heading text-2xl tracking-normal text-fg">References</h2>
+          <h2 className="font-heading text-2xl tracking-normal text-fg">{ui.references}</h2>
           <ul className="space-y-3">
             {guide.references.map((reference) => (
               <li key={reference.url} className="text-base leading-7">

@@ -22,6 +22,8 @@ import {
   getGuideMarkdownPath,
 } from "../src/lib/guides/catalog.ts";
 
+import { getGuideUiStrings } from "../src/lib/guides/ui-strings.ts";
+
 import {
   getHubStaticParams,
   getDetailStaticParams,
@@ -294,4 +296,80 @@ test("routing.ts source validates locale against guideLocales", () => {
     /guideLocales|isGuideLocale/,
     "routing.ts must use guideLocales or isGuideLocale for validation",
   );
+});
+
+test("detail breadcrumb Guides link uses getLocalizedHref for hub, not getGuideCanonicalPath", () => {
+  const source = readText("src/components/guides/guide-detail-page.tsx");
+  const guidesBreadcrumbPattern = /Guides[\s\S]*?<\/a>/;
+  const match = source.match(guidesBreadcrumbPattern);
+  assert.ok(match, "Detail must render a Guides breadcrumb link");
+  const linkHtml = match[0];
+  assert.ok(
+    /getLocalizedHref\(.*["']\/guides["']\)/.test(source),
+    "Breadcrumb Guides href must use getLocalizedHref(locale, '/guides')",
+  );
+  assert.ok(
+    !(/href=\{getGuideCanonicalPath\(.*slug/.test(linkHtml)),
+    "Guides breadcrumb must not use getGuideCanonicalPath for the hub link",
+  );
+});
+
+test("getGuideUiStrings returns localized strings for both EN and TR", () => {
+  const en = getGuideUiStrings("en");
+  const tr = getGuideUiStrings("tr");
+  assert.equal(typeof en.home, "string");
+  assert.equal(typeof tr.home, "string");
+  assert.notEqual(en.home, tr.home);
+  assert.equal(en.home, "Home");
+  assert.equal(tr.home, "Ana sayfa");
+  assert.equal(en.guides, "Guides");
+  assert.equal(tr.guides, "Rehberler");
+  assert.equal(en.published, "Published");
+  assert.equal(tr.published, "Yayınlandı");
+  assert.equal(en.updated, "Updated");
+  assert.equal(tr.updated, "Güncellendi");
+  assert.equal(en.keyTakeaways, "Key takeaways");
+  assert.equal(tr.keyTakeaways, "Temel çıkarımlar");
+  assert.equal(en.limitations, "Limitations");
+  assert.equal(tr.limitations, "Sınırlamalar");
+  assert.equal(en.sismosmartFit, "SismoSmart fit");
+  assert.equal(tr.sismosmartFit, "SismoSmart bu tabloda nerede?");
+  assert.equal(en.relatedGlossaryTerms, "Related glossary terms");
+  assert.equal(tr.relatedGlossaryTerms, "İlgili sözlük terimleri");
+  assert.equal(en.relatedGuides, "Related guides");
+  assert.equal(tr.relatedGuides, "İlgili rehberler");
+  assert.equal(en.references, "References");
+  assert.equal(tr.references, "Kaynaklar");
+  assert.equal(en.product, "Product");
+  assert.equal(tr.product, "Ürün");
+  assert.equal(en.technology, "Technology");
+  assert.equal(tr.technology, "Teknoloji");
+  assert.equal(en.howItWorks, "How it works");
+  assert.equal(tr.howItWorks, "Nasıl çalışır");
+  assert.equal(en.faq, "FAQ");
+  assert.equal(tr.faq, "SSS");
+  assert.equal(en.glossary, "Glossary");
+  assert.equal(tr.glossary, "Sözlük");
+  assert.equal(en.pilotProgram, "Pilot program");
+  assert.equal(tr.pilotProgram, "Pilot program");
+});
+
+test("getGuideUiStrings returns the same object reference for same locale (immutable)", () => {
+  const a = getGuideUiStrings("en");
+  const b = getGuideUiStrings("en");
+  assert.equal(a, b, "getGuideUiStrings should return a cached singleton per locale");
+});
+
+test("getGuideUiStrings is a pure function with all required keys", () => {
+  const en = getGuideUiStrings("en");
+  const tr = getGuideUiStrings("tr");
+  const requiredKeys = [
+    "home", "guides", "published", "updated", "keyTakeaways", "limitations",
+    "sismosmartFit", "relatedGlossaryTerms", "relatedGuides", "references",
+    "product", "technology", "howItWorks", "faq", "glossary", "pilotProgram",
+  ];
+  for (const key of requiredKeys) {
+    assert.ok(key in en, `EN string map missing key: ${key}`);
+    assert.ok(key in tr, `TR string map missing key: ${key}`);
+  }
 });

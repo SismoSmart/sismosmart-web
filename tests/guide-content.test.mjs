@@ -95,7 +95,7 @@ test("no guide contains prohibited claims", () => {
     .flatMap(getGuides)
     .map(JSON.stringify)
     .join("\n");
-  for (const pattern of [
+  const forbiddenPatterns = [
     /predicts? earthquakes?/i,
     /depremi (?:önceden )?tahmin/i,
     /certifies? (?:a )?building (?:as )?safe/i,
@@ -106,6 +106,8 @@ test("no guide contains prohibited claims", () => {
     /resm[iî] erken uyarı/i,
     /proven accuracy/i,
     /kanıtlanmış doğruluk/i,
-  ])
+  ];
+  for (const pattern of forbiddenPatterns)
     assert.doesNotMatch(publicCopy, pattern);
+  assert.doesNotMatch(publicCopy, /[/\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/u);
 });

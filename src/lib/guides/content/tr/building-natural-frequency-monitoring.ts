@@ -50,7 +50,7 @@ export const buildingNaturalFrequencyMonitoringTr: GuideContent = {
     {
       heading: "Sınırlamalar",
       paragraphs: [
-        "Frekans verisi tek başına bir değişikliğin nedenini belirleyemez. Birden fazla faktör benzer kaymalar üretebilir. Frekans trendlerini yorumlamak, binanın inşaatı, bakım geçmişi ve çevresel bağlamı hakkında ayrıntılı bilgi gerektirir. Tek bir frekans ölçümü veya bir dizi ölçüme bile yapısal sağlık teşhisi构成 etmez.",
+        "Frekans verisi tek başına bir değişikliğin nedenini belirleyemez. Birden fazla faktör benzer kaymalar üretebilir. Frekans trendlerini yorumlamak, binanın inşaatı, bakım geçmişi ve çevresel bağlamı hakkında ayrıntılı bilgi gerektirir. Tek bir frekans ölçümü veya bir dizi ölçüm bile yapısal sağlık teşhisi oluşturmaz.",
       ],
     },
   ],

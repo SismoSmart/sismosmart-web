@@ -729,7 +729,7 @@ test("browser runner is portable, animation-stable, and retry-safe", () => {
   );
 });
 
-test("vulnerable brace-expansion paths are pinned to patched releases", () => {
+test("vulnerable transitive dependency paths use patched compatibility releases", () => {
   const compareVersions = (left, right) => {
     const leftParts = left.split(".").map(Number);
     const rightParts = right.split(".").map(Number);
@@ -739,33 +739,62 @@ test("vulnerable brace-expansion paths are pinned to patched releases", () => {
     }
     return 0;
   };
-  const isPatched = (version) => {
-    const major = Number(version.split(".")[0]);
-    if (major < 2) return compareVersions(version, "1.1.16") >= 0;
-    if (major === 2) return compareVersions(version, "2.1.2") >= 0;
-    if (major < 5) return false;
-    if (major === 5) return compareVersions(version, "5.0.7") >= 0;
-    return true;
-  };
 
   const packageJson = readJson("package.json");
-  const override3 =
-    packageJson.overrides?.["minimatch@3.1.5"]?.["brace-expansion"];
-  const override10 =
-    packageJson.overrides?.["minimatch@10.2.5"]?.["brace-expansion"];
-  assert.ok(override3 && isPatched(override3), `Unsafe 1.x override: ${override3}`);
-  assert.ok(override10 && isPatched(override10), `Unsafe 5.x override: ${override10}`);
+  assert.equal(
+    compareVersions(packageJson.overrides?.postcss || "0.0.0", "8.5.18") >= 0,
+    true,
+    `Unsafe postcss override: ${packageJson.overrides?.postcss}`,
+  );
+  assert.equal(
+    packageJson.dependencies?.["brace-expansion"],
+    "file:vendor/brace-expansion-compat",
+  );
+  assert.equal(
+    packageJson.overrides?.minimatch?.["brace-expansion"],
+    "$brace-expansion",
+  );
+  assert.equal(packageJson.overrides?.["minimatch@3.1.5"], undefined);
+  assert.equal(packageJson.overrides?.["minimatch@10.2.5"], undefined);
+
+  const compatPackage = readJson("vendor/brace-expansion-compat/package.json");
+  assert.equal(compatPackage.name, "brace-expansion");
+  assert.equal(compareVersions(compatPackage.version, "5.0.8") >= 0, true);
+  assert.equal(
+    compatPackage.dependencies?.["brace-expansion-upstream"],
+    "npm:brace-expansion@5.0.8",
+  );
+
+  const compatModule = readText("vendor/brace-expansion-compat/index.js");
+  assert.match(compatModule, /require\("brace-expansion-upstream"\)/);
+  assert.match(compatModule, /module\.exports = expand/);
+  assert.match(compatModule, /module\.exports\.expand = expand/);
 
   const lock = readJson("package-lock.json");
-  const versions = Object.entries(lock.packages || {})
+  const braceVersions = Object.values(lock.packages || {})
+    .filter((metadata) => metadata.name === "brace-expansion" && metadata.version)
+    .map((metadata) => metadata.version);
+  assert.ok(braceVersions.length > 0, "No brace-expansion instances found in lockfile");
+  for (const version of braceVersions) {
+    assert.equal(
+      compareVersions(version, "5.0.8") >= 0,
+      true,
+      `Vulnerable brace-expansion version found: ${version}`,
+    );
+  }
+
+  const postcssVersions = Object.entries(lock.packages || {})
     .filter(
       ([name]) =>
-        name === "node_modules/brace-expansion" ||
-        name.endsWith("/node_modules/brace-expansion"),
+        name === "node_modules/postcss" || name.endsWith("/node_modules/postcss"),
     )
     .map(([, metadata]) => metadata.version);
-  assert.ok(versions.length > 0, "No brace-expansion instances found in lockfile");
-  for (const version of versions) {
-    assert.equal(isPatched(version), true, `Vulnerable version found: ${version}`);
+  assert.ok(postcssVersions.length > 0, "No postcss instances found in lockfile");
+  for (const version of postcssVersions) {
+    assert.equal(
+      compareVersions(version, "8.5.18") >= 0,
+      true,
+      `Vulnerable postcss version found: ${version}`,
+    );
   }
 });

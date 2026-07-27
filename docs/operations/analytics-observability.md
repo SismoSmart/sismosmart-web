@@ -106,6 +106,25 @@ For a manual release review:
 
 A configured resource with an empty Realtime report means no recent traffic or delayed ingestion; it does not mean the resource is missing.
 
+## Search Console performance reporting
+
+The `performance` command provides a safe, read-only Search Console performance report through explicit Doppler project `sismosmart-web`, config `prd_ops`:
+
+```bash
+npm run ops:search-console -- performance [startDate] [endDate] [--compare]
+```
+
+The command:
+
+- runs through explicit Doppler project `sismosmart-web`, config `prd_ops`;
+- is read-only and uses only Search Analytics query calls (`webmasters.searchanalytics.query`);
+- prints aggregate safe output only (totals, non-brand metrics, top queries/pages/countries);
+- does not persist private reports to disk;
+- defaults to a complete 28-day window ending three days ago because Search Console data is commonly available after two to three days;
+- can compare against the immediately preceding equal-length period with `--compare`.
+
+The performance command never calls `sites.add`, `sitemaps.submit`, Site Verification mutation, URL Inspection, Indexing API, or any write method. It uses only the read-only `https://www.googleapis.com/auth/webmasters.readonly` OAuth scope.
+
 ## Rollback
 
 If analytics or consent behavior regresses:

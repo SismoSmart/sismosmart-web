@@ -884,3 +884,135 @@ test("vulnerable transitive dependency paths use patched compatibility releases"
     );
   }
 });
+
+
+test("Search Console performance library is pure and exports safe aggregation and date interfaces", () => {
+  const libPath = path.join(
+    rootDir,
+    "scripts/ops/search-console-performance-lib.mjs",
+  );
+  assert.ok(
+    fs.existsSync(libPath),
+    "search-console-performance-lib.mjs must exist",
+  );
+
+  const source = readText("scripts/ops/search-console-performance-lib.mjs");
+  for (const name of [
+    "normalizeSearchConsoleRows",
+    "isBrandQuery",
+    "parseSearchConsoleDate",
+    "resolvePerformancePeriod",
+    "getPreviousPerformancePeriod",
+    "summarizePerformance",
+  ]) {
+    assert.match(
+      source,
+      new RegExp(`export function ${name}`),
+      `${name} must be exported directly`,
+    );
+  }
+  assert.doesNotMatch(source, /googleapis|process\.env|node:fs|writeFile|appendFile/);
+  assert.match(source, /getUTCFullYear\(\)/);
+  assert.match(source, /Date\.UTC\(/);
+  assert.match(source, /formatUtcDate\(date\) !== value/);
+});
+
+test("Search Console CLI advertises the safe performance command", () => {
+  const source = readText("scripts/ops/search-console.mjs");
+
+  assert.match(
+    source,
+    /performance \[startDate\] \[endDate\] \[--compare\]/,
+  );
+  assert.match(source, /case "performance"/);
+  assert.match(source, /runPerformance\(firstArg, secondArg, options\.compare\)/);
+  assert.match(source, /search-console-performance-lib\.mjs/);
+});
+
+test("Search Console performance auth uses only the readonly Webmaster scope", () => {
+  const source = readText("scripts/ops/search-console.mjs");
+  const start = source.indexOf("async function runPerformance(");
+  const end = source.indexOf("\nasync function main()", start);
+  assert.ok(start >= 0 && end > start, "runPerformance block must be found");
+  const block = source.slice(start, end);
+
+  assert.match(
+    block,
+    /https:\/\/www\.googleapis\.com\/auth\/webmasters\.readonly/,
+  );
+  assert.doesNotMatch(block, /GOOGLE_SCOPES\.searchConsole\b/);
+  assert.doesNotMatch(block, /authMode|siteUrl\s*:/);
+});
+
+test("Search Analytics request keeps siteUrl top-level and only safe fields in requestBody", () => {
+  const source = readText("scripts/ops/search-console.mjs");
+  const start = source.indexOf("async function querySearchAnalytics(");
+  const end = source.indexOf("\nasync function queryPerformanceDataset(", start);
+  assert.ok(start >= 0 && end > start, "querySearchAnalytics block must be found");
+  const block = source.slice(start, end);
+
+  assert.match(block, /const requestBody = \{/);
+  assert.match(block, /searchType:\s*"web"/);
+  assert.match(block, /rowLimit:\s*25000/);
+  assert.match(
+    block,
+    /searchanalytics\.query\(\{\s*siteUrl:\s*site,\s*requestBody,\s*\}\)/s,
+  );
+  const bodyStart = block.indexOf("const requestBody = {");
+  const bodyEnd = block.indexOf("};", bodyStart);
+  assert.doesNotMatch(block.slice(bodyStart, bodyEnd), /siteUrl/);
+});
+
+test("Search Console performance requests totals, query, page, and country datasets only", () => {
+  const source = readText("scripts/ops/search-console.mjs");
+  const start = source.indexOf("async function queryPerformanceDataset(");
+  const end = source.indexOf("\nasync function runPerformance(", start);
+  assert.ok(start >= 0 && end > start, "queryPerformanceDataset block must be found");
+  const block = source.slice(start, end);
+
+  assert.equal(
+    (block.match(/querySearchAnalytics\(/g) || []).length,
+    4,
+    "each period must issue exactly four Search Analytics reads",
+  );
+  for (const dimensions of ["[]", '["query"]', '["page"]', '["country"]']) {
+    assert.ok(block.includes(dimensions), `${dimensions} query is missing`);
+  }
+  assert.doesNotMatch(block, /sites\.add|sitemaps\.submit|webResource|urlInspection|indexing/i);
+});
+
+test("Search Console performance path resolves safe dates, optional comparison, and prints only summary", () => {
+  const source = readText("scripts/ops/search-console.mjs");
+  const start = source.indexOf("async function runPerformance(");
+  const end = source.indexOf("\nasync function main()", start);
+  const block = source.slice(start, end);
+
+  assert.match(block, /resolvePerformancePeriod\(\{/);
+  assert.match(block, /getPreviousPerformancePeriod\(/);
+  assert.match(block, /compare === true \|\| compare === "true"/);
+  assert.match(block, /printJson\(\s*summarizePerformance\(\{/s);
+  assert.doesNotMatch(
+    block,
+    /sites\.add|sitemaps\.submit|webResource|urlInspection|indexing|writeFile|appendFile/i,
+  );
+  assert.doesNotMatch(block, /authMode|rawResponse|headers|credentials|token/i);
+});
+
+test("Search Console performance documentation preserves the Doppler and privacy boundary", () => {
+  const runbook = readText("docs/operations/analytics-observability.md");
+
+  for (const phrase of [
+    "sismosmart-web",
+    "prd_ops",
+    "read-only",
+    "Search Analytics query",
+    "28-day",
+    "three days",
+    "immediately preceding equal-length period",
+    "does not persist private reports",
+    "https://www.googleapis.com/auth/webmasters.readonly",
+  ]) {
+    assert.match(runbook, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  }
+  assert.doesNotMatch(runbook, /performance[^\n]*searchConsole OAuth scope/i);
+});

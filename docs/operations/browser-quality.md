@@ -12,6 +12,8 @@ The audit exercises representative English and Turkish routes at desktop and mob
 - `/en/product` and `/tr/product`;
 - `/en/contact`;
 - `/tr/pilot-program`;
+- `/en/guides`;
+- `/tr/guides/bina-deprem-sensoru-sismik-izleme`;
 - navigation from the English home page to the localized product page;
 - locale switching while preserving the current route;
 - cookie consent necessary-only selection and reset;

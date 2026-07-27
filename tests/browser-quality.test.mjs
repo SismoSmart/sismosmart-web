@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   browserQualityRoutes,
@@ -16,7 +19,13 @@ import {
   isAddressInUseFailure,
 } from "../scripts/test/browser-quality.mjs";
 
-test("browser route policy covers localized home, product, contact, and pilot pages", () => {
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+function readText(relativePath) {
+  return readFileSync(path.join(rootDir, relativePath), "utf8");
+}
+
+test("browser route policy covers commercial pages and bilingual guide routes", () => {
   assert.deepEqual(
     browserQualityRoutes.map(({ key, path }) => [key, path]),
     [
@@ -26,11 +35,25 @@ test("browser route policy covers localized home, product, contact, and pilot pa
       ["tr-product", "/tr/product"],
       ["en-contact", "/en/contact"],
       ["tr-pilot", "/tr/pilot-program"],
+      ["en-guides", "/en/guides"],
+      ["tr-guide-device", "/tr/guides/bina-deprem-sensoru-sismik-izleme"],
     ],
   );
   assert.equal(
     browserQualityRoutes.every((route) => ["en", "tr"].includes(route.locale)),
     true,
+  );
+});
+
+test("browser mobile policy remains limited to the existing home and product scenarios", () => {
+  const runner = readText("scripts/test/browser-quality.mjs");
+  assert.match(
+    runner,
+    /\["en-home", "tr-product"\]\.includes\(item\.key\)/,
+  );
+  assert.doesNotMatch(
+    runner,
+    /\["en-home", "tr-product", "en-guides"\]/,
   );
 });
 

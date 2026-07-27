@@ -931,7 +931,7 @@ git commit -m "feat: report search console performance safely"
 - Modify: `tests/browser-quality-page.test.mjs` only if article semantics need a focused assertion
 - Modify: `docs/superpowers/plans/2026-07-26-seo-topic-cluster.md` — check completed boxes and record evidence
 
-- [ ] **Step 1: Write the failing route-policy test**
+- [x] **Step 1: Write the failing route-policy test**
 
 Extend expected routes with:
 
@@ -942,11 +942,11 @@ Extend expected routes with:
 
 Keep mobile runs limited to the existing home/product subset unless layout evidence shows a need for one guide mobile run. If adding one, use `en-guides` only to bound CI duration.
 
-- [ ] **Step 2: Verify red and update browser route policy**
+- [x] **Step 2: Verify red and update browser route policy**
 
 Add the two routes to `browserQualityRoutes`. The existing page scenario must verify status 200, visible main/H1, no serious/critical axe violations, no duplicate IDs, and no horizontal overflow.
 
-- [ ] **Step 3: Run focused tests**
+- [x] **Step 3: Run focused tests**
 
 ```bash
 node --import ./tests/alias-loader.mjs --test \
@@ -961,7 +961,7 @@ node --import ./tests/alias-loader.mjs --test \
 
 Expected: PASS.
 
-- [ ] **Step 4: Run full static gates**
+- [x] **Step 4: Run full static gates**
 
 ```bash
 npm run lint
@@ -979,7 +979,7 @@ Expected:
 - no guide routes for the other four locales;
 - zero blocking dependency vulnerabilities.
 
-- [ ] **Step 5: Run representative HTTP checks on the production build**
+- [x] **Step 5: Run representative HTTP checks on the production build**
 
 Start `next start` on loopback and verify:
 
@@ -994,7 +994,7 @@ Start `next start` on loopback and verify:
 
 Check canonical, exact partial `hreflang`, Markdown alternate, Article JSON-LD, BreadcrumbList, dates, reference links, and safety notice.
 
-- [ ] **Step 6: Run pinned browser quality**
+- [x] **Step 6: Run pinned browser quality**
 
 Use the same analytics-enabled public IDs as CI, without printing them:
 
@@ -1005,11 +1005,11 @@ npm run test:browser
 
 Expected: all prior scenarios plus the two guide scenarios pass; form and consent evidence remains unchanged.
 
-- [ ] **Step 7: Scan the public diff**
+- [x] **Step 7: Scan the public diff**
 
 Reject additions matching private keys, bearer tokens, OAuth refresh tokens, private IPs, `/srv/`, `/home/`, Windows drive paths, private endpoints, raw Search Console responses, or credential-looking assignments.
 
-- [ ] **Step 8: Commit final validation changes**
+- [x] **Step 8: Commit final validation changes**
 
 ```bash
 git add scripts/test tests docs/superpowers/plans/2026-07-26-seo-topic-cluster.md
@@ -1017,6 +1017,18 @@ git commit -m "test: validate bilingual SEO guide cluster"
 ```
 
 ---
+
+#### Task 9 evidence
+
+- TDD route-policy RED: expected eight routes while the policy exposed six; exit 1.
+- Route-policy GREEN: 11/11 tests; guide routes added only to desktop coverage and the mobile filter remained `en-home` plus `tr-product`.
+- Focused guide/agent/SEO/browser contracts: 196/196 passing.
+- Full repository suite: 467/467 passing; lint and typecheck clean.
+- Analytics-enabled production build: 209/209 static pages, including two hubs and twelve guide details; no unsupported-locale guide routes.
+- Dependency audit: 0 vulnerabilities.
+- Loopback production checks: three representative HTML responses, two Markdown responses, and two negative 404 routes passed; canonical, EN/TR/x-default hreflang, Markdown alternate, Article/BreadcrumbList JSON-LD, dates, HTTPS references, safety notice, canonical `Link`, and `Accept` in `Vary` verified.
+- Pinned Chrome Headless Shell `150.0.7871.24`: 14 scenarios passed, including eight desktop routes, the existing two mobile routes, navigation, consent, contact form, and pilot form; zero blocking axe findings, duplicate IDs, or horizontal overflow.
+- Public branch diff scan: 7,364 added lines inspected; no credential, private-key, private-network, private-path, or secret-value finding.
 
 ### Task 10: Review, pull request, deploy, and production evidence
 

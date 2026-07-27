@@ -3,10 +3,10 @@ import { makeExtraPages } from "@/lib/page-content/extra-pages/shared";
 export const enExtraPages = makeExtraPages({
   technology: {
     eyebrow: "Technology",
-    metaTitle: "Technology: how SismoSmart measures",
+    metaTitle: "MEMS Sensors for Building Motion | SismoSmart",
     metaDescription:
-      "What's inside the device, how it tells real shaking from noise, and how the data turns into a report you can read. Written for engineers and curious readers.",
-    title: "What's inside the device, and how the data reaches you",
+      "Pre-launch technical overview of MEMS sensing, event buffering, and building-motion analysis; detection and performance remain subject to pilot validation.",
+    title: "How MEMS sensors measure building motion",
     description:
       "SismoSmart has one job: record how a building moves. Both the fast notification during the shaking and the report that follows come out of that same recording. This page explains how the recording is taken.",
     sections: [

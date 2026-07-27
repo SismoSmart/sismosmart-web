@@ -3,12 +3,12 @@ import type { BaseRoutePagesCopy } from "@/lib/page-copy";
 export const trPages: BaseRoutePagesCopy = {
   product: {
     meta: {
-      title: "SismoSmart cihazı",
+      title: "Bina Deprem Sensörü ve Sismik İzleme Cihazı | SismoSmart",
       description:
-        "Evinize veya iş yerinize taktığınız küçük bir sismik izleme cihazı. Binanın hareketini ölçer, deprem sırasında ne olduğunu kaydeder.",
+        "Evler ve küçük binalar için lansman öncesi bina deprem sensörü ve sismik izleme cihazı; sarsıntı sırasında hareketi kaydetmek ve uzman incelemesini desteklemek için tasarlanıyor.",
     },
     eyebrow: "Ürün",
-    title: "Cihaz",
+    title: "Evler ve küçük binalar için sismik izleme cihazı",
     description:
       "Duvara sabitlenen, USB-C ile beslenen, 100 x 100 x 27 mm boyutunda bir cihaz. Ev ve küçük bina ölçeğinde sürekli hareket ölçümü yapmak için tasarladık.",
     deviceDescription:
@@ -80,12 +80,12 @@ export const trPages: BaseRoutePagesCopy = {
   },
   howItWorks: {
     meta: {
-      title: "SismoSmart nasıl çalışır",
+      title: "Bina Hareketi Nasıl Ölçülür? | SismoSmart",
       description:
-        "Cihazı duvara takıyor, telefonunuza bağlıyorsunuz. Cihaz binanızı tanıyor, sarsıntıda haber veriyor ve deprem sonrası rapor üretiyor.",
+        "Lansman öncesi SismoSmart cihazının bina hareketini nasıl ölçtüğünü, sarsıntı kaydını nasıl sakladığını ve pilot doğrulama için rapora dönüştürdüğünü görün.",
     },
     eyebrow: "Nasıl çalışır",
-    title: "Sistem üç parçadan oluşuyor.",
+    title: "SismoSmart bina hareketini nasıl ölçer ve rapora dönüştürür?",
     description:
       "Cihaz binanın titreşimini ölçer. Bulut bu veriyi şifreli olarak alır ve yakındaki diğer cihazlarla karşılaştırır. Uygulama size sadece anlamlı olanı gösterir.",
     flow: [

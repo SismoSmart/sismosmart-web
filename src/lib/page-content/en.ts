@@ -3,12 +3,12 @@ import type { BaseRoutePagesCopy } from "@/lib/page-copy";
 export const enPages: BaseRoutePagesCopy = {
   product: {
     meta: {
-      title: "The SismoSmart device",
+      title: "Building Seismic Monitoring Device | SismoSmart",
       description:
-        "A small seismic monitoring device for your home or office. Senses tremors, records how the building behaves after an earthquake.",
+        "A pre-launch building seismic monitoring device for homes and small buildings, designed to record motion during shaking and support qualified post-event review.",
     },
     eyebrow: "Product",
-    title: "The device",
+    title: "A building seismic monitoring device for homes and small buildings",
     description:
       "A wall-mounted, USB-C powered device, 100 x 100 x 27 mm. Built for fixed, careful motion measurement at home and small-building scale.",
     deviceDescription:
@@ -76,12 +76,12 @@ export const enPages: BaseRoutePagesCopy = {
   },
   howItWorks: {
     meta: {
-      title: "How SismoSmart works",
+      title: "How Building Motion Is Measured | SismoSmart",
       description:
-        "Mount the device, pair your phone, the building gets recognized. You get a notification when shaking happens, a report after.",
+        "See how the pre-launch SismoSmart device measures building motion, stores a shaking record, and prepares a post-event report for pilot validation.",
     },
     eyebrow: "How it works",
-    title: "The system has three parts.",
+    title: "How SismoSmart measures building motion and prepares a report",
     description:
       "Three parts. The device measures your building's vibration. The cloud receives encrypted data and correlates with other devices. The app shows you only what matters.",
     flow: [

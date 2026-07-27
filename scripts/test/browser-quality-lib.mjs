@@ -23,6 +23,12 @@ export const browserQualityRoutes = [
   { key: "tr-product", locale: "tr", path: "/tr/product" },
   { key: "en-contact", locale: "en", path: "/en/contact" },
   { key: "tr-pilot", locale: "tr", path: "/tr/pilot-program" },
+  { key: "en-guides", locale: "en", path: "/en/guides" },
+  {
+    key: "tr-guide-device",
+    locale: "tr",
+    path: "/tr/guides/bina-deprem-sensoru-sismik-izleme",
+  },
 ];
 
 function finiteNumber(value) {

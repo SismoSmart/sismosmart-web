@@ -1,6 +1,12 @@
 import { getAgentPageDescriptor } from "@/lib/agent-discovery";
 import { getPages, routeSegments } from "@/lib/pages";
 import { locales, siteConfig } from "@/lib/site";
+import {
+  getGuides,
+  getGuideCanonicalPath,
+  getGuideHub,
+} from "@/lib/guides/catalog";
+import { guideLocales } from "@/lib/guides/types";
 
 export const dynamic = "force-static";
 
@@ -11,6 +17,21 @@ function absolutePath(path: string) {
 }
 
 export function GET(): Response {
+  const guideSections = guideLocales
+    .map((locale) => {
+      const hub = getGuideHub(locale);
+      const guides = getGuides(locale);
+      const hubPath = `/${locale}/guides`;
+      const detailLines = guides
+        .map((guide) => {
+          const canonical = getGuideCanonicalPath(guide);
+          return `- [${guide.title}](${siteConfig.url}${canonical}): ${guide.summary}`;
+        })
+        .join("\n");
+      return `### ${hub.title}\n\n- [Guide hub](${siteConfig.url}${hubPath}): ${hub.description}\n\n${detailLines}`;
+    })
+    .join("\n\n");
+
   const body = `# ${siteConfig.name} expanded context
 
 > ${siteConfig.description}
@@ -64,6 +85,10 @@ The public website uses consent-controlled analytics. Form submissions are valid
 - [Security](${absolutePath(routeSegments.security)}): ${pages.security.description}
 - [Contact](${absolutePath(routeSegments.contact)}): ${pages.contact.description}
 - [Glossary](${absolutePath(routeSegments.glossary)}): ${pages.glossary.description}
+
+## Guide topics
+
+${guideSections}
 
 ## Languages and indexes
 

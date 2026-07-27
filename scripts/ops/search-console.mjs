@@ -12,6 +12,11 @@ import {
 import { getAnalyticsIdentifiers } from "./analytics-config.mjs";
 import { ensureTxtRecord } from "./cpanel-dns.mjs";
 import { getGoogleAuthClient, GOOGLE_SCOPES } from "./google-auth.mjs";
+import {
+  getPreviousPerformancePeriod,
+  resolvePerformancePeriod,
+  summarizePerformance,
+} from "./search-console-performance-lib.mjs";
 
 const usage = getCommandUsage("ops:search-console", [
   "status",
@@ -20,6 +25,7 @@ const usage = getCommandUsage("ops:search-console", [
   "verify-domain [domain]",
   "submit-sitemap [site] [sitemapUrl]",
   "bootstrap-domain [domain] [--verify]",
+  "performance [startDate] [endDate] [--compare]",
 ]);
 
 function getClients(auth) {
@@ -224,6 +230,77 @@ async function runBootstrapDomain(domain, options) {
   });
 }
 
+async function querySearchAnalytics(
+  webmasters,
+  site,
+  startDate,
+  endDate,
+  dimensions,
+) {
+  const requestBody = {
+    startDate,
+    endDate,
+    searchType: "web",
+    rowLimit: 25000,
+  };
+
+  if (dimensions.length > 0) {
+    requestBody.dimensions = dimensions;
+  }
+
+  const response = await webmasters.searchanalytics.query({
+    siteUrl: site,
+    requestBody,
+  });
+
+  return response.data.rows || [];
+}
+
+async function queryPerformanceDataset(
+  webmasters,
+  site,
+  { startDate, endDate },
+) {
+  const [totals, queries, pages, countries] = await Promise.all([
+    querySearchAnalytics(webmasters, site, startDate, endDate, []),
+    querySearchAnalytics(webmasters, site, startDate, endDate, ["query"]),
+    querySearchAnalytics(webmasters, site, startDate, endDate, ["page"]),
+    querySearchAnalytics(webmasters, site, startDate, endDate, ["country"]),
+  ]);
+
+  return { totals, queries, pages, countries };
+}
+
+async function runPerformance(startDateArg, endDateArg, compare) {
+  const period = resolvePerformancePeriod({
+    startDate: startDateArg,
+    endDate: endDateArg,
+  });
+  const { client } = await getGoogleAuthClient([
+    "https://www.googleapis.com/auth/webmasters.readonly",
+  ]);
+  const { webmasters } = getClients(client);
+  const site = getSearchConsoleConfig().site;
+  const current = await queryPerformanceDataset(webmasters, site, period);
+  const shouldCompare = compare === true || compare === "true";
+  const previous = shouldCompare
+    ? await queryPerformanceDataset(
+        webmasters,
+        site,
+        getPreviousPerformancePeriod(period.startDate, period.endDate),
+      )
+    : null;
+
+  printJson(
+    summarizePerformance({
+      current,
+      previous,
+      startDate: period.startDate,
+      endDate: period.endDate,
+    }),
+  );
+}
+
 async function main() {
   const { positional, options } = parseCliArgs();
   const [command = "status", firstArg, secondArg] = positional;
@@ -246,6 +323,9 @@ async function main() {
       break;
     case "bootstrap-domain":
       await runBootstrapDomain(firstArg, options);
+      break;
+    case "performance":
+      await runPerformance(firstArg, secondArg, options.compare);
       break;
     case "help":
     case "--help":

@@ -3,6 +3,8 @@ import {
   type AgentPageKey,
 } from "@/lib/agent-discovery";
 import { locales, siteConfig } from "@/lib/site";
+import { getGuideCanonicalPath, getGuideMarkdownPath, getGuideByTranslationKey } from "@/lib/guides/catalog";
+import { guideTranslationKeys } from "@/lib/guides/types";
 
 /** A concise, link-first public summary following the llmstxt.org convention. */
 export const dynamic = "force-static";
@@ -32,6 +34,15 @@ export function GET(): Response {
     .join("\n");
   const homeMarkdown = getAgentPageDescriptor("en", "home").markdownUrl;
 
+  const guideLinks = guideTranslationKeys
+    .map((key) => {
+      const guide = getGuideByTranslationKey("en", key);
+      const canonical = getGuideCanonicalPath(guide);
+      const markdown = getGuideMarkdownPath(guide);
+      return `- [${guide.title}](${siteConfig.url}${canonical}): ${guide.description} [Markdown](${siteConfig.url}${markdown})`;
+    })
+    .join("\n");
+
   const body = `# ${siteConfig.name}
 
 > ${siteConfig.name} is a small seismic monitoring device you mount on the wall. It measures how your building moves during an earthquake, can notify a paired phone when configured thresholds are crossed, and stores a recording for qualified technical review.
@@ -41,6 +52,12 @@ ${siteConfig.name} is a pre-launch startup building consumer and small-building 
 ## Key pages
 
 ${keyPages}
+
+## Guides
+
+- [English guide hub](${siteConfig.url}/en/guides): Hub for all English guides. [Markdown](${siteConfig.url}/en/guides.md)
+
+${guideLinks}
 
 ## Notes for language models
 

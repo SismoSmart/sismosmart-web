@@ -44,15 +44,15 @@ test("extra page copy is owned by focused locale modules", () => {
   );
 });
 
-test("representative extra page content remains unchanged for every locale", () => {
+test("representative extra page content matches approved locale values", () => {
   const expectations = {
     tr: {
-      technologyMeta: "Teknoloji: SismoSmart nasıl ölçer",
+      technologyMeta: "Bina Hareketi için MEMS Sensörler | SismoSmart",
       technologyFirst: "MEMS ivmeölçer",
       securityLast: "Cihaz güvenlik planı",
     },
     en: {
-      technologyMeta: "Technology: how SismoSmart measures",
+      technologyMeta: "MEMS Sensors for Building Motion | SismoSmart",
       technologyFirst: "MEMS accelerometer",
       securityLast: "Device security plan",
     },

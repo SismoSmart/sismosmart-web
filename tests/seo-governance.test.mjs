@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -8,13 +9,20 @@ import sitemap from "../src/app/sitemap.ts";
 import robots from "../src/app/robots.ts";
 import { webManifest } from "../src/app/manifest-data.ts";
 import { buildPageMetadata } from "../src/lib/metadata.ts";
-import { routeSegments, staticPageKeys } from "../src/lib/pages.ts";
+import {
+  getFooterNavigation,
+  getPages,
+  getPrimaryNavigation,
+  routeSegments,
+  staticPageKeys,
+} from "../src/lib/pages.ts";
 import {
   locales,
   productStageNotices,
   safetyNotices,
   siteConfig,
 } from "../src/lib/site.ts";
+
 import {
   getGuides,
   getGuideCanonicalPath,
@@ -328,3 +336,310 @@ test("private historical reports are excluded under a public retention policy", 
   assert.match(policy, /historical/i);
   assert.match(policy, /not imported into the public repository/i);
 });
+
+test("exact EN product meta title and H1 match contracts", () => {
+  const pages = getPages("en");
+  assert.equal(pages.product.meta.title, "Building Seismic Monitoring Device | SismoSmart");
+  assert.equal(pages.product.title, "A building seismic monitoring device for homes and small buildings");
+  assert.match(pages.product.meta.description, /pre-launch|pilot/i);
+  assert.doesNotMatch(pages.product.meta.description, /certified|proven performance/i);
+});
+
+test("exact TR product meta title and H1 match contracts", () => {
+  const pages = getPages("tr");
+  assert.equal(pages.product.meta.title, "Bina Deprem Sensörü ve Sismik İzleme Cihazı | SismoSmart");
+  assert.equal(pages.product.title, "Evler ve küçük binalar için sismik izleme cihazı");
+  assert.match(pages.product.meta.description, /lansman öncesi/i);
+  assert.doesNotMatch(pages.product.meta.description, /sertifikalı|kanıtlanmış performans/i);
+});
+
+test("EN technology metadata and H1 use natural building-motion language without repetition", () => {
+  const pages = getPages("en");
+  const title = pages.technology.meta.title;
+  const h1 = pages.technology.title;
+  const seismicTitleMatches = (title.match(/seismic monitoring/gi) || []).length;
+  const seismicH1Matches = (h1.match(/seismic monitoring/gi) || []).length;
+  assert.match(title, /building motion|MEMS|seismic monitoring/i);
+  assert.match(h1, /building motion|MEMS|seismic monitoring/i);
+  assert.ok(seismicTitleMatches <= 1);
+  assert.ok(seismicH1Matches <= 1);
+  assert.notEqual(title, h1);
+  assert.match(pages.technology.meta.description, /pre-launch|pilot/i);
+  assert.doesNotMatch(pages.technology.meta.description, /certified field performance|proven performance/i);
+});
+
+test("TR technology metadata and H1 use natural building-motion language without repetition", () => {
+  const pages = getPages("tr");
+  const title = pages.technology.meta.title;
+  const h1 = pages.technology.title;
+  const sismikTitleMatches = (title.match(/sismik izleme/gi) || []).length;
+  const sismikH1Matches = (h1.match(/sismik izleme/gi) || []).length;
+  assert.match(title, /bina hareket|MEMS|sismik izleme/i);
+  assert.match(h1, /bina hareket|MEMS|sismik izleme/i);
+  assert.ok(sismikTitleMatches <= 1);
+  assert.ok(sismikH1Matches <= 1);
+  assert.notEqual(title, h1);
+  assert.match(pages.technology.meta.description, /lansman|pilot doğrulama/i);
+  assert.doesNotMatch(pages.technology.meta.description, /sertifikalı saha performansı|kanıtlanmış performans/i);
+});
+
+test("EN how-it-works metadata and H1 describe building-motion measurement and reporting distinctly", () => {
+  const pages = getPages("en");
+  const howTitle = pages.howItWorks.meta.title;
+  const howH1 = pages.howItWorks.title;
+  const combined = `${howTitle} ${howH1}`;
+  assert.match(combined, /building motion/i);
+  assert.match(combined, /measur|report/i);
+  assert.notEqual(howTitle, pages.product.meta.title);
+  assert.notEqual(howTitle, pages.technology.meta.title);
+  assert.notEqual(howH1, pages.product.title);
+  assert.notEqual(howH1, pages.technology.title);
+  assert.match(pages.howItWorks.meta.description, /pre-launch|pilot/i);
+});
+
+test("TR how-it-works metadata and H1 describe building-motion measurement and reporting distinctly", () => {
+  const pages = getPages("tr");
+  const howTitle = pages.howItWorks.meta.title;
+  const howH1 = pages.howItWorks.title;
+  const combined = `${howTitle} ${howH1}`;
+  assert.match(combined, /bina hareket/i);
+  assert.match(combined, /ölç|rapor/i);
+  assert.notEqual(howTitle, pages.product.meta.title);
+  assert.notEqual(howTitle, pages.technology.meta.title);
+  assert.notEqual(howH1, pages.product.title);
+  assert.notEqual(howH1, pages.technology.title);
+  assert.match(pages.howItWorks.meta.description, /lansman|pilot/i);
+});
+
+test("ES, ID, IT, and PT commercial page metadata and H1 values remain unchanged", () => {
+  const expected = {
+    es: {
+      product: {
+        meta: {
+          title: "El dispositivo SismoSmart",
+          description: "Un pequeño dispositivo de monitoreo sísmico para casa u oficina. Detecta temblores y registra cómo se comporta el edificio después de un terremoto.",
+        },
+        title: "El dispositivo",
+      },
+      technology: {
+        meta: {
+          title: "Tecnología: cómo mide SismoSmart",
+          description: "Qué hay dentro del dispositivo, cómo distingue un temblor real del ruido y cómo la medición se convierte en un informe legible.",
+        },
+        title: "Qué hay dentro del dispositivo y cómo te llega el dato",
+      },
+      howItWorks: {
+        meta: {
+          title: "Cómo funciona SismoSmart",
+          description: "Monta el dispositivo, empareja el teléfono, el edificio se reconoce. Recibes aviso cuando hay sacudida y reporte después.",
+        },
+        title: "Dispositivo, nube, app: juntos.",
+      },
+    },
+    id: {
+      product: {
+        meta: {
+          title: "Perangkat SismoSmart",
+          description: "Perangkat pemantauan seismik kecil untuk rumah atau kantor. Membaca guncangan dan merekam perilaku bangunan setelah gempa.",
+        },
+        title: "Perangkat",
+      },
+      technology: {
+        meta: {
+          title: "Teknologi: bagaimana SismoSmart mengukur",
+          description: "Apa isi perangkat, bagaimana ia membedakan guncangan asli dari derau, dan bagaimana pengukuran berubah menjadi laporan yang bisa dibaca.",
+        },
+        title: "Apa yang ada di dalam perangkat, dan bagaimana datanya sampai ke Anda",
+      },
+      howItWorks: {
+        meta: {
+          title: "Cara kerja SismoSmart",
+          description: "Pasang perangkat, pasangkan ponsel, bangunan dikenali. Anda mendapat notifikasi saat guncangan terjadi, lalu laporan setelahnya.",
+        },
+        title: "Perangkat, cloud, app: bersama.",
+      },
+    },
+    it: {
+      product: {
+        meta: {
+          title: "Il dispositivo SismoSmart",
+          description: "Un piccolo dispositivo di monitoraggio sismico per casa o ufficio. Rileva le scosse e registra come si comporta l'edificio dopo un terremoto.",
+        },
+        title: "Il dispositivo",
+      },
+      technology: {
+        meta: {
+          title: "Tecnologia: come misura SismoSmart",
+          description: "Cosa c'è dentro il dispositivo, come distingue una scossa reale dal rumore, e come la misura diventa un report leggibile.",
+        },
+        title: "Cosa c'è dentro il dispositivo e come il dato arriva fino a te",
+      },
+      howItWorks: {
+        meta: {
+          title: "Come funziona SismoSmart",
+          description: "Monti il dispositivo, lo abbini al telefono, l'edificio viene riconosciuto. Ricevi una notifica quando arriva una scossa e un report dopo.",
+        },
+        title: "Dispositivo, cloud, app: insieme.",
+      },
+    },
+    pt: {
+      product: {
+        meta: {
+          title: "O dispositivo SismoSmart",
+          description: "Um pequeno dispositivo de monitoramento sísmico para casa ou escritório. Detecta tremores e registra como o prédio se comporta depois de um terremoto.",
+        },
+        title: "O dispositivo",
+      },
+      technology: {
+        meta: {
+          title: "Tecnologia: como o SismoSmart mede",
+          description: "O que tem dentro do dispositivo, como ele separa um tremor real do ruído e como a medição vira um relatório legível.",
+        },
+        title: "O que tem dentro do dispositivo e como o dado chega até você",
+      },
+      howItWorks: {
+        meta: {
+          title: "Como o SismoSmart funciona",
+          description: "Você instala o dispositivo, pareia o celular e o prédio é reconhecido. Recebe aviso quando há tremor e um relatório depois.",
+        },
+        title: "Dispositivo, cloud, app: juntos.",
+      },
+    },
+  };
+
+  for (const [locale, snapshot] of Object.entries(expected)) {
+    const pages = getPages(locale);
+    assert.deepEqual(
+      {
+        product: { meta: pages.product.meta, title: pages.product.title },
+        technology: { meta: pages.technology.meta, title: pages.technology.title },
+        howItWorks: { meta: pages.howItWorks.meta, title: pages.howItWorks.title },
+      },
+      snapshot,
+      `${locale} commercial metadata and H1 snapshot changed`,
+    );
+  }
+});
+
+test("footer navigation appends guide link only for EN/TR", () => {
+  const enFooter = getFooterNavigation("en");
+  const enGuideLink = enFooter.find((item) => item.href === "/guides");
+  assert.ok(enGuideLink, "EN footer must contain a guide link");
+  assert.equal(enGuideLink.label, "Guides");
+
+  const trFooter = getFooterNavigation("tr");
+  const trGuideLink = trFooter.find((item) => item.href === "/guides");
+  assert.ok(trGuideLink, "TR footer must contain a guide link");
+  assert.equal(trGuideLink.label, "Rehberler");
+
+  for (const locale of locales) {
+    if (locale === "en" || locale === "tr") continue;
+    const footer = getFooterNavigation(locale);
+    const guideLink = footer.find((item) => item.href === "/guides");
+    assert.equal(
+      guideLink,
+      undefined,
+      `${locale} footer must NOT contain a guide link`,
+    );
+  }
+});
+
+test("primary navigation does not add a guide link for any locale", () => {
+  for (const locale of locales) {
+    const primary = getPrimaryNavigation(locale);
+    const guideLink = primary.find((item) => item.href === "/guides");
+    assert.equal(
+      guideLink,
+      undefined,
+      `${locale} primary navigation must NOT contain a guide link`,
+    );
+  }
+});
+
+function extractConstStringArray(source, name) {
+  const match = source.match(
+    new RegExp(`const\\s+${name}[^=]*=\\s*\\[([\\s\\S]*?)\\]\\s+as const;`),
+  );
+  assert.ok(match, `${name} must be declared as a const array`);
+  return [...match[1].matchAll(/"([^"]+)"/g)].map((entry) => entry[1]);
+}
+
+test("commercial pages use exact contextual guide translation-key sets", () => {
+  assert.deepEqual(
+    extractConstStringArray(
+      readTextSync("src/components/localized-pages/product-page.tsx"),
+      "productGuideKeys",
+    ),
+    [
+      "building-seismic-monitoring-device",
+      "earthquake-app-vs-fixed-sensor",
+      "seismic-sensor-placement",
+    ],
+  );
+  assert.deepEqual(
+    extractConstStringArray(
+      readTextSync("src/components/localized-pages/info-page.tsx"),
+      "technologyGuideKeys",
+    ),
+    [
+      "mems-accelerometers-seismic-monitoring",
+      "building-natural-frequency-monitoring",
+    ],
+  );
+  assert.deepEqual(
+    extractConstStringArray(
+      readTextSync("src/components/localized-pages/how-it-works-page.tsx"),
+      "howItWorksGuideKeys",
+    ),
+    [
+      "measuring-building-motion-after-earthquake",
+      "seismic-sensor-placement",
+    ],
+  );
+});
+
+test("product, technology, and how-it-works use six distinct EN/TR guide headings", () => {
+  const sources = [
+    readTextSync("src/components/localized-pages/product-page.tsx"),
+    readTextSync("src/components/localized-pages/info-page.tsx"),
+    readTextSync("src/components/localized-pages/how-it-works-page.tsx"),
+  ].join("\n");
+  const headings = [
+    "Choosing and placing a fixed building sensor",
+    "Sabit bina sensörü seçimi ve yerleşimi",
+    "MEMS sensing and structural response guides",
+    "MEMS algılama ve yapı davranışı rehberleri",
+    "From sensor placement to post-earthquake measurement",
+    "Sensör yerleşiminden deprem sonrası ölçüme",
+  ];
+  for (const heading of headings) assert.match(sources, new RegExp(heading));
+  assert.equal(new Set(headings).size, headings.length);
+});
+
+test("GuideLinks accepts all site locales but renders only supported guide locales", () => {
+  const source = readTextSync("src/components/guides/guide-links.tsx");
+  assert.match(source, /locale:\s*Locale/);
+  assert.match(source, /isGuideLocale\(locale\)/);
+  assert.match(source, /if\s*\(!isGuideLocale\(locale\)\)\s*return null/);
+  assert.match(source, /getGuideByTranslationKey\(locale, key\)/);
+  assert.match(source, /getGuideCanonicalPath\(guide\)/);
+  assert.doesNotMatch(source, /target=["']_blank["']/);
+});
+
+test("locale-switch script maps the current guide path before generic locale substitution", () => {
+  const layout = readTextSync("src/app/[locale]/layout.tsx");
+  const mobile = readTextSync("src/components/mobile-navigation.tsx");
+  assert.match(layout, /getGuideLocaleSwitchPathMap/);
+  assert.match(layout, /guideSwitchMap\[relativePath\]/);
+  assert.match(layout, /next\s*===\s*current\s*\?\s*relativePath/);
+  assert.match(layout, /guideTargets\[next\]\s*\|\|\s*["']\/["']\s*\+\s*next/);
+  assert.doesNotMatch(layout, /guideSwitchMap\[candidatePath\]/);
+  assert.match(layout, /window\.location\.search\s*\+\s*window\.location\.hash/);
+  assert.match(layout, /data-locale-switch/);
+  assert.match(mobile, /data-locale-switch/);
+});
+
+function readTextSync(relativePath) {
+  const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  return readFileSync(path.join(rootDir, relativePath), "utf8");
+}

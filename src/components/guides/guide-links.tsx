@@ -1,13 +1,17 @@
 import { getGuideByTranslationKey, getGuideCanonicalPath } from "@/lib/guides/catalog";
-import type { GuideLocale, GuideTranslationKey } from "@/lib/guides/types";
+import { isGuideLocale } from "@/lib/guides/types";
+import type { GuideTranslationKey } from "@/lib/guides/types";
+import type { Locale } from "@/lib/site";
 
 type GuideLinksProps = {
-  locale: GuideLocale;
+  locale: Locale;
   translationKeys: readonly GuideTranslationKey[];
   heading: string;
 };
 
 export function GuideLinks({ locale, translationKeys, heading }: GuideLinksProps) {
+  if (!isGuideLocale(locale)) return null;
+
   const guides = translationKeys.map((key) => getGuideByTranslationKey(locale, key));
 
   return (

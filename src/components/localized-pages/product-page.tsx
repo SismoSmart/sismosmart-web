@@ -4,9 +4,17 @@ import { PageHero } from "@/components/page-hero";
 import { ProductVisual } from "@/components/product-visual";
 import { SectionHeading } from "@/components/section-heading";
 import { ButtonLink } from "@/components/ui/button";
+import { GuideLinks } from "@/components/guides/guide-links";
 import { withBasePath } from "@/lib/base-path";
 import { getPages } from "@/lib/pages";
 import { getLocalizedHref, type Locale } from "@/lib/site";
+import type { GuideTranslationKey } from "@/lib/guides/types";
+
+const productGuideKeys: readonly GuideTranslationKey[] = [
+  "building-seismic-monitoring-device",
+  "earthquake-app-vs-fixed-sensor",
+  "seismic-sensor-placement",
+] as const;
 
 const productLabels: Record<
   Locale,
@@ -28,6 +36,7 @@ const productLabels: Record<
     mobile: string;
     ctaTitle: string;
     ctaDescription: string;
+    guideLinksHeading?: string;
   }
 > = {
   tr: {
@@ -60,6 +69,7 @@ const productLabels: Record<
     ctaTitle: "Gerçek bir binada denemek ister misiniz?",
     ctaDescription:
       "Bize binayı anlatın. İlk pilotlar için uygun olup olmadığına birlikte bakalım.",
+    guideLinksHeading: "Sabit bina sensörü seçimi ve yerleşimi",
   },
   en: {
     cloudTitle: "Cloud and app",
@@ -91,6 +101,7 @@ const productLabels: Record<
     ctaTitle: "Want to test it in a real building?",
     ctaDescription:
       "Tell us about the building. We will see if it fits the first pilots.",
+    guideLinksHeading: "Choosing and placing a fixed building sensor",
   },
   es: {
     cloudTitle: "Nube y app",
@@ -395,6 +406,14 @@ export function ProductPage({ locale }: { locale: Locale }) {
           </ButtonLink>
         </div>
       </section>
+
+      {labels.guideLinksHeading ? (
+        <GuideLinks
+          heading={labels.guideLinksHeading}
+          locale={locale}
+          translationKeys={productGuideKeys}
+        />
+      ) : null}
     </main>
   );
 }

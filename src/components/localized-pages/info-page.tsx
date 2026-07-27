@@ -1,9 +1,16 @@
 import { FrequencyTrend } from "@/components/frequency-trend";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
+import { GuideLinks } from "@/components/guides/guide-links";
 import { withBasePath } from "@/lib/base-path";
 import { getPages } from "@/lib/pages";
 import type { Locale } from "@/lib/site";
+import type { GuideTranslationKey } from "@/lib/guides/types";
+
+const technologyGuideKeys: readonly GuideTranslationKey[] = [
+  "mems-accelerometers-seismic-monitoring",
+  "building-natural-frequency-monitoring",
+] as const;
 
 export type InfoPageKey =
   | "glossary"
@@ -19,7 +26,7 @@ export type InfoPageKey =
 // chart is specific to one page.
 const frequencyTrendLabels: Record<
   Locale,
-  { eyebrow: string; title: string; caption: string; baseline: string; event: string }
+  { eyebrow: string; title: string; caption: string; baseline: string; event: string; guideLinksHeading?: string }
 > = {
   tr: {
     eyebrow: "Yapı sağlığı",
@@ -28,6 +35,7 @@ const frequencyTrendLabels: Record<
       "Bir binanın doğal frekansı aylar boyunca küçük mevsimsel dalgalanmalarla sabit kalır. Ciddi bir sarsıntıdan sonra bu değer düşer ve eski seviyesine dönmez. Cihaz bu kaymayı yakalar.",
     baseline: "Sağlıklı taban",
     event: "Olay",
+    guideLinksHeading: "MEMS algılama ve yapı davranışı rehberleri",
   },
   en: {
     eyebrow: "Structural health",
@@ -36,6 +44,7 @@ const frequencyTrendLabels: Record<
       "A building's natural frequency holds steady for months, wobbling only with the seasons. After a serious tremor it drops and does not return to where it was. The device catches that shift.",
     baseline: "Healthy baseline",
     event: "Event",
+    guideLinksHeading: "MEMS sensing and structural response guides",
   },
   es: {
     eyebrow: "Salud estructural",
@@ -131,6 +140,14 @@ export function InfoPage({
           </article>
         ))}
       </section>
+
+      {pageKey === "technology" && trend?.guideLinksHeading ? (
+        <GuideLinks
+          heading={trend.guideLinksHeading}
+          locale={locale}
+          translationKeys={technologyGuideKeys}
+        />
+      ) : null}
 
       {page.links ? (
         <section className="rounded-xl border border-[rgba(114,174,127,0.2)] bg-primary-950 px-6 py-10 shadow-[var(--shadow-inverse)] sm:px-8">

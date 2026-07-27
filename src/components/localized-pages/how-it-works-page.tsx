@@ -2,9 +2,16 @@ import Image from "next/image";
 
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
+import { GuideLinks } from "@/components/guides/guide-links";
 import { withBasePath } from "@/lib/base-path";
 import { getPages } from "@/lib/pages";
 import type { Locale } from "@/lib/site";
+import type { GuideTranslationKey } from "@/lib/guides/types";
+
+const howItWorksGuideKeys: readonly GuideTranslationKey[] = [
+  "measuring-building-motion-after-earthquake",
+  "seismic-sensor-placement",
+] as const;
 
 const howItWorksLabels: Record<
   Locale,
@@ -18,6 +25,7 @@ const howItWorksLabels: Record<
     networkEyebrow: string;
     networkTitle: string;
     networkDescription: string;
+    guideLinksHeading?: string;
   }
 > = {
   tr: {
@@ -33,6 +41,7 @@ const howItWorksLabels: Record<
     networkTitle: "Cihaz sayısı arttıkça veri güvenilirleşiyor",
     networkDescription:
       "Yakındaki cihazlar aynı olayı görünce kayıt doğrulanmış sayılıyor ve yanlış alarm ihtimali düşüyor.",
+    guideLinksHeading: "Sensör yerleşiminden deprem sonrası ölçüme",
   },
   en: {
     flowEyebrow: "Setup",
@@ -47,6 +56,7 @@ const howItWorksLabels: Record<
     networkTitle: "One device is useful. Several are better.",
     networkDescription:
       "Nearby devices help confirm the same event and reduce false alarms.",
+    guideLinksHeading: "From sensor placement to post-earthquake measurement",
   },
   es: {
     flowEyebrow: "Instalación",
@@ -202,6 +212,14 @@ export function HowItWorksPage({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
+
+      {labels.guideLinksHeading ? (
+        <GuideLinks
+          heading={labels.guideLinksHeading}
+          locale={locale}
+          translationKeys={howItWorksGuideKeys}
+        />
+      ) : null}
 
     </main>
   );

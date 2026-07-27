@@ -27,6 +27,7 @@ import {
   safetyNotices,
   siteConfig,
 } from "@/lib/site";
+import { getGuideLocaleSwitchPathMap } from "@/lib/guides/catalog";
 
 type LocaleLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -199,17 +200,25 @@ export default async function LocaleLayout({
   const locales = ${JSON.stringify(locales)};
   const current = ${JSON.stringify(locale)};
   const basePath = ${JSON.stringify(appBasePath)};
+  const guideSwitchMap = ${JSON.stringify(getGuideLocaleSwitchPathMap())};
   const relativePath = basePath && window.location.pathname.startsWith(basePath)
     ? window.location.pathname.slice(basePath.length) || "/"
     : window.location.pathname;
   const path = relativePath.split("/").filter(Boolean);
+  const guideTargets = guideSwitchMap[relativePath];
   for (const link of document.querySelectorAll("[data-locale-switch]")) {
     const next = link.getAttribute("data-locale-switch");
     if (!next || !locales.includes(next)) continue;
-    const segments = path.length ? [...path] : [current];
-    if (locales.includes(segments[0])) segments[0] = next;
-    else segments.unshift(next);
-    link.setAttribute("href", basePath + "/" + segments.join("/") + window.location.search + window.location.hash);
+    let nextPath;
+    if (guideTargets) {
+      nextPath = next === current ? relativePath : guideTargets[next] || "/" + next;
+    } else {
+      const segments = path.length ? [...path] : [current];
+      if (locales.includes(segments[0])) segments[0] = next;
+      else segments.unshift(next);
+      nextPath = "/" + segments.join("/");
+    }
+    link.setAttribute("href", basePath + nextPath + window.location.search + window.location.hash);
   }
 })();
 `,

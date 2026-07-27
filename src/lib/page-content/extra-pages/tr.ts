@@ -3,10 +3,10 @@ import { makeExtraPages } from "@/lib/page-content/extra-pages/shared";
 export const trExtraPages = makeExtraPages({
   technology: {
     eyebrow: "Teknoloji",
-    metaTitle: "Teknoloji: SismoSmart nasıl ölçer",
+    metaTitle: "Bina Hareketi için MEMS Sensörler | SismoSmart",
     metaDescription:
-      "Cihazın içinde ne var, sarsıntıyı sıradan titreşimden nasıl ayırır, ölçüm nasıl okunabilir bir rapora döner. Mühendislere ve meraklılara açık dille.",
-    title: "Cihazın içinde ne var, veri size nasıl ulaşıyor?",
+      "MEMS algılama, olay tamponlama ve bina hareketi analizine ilişkin lansman öncesi teknik özet; algılama ve performans pilot doğrulamasına tabidir.",
+    title: "MEMS sensörler bina hareketini nasıl ölçer?",
     description:
       "SismoSmart'ın tek bir işi var: binanın nasıl hareket ettiğini kaydetmek. Sarsıntı sırasında gelen hızlı bildirim de, sarsıntı bittikten sonra çıkan rapor da bu kayıttan doğuyor. Bu sayfa, o kaydın nasıl alındığını anlatıyor.",
     sections: [

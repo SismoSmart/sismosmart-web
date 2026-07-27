@@ -8,6 +8,7 @@ import { extraPagesByLocale } from "@/lib/page-content/extra-pages/index";
 import { glossaryPagesByLocale } from "@/lib/page-content/glossary";
 import type { BaseRoutePagesCopy } from "@/lib/page-copy";
 import type { Locale, SiteLink } from "@/lib/site";
+import { isGuideLocale } from "@/lib/guides/types";
 
 export const routeSegments = {
   home: "/",
@@ -272,7 +273,7 @@ export function getPrimaryNavigation(locale: Locale): SiteLink[] {
 export function getFooterNavigation(locale: Locale): SiteLink[] {
   const labels = navigationLabels[locale];
 
-  return [
+  const links: SiteLink[] = [
     { label: labels.product, href: routeSegments.product },
     { label: labels.technology, href: routeSegments.technology },
     { label: labels.howItWorks, href: routeSegments.howItWorks },
@@ -287,6 +288,20 @@ export function getFooterNavigation(locale: Locale): SiteLink[] {
     { label: labels.security, href: routeSegments.security },
     { label: labels.contact, href: routeSegments.contact },
   ];
+
+  const guideLink = getGuideNavigationLink(locale);
+  if (guideLink) {
+    links.push(guideLink);
+  }
+
+  return links;
+}
+
+export function getGuideNavigationLink(locale: Locale): SiteLink | null {
+  if (!isGuideLocale(locale)) return null;
+  if (locale === "en") return { label: "Guides", href: "/guides" };
+  if (locale === "tr") return { label: "Rehberler", href: "/guides" };
+  return null;
 }
 
 export function getLayoutChromeLabels(locale: Locale) {

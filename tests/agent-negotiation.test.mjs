@@ -73,6 +73,63 @@ test("guide detail direct Markdown path rewrites correctly", async () => {
   }
 });
 
+test("direct hub Markdown path rewrites correctly for both locales", async () => {
+  const { proxy } = await loadProxy();
+  for (const [pathname, expected] of [
+    ["/en/guides.md", "/markdown/guides/en"],
+    ["/tr/guides.md", "/markdown/guides/tr"],
+  ]) {
+    const response = proxy(new NextRequest(`https://sismosmart.com${pathname}`));
+    assert.equal(rewritePath(response), expected, `Expected rewrite ${pathname} -> ${expected}`);
+  }
+});
+
+test("proxy does not rewrite unsupported guide locales for direct .md paths", async () => {
+  const { proxy } = await loadProxy();
+  for (const locale of ["es", "id", "pt", "it"]) {
+    const response = proxy(
+      new NextRequest(`https://sismosmart.com/${locale}/guides.md`),
+    );
+    assert.equal(rewritePath(response), null, `Should not rewrite /${locale}/guides.md`);
+  }
+});
+
+test("proxy does not rewrite unsupported guide locales for detail .md paths", async () => {
+  const { proxy } = await loadProxy();
+  for (const locale of ["es", "id", "pt", "it"]) {
+    const response = proxy(
+      new NextRequest(`https://sismosmart.com/${locale}/guides/building-seismic-monitoring-device.md`),
+    );
+    assert.equal(rewritePath(response), null, `Should not rewrite /${locale}/guides/detail.md`);
+  }
+});
+
+test("proxy does not rewrite nested guide paths without .md", async () => {
+  const { proxy } = await loadProxy();
+  for (const path of [
+    "/en/guides/building-seismic-monitoring-device/extra",
+    "/en/guides/building-seismic-monitoring-device/extra.md",
+  ]) {
+    const response = proxy(
+      new NextRequest(`https://sismosmart.com${path}`, {
+        headers: { Accept: "text/markdown" },
+      }),
+    );
+    assert.equal(rewritePath(response), null, `Should not rewrite ${path}`);
+  }
+});
+
+test("proxy passes through POST requests to guide paths", async () => {
+  const { proxy } = await loadProxy();
+  const response = proxy(
+    new NextRequest("https://sismosmart.com/en/guides", {
+      method: "POST",
+      headers: { Accept: "text/markdown" },
+    }),
+  );
+  assert.equal(rewritePath(response), null, "POST should not rewrite");
+});
+
 test("proxy does not rewrite unknown guide slugs", async () => {
   const { proxy } = await loadProxy();
   const response = proxy(
@@ -114,6 +171,48 @@ test("proxy resolves guide detail before legacy markdown fallback", async () => 
     }),
   );
   assert.equal(rewritePath(response), "/markdown/guides/en/building-seismic-monitoring-device", "Guide detail must resolve before legacy fallback");
+});
+
+test("proxy rejects Accept headers where text/markdown q is zero or negative", async () => {
+  const { proxy } = await loadProxy();
+  for (const accept of [
+    "text/markdown;q=0",
+    "text/markdown;q=0.0",
+    "text/markdown;q=0.00",
+    "text/markdown;q=0.000",
+    "text/markdown;q=0.0000",
+    "text/markdown;q=-1",
+    "text/markdown;q=NaN",
+    "text/markdown;q=Infinity",
+    "text/markdown;q=",
+  ]) {
+    const response = proxy(
+      new NextRequest("https://sismosmart.com/en/product", {
+        headers: { Accept: accept },
+      }),
+    );
+    assert.equal(rewritePath(response), null, `Should not rewrite for Accept: ${accept}`);
+  }
+});
+
+test("proxy accepts Accept headers with positive finite q values", async () => {
+  const { proxy } = await loadProxy();
+  for (const accept of [
+    "text/markdown;q=1",
+    "text/markdown;q=1.0",
+    "text/markdown;q=0.5",
+    "text/markdown;q=0.1",
+    "text/markdown;q=0.01",
+    "text/markdown;q=0.001",
+    "text/markdown;q=0.0001",
+  ]) {
+    const response = proxy(
+      new NextRequest("https://sismosmart.com/en/product", {
+        headers: { Accept: accept },
+      }),
+    );
+    assert.notEqual(rewritePath(response), null, `Should rewrite for Accept: ${accept}`);
+  }
 });
 
 test("HEAD requests negotiate Markdown while ordinary browser and unsafe requests pass through", async () => {

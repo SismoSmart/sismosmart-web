@@ -749,3 +749,473 @@ test("detail route StructuredData call uses exact data and id", () => {
   assert.match(sdCallMatch[0], /data=\{getGuideStructuredData\(guide\)\}/, "Detail StructuredData must use data={getGuideStructuredData(guide)}");
   assert.match(sdCallMatch[0], /id=\{`\$\{resolved\.locale\}-\$\{guide\.slug\}-structured-data`\}/, "Detail StructuredData id must be ${resolved.locale}-${guide.slug}-structured-data");
 });
+
+import {
+  renderGuideHubMarkdown,
+  renderGuideMarkdown,
+} from "../src/lib/guides/markdown.ts";
+
+import { getLocalizedHref } from "../src/lib/site.ts";
+
+const siteUrl = "https://sismosmart.com";
+
+import {
+  GET as hubGET,
+} from "../src/app/markdown/guides/[locale]/route.ts";
+
+import {
+  GET as detailGET,
+} from "../src/app/markdown/guides/[locale]/[slug]/route.ts";
+
+test("renderGuideHubMarkdown produces valid frontmatter for both locales", () => {
+  for (const locale of ["en", "tr"]) {
+    const md = renderGuideHubMarkdown(locale);
+    const match = md.match(/^---\n([\s\S]*?)\n---\n/);
+    assert.ok(match, `Hub markdown must have YAML frontmatter for ${locale}`);
+    const front = match[1];
+    assert.match(front, /title:/, "frontmatter must have title");
+    assert.match(front, /description:/, "frontmatter must have description");
+    assert.match(front, /locale:/, "frontmatter must have locale");
+    assert.match(front, /canonical_url:/, "frontmatter must have canonical_url");
+    assert.match(front, /published_at:/, "frontmatter must have published_at");
+    assert.match(front, /last_updated:/, "frontmatter must have last_updated");
+    assert.match(front, new RegExp(`locale: ${locale}`), `locale must be ${locale}`);
+    assert.match(front, new RegExp(`canonical_url:.*${locale}/guides`), "canonical_url must point to localized guides");
+  }
+});
+
+test("renderGuideHubMarkdown dates are deterministic catalog extrema", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const expectedPublished = guides.reduce((min, g) => g.publishedAt < min ? g.publishedAt : min, guides[0].publishedAt);
+    const expectedUpdated = guides.reduce((max, g) => g.updatedAt > max ? g.updatedAt : max, guides[0].updatedAt);
+    const md = renderGuideHubMarkdown(locale);
+    assert.match(md, new RegExp(`published_at:.*${expectedPublished.replace(/[-.]/g, '\\$&')}`), `published_at must be ${expectedPublished} for ${locale}`);
+    assert.match(md, new RegExp(`last_updated:.*${expectedUpdated.replace(/[-.]/g, '\\$&')}`), `last_updated must be ${expectedUpdated} for ${locale}`);
+  }
+});
+
+test("renderGuideHubMarkdown includes all 6 guide links for both locales", () => {
+  for (const locale of ["en", "tr"]) {
+    const md = renderGuideHubMarkdown(locale);
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const path = getGuideCanonicalPath(guide);
+      assert.match(md, new RegExp(`\\[.*\\]\\(${siteUrl.replace(/\//g, '\\/')}${path.replace(/\//g, '\\/')}\\)`), `Hub must link to ${path} for ${locale}`);
+    }
+  }
+});
+
+test("renderGuideHubMarkdown Sitemap section has exactly 4 links", () => {
+  for (const locale of ["en", "tr"]) {
+    const md = renderGuideHubMarkdown(locale);
+    const sitemapMatch = md.match(/## Sitemap\n([\s\S]*?)$/);
+    assert.ok(sitemapMatch, `Hub must have Sitemap section for ${locale}`);
+    const links = sitemapMatch[1].match(/^- \[.*\]\(.*\)$/gm);
+    assert.equal(links.length, 4, `Sitemap must have exactly 4 links for ${locale}`);
+    assert.match(sitemapMatch[1], /Canonical HTML page/, "Sitemap must include canonical HTML link");
+    assert.match(sitemapMatch[1], /XML sitemap/, "Sitemap must include XML sitemap");
+    assert.match(sitemapMatch[1], /Human-readable sitemap/, "Sitemap must include human-readable sitemap");
+    assert.match(sitemapMatch[1], /Markdown index/, "Sitemap must include Markdown index");
+  }
+});
+
+test("renderGuideMarkdown includes limitationParagraphs before limitation bullets", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      const limSection = guide.sections.find(s => s.heading === ui.limitations);
+      if (limSection && limSection.paragraphs.length > 0) {
+        for (const para of limSection.paragraphs) {
+          const bulletIndex = md.indexOf(`- ${guide.limitations[0]}`);
+          const paraIndex = md.indexOf(para);
+          assert.ok(paraIndex >= 0, `limitation paragraph must be rendered for ${guide.translationKey} in ${locale}`);
+          assert.ok(paraIndex < bulletIndex || bulletIndex < 0, `limitation paragraph must appear before limitation bullets for ${guide.translationKey} in ${locale}`);
+        }
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown CTA uses localized URL", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      const expectedCtaHref = getLocalizedHref(locale, guide.cta.href);
+      const expectedCtaUrl = `${siteUrl}${expectedCtaHref}`;
+      assert.match(md, new RegExp(`\\[${guide.cta.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${expectedCtaUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`), `CTA must use localized URL ${expectedCtaUrl} for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown does not include safetyNotices or productStageNotices from site.ts", async () => {
+  const { safetyNotices, productStageNotices } = await import("../src/lib/site.ts");
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.doesNotMatch(md, new RegExp(safetyNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Markdown must not include global safetyNotice for ${guide.translationKey}`);
+      assert.doesNotMatch(md, new RegExp(productStageNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Markdown must not include global productStageNotice for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown includes exactly the guide safetyNotice", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(guide.safetyNotice.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Markdown must include guide.safetyNotice for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown frontmatter dates equal guide.publishedAt and guide.updatedAt", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      const pubEscaped = guide.publishedAt.replace(/[-.]/g, '\\$&');
+      const updEscaped = guide.updatedAt.replace(/[-.]/g, '\\$&');
+      assert.match(md, new RegExp(`published_at:.*${pubEscaped}`), `published_at must match guide.publishedAt for ${guide.translationKey}`);
+      assert.match(md, new RegExp(`last_updated:.*${updEscaped}`), `last_updated must match guide.updatedAt for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown includes all sections, paragraphs, and bullets", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      const contentSections = guide.sections.filter(s => s.heading !== ui.limitations);
+      for (const section of contentSections) {
+        assert.match(md, new RegExp(`## ${section.heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have heading "${section.heading}" for ${guide.translationKey}`);
+        for (const para of section.paragraphs) {
+          assert.ok(md.includes(para), `Must include paragraph from "${section.heading}" for ${guide.translationKey}`);
+        }
+        if (section.bullets) {
+          for (const bullet of section.bullets) {
+            assert.match(md, new RegExp(`^- ${bullet.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'), `Must include bullet for ${guide.translationKey}`);
+          }
+        }
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown includes all related guide links with locale-correct slugs", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      for (const relKey of guide.relatedGuides) {
+        const related = getGuideByTranslationKey(locale, relKey);
+        const relPath = getGuideCanonicalPath(related);
+        assert.match(md, new RegExp(`\\[.*\\]\\(${siteUrl.replace(/\//g, '\\/')}${relPath.replace(/\//g, '\\/')}\\)`), `Related guide ${relKey} must use locale ${locale} slug for ${guide.translationKey}`);
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown includes references with organization", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      for (const ref of guide.references) {
+        assert.match(md, new RegExp(`\\[${ref.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${ref.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\) — ${ref.organization.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must include reference ${ref.label} for ${guide.translationKey}`);
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown Sitemap section has exactly 4 links", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      const sitemapMatch = md.match(/## Sitemap\n([\s\S]*?)$/);
+      assert.ok(sitemapMatch, `Detail must have Sitemap section for ${guide.translationKey}`);
+      const links = sitemapMatch[1].match(/^- \[.*\]\(.*\)$/gm);
+      assert.equal(links.length, 4, `Sitemap must have exactly 4 links for ${guide.translationKey}`);
+      assert.match(sitemapMatch[1], /Canonical HTML page/, "Sitemap must include canonical HTML link");
+      assert.match(sitemapMatch[1], /XML sitemap/, "Sitemap must include XML sitemap");
+      assert.match(sitemapMatch[1], /Human-readable sitemap/, "Sitemap must include human-readable sitemap");
+      assert.match(sitemapMatch[1], /Markdown index/, "Sitemap must include Markdown index");
+    }
+  }
+});
+
+test("renderGuideMarkdown keyTakeaways section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.keyTakeaways.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.keyTakeaways} heading for ${guide.translationKey}`);
+      for (const item of guide.keyTakeaways) {
+        assert.match(md, new RegExp(`^- ${item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'), `Must include key takeaway for ${guide.translationKey}`);
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown glossary terms link to locale glossary", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      for (const term of guide.relatedGlossaryTerms) {
+        assert.match(md, new RegExp(`\\[${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${siteUrl.replace(/\//g, '\\/')}/${locale}/glossary\\)`), `Glossary link must point to ${locale}/glossary for ${guide.translationKey}`);
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown SismoSmart fit section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.sismosmartFit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.sismosmartFit} heading for ${guide.translationKey}`);
+      for (const item of guide.sismosmartFit) {
+        assert.match(md, new RegExp(`^- ${item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'), `Must include SismoSmart fit item for ${guide.translationKey}`);
+      }
+    }
+  }
+});
+
+test("renderGuideMarkdown limitations section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.limitations.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.limitations} heading for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown references section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.references.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.references} heading for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown related guides section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.relatedGuides.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.relatedGuides} heading for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown related glossary terms section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.relatedGlossaryTerms.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.relatedGlossaryTerms} heading for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown safety notice section uses localized heading", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    const ui = getGuideUiStrings(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`## ${ui.safetyNotice.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.safetyNotice} heading for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown locale field matches guide locale", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`locale: ${locale}`), `locale must be ${locale} for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown canonical_url uses localized path", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      const path = getGuideCanonicalPath(guide);
+      assert.match(md, new RegExp(`canonical_url:.*${path.replace(/\//g, '\\/')}`), `canonical_url must use ${path} for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown H1 matches guide.h1", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`# ${guide.h1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `H1 must match guide.h1 for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("renderGuideMarkdown summary appears as blockquote", () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const md = renderGuideMarkdown(guide);
+      assert.match(md, new RegExp(`> ${guide.summary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Summary must appear as blockquote for ${guide.translationKey}`);
+    }
+  }
+});
+
+test("hub route GET returns correct content-type, cache-control, Link, Vary for both locales", async () => {
+  for (const locale of ["en", "tr"]) {
+    const response = await hubGET(new Request(`https://sismosmart.com/markdown/guides/${locale}`), {
+      params: Promise.resolve({ locale }),
+    });
+    assert.equal(response.status, 200, `Hub route must return 200 for ${locale}`);
+    assert.equal(response.headers.get("content-type"), "text/markdown; charset=utf-8", `content-type must be text/markdown for ${locale}`);
+    assert.equal(response.headers.get("cache-control"), "public, max-age=3600", `cache-control must be public, max-age=3600 for ${locale}`);
+    assert.equal(response.headers.get("vary"), "Accept", `Vary must be Accept for ${locale}`);
+    assert.equal(response.headers.get("link"), `<${siteUrl}/${locale}/guides>; rel="canonical"`, `Link must point to canonical for ${locale}`);
+  }
+});
+
+test("hub route GET body matches renderGuideHubMarkdown output", async () => {
+  for (const locale of ["en", "tr"]) {
+    const response = await hubGET(new Request(`https://sismosmart.com/markdown/guides/${locale}`), {
+      params: Promise.resolve({ locale }),
+    });
+    const body = await response.text();
+    const expected = renderGuideHubMarkdown(locale);
+    assert.equal(body, expected, `Hub body must match renderGuideHubMarkdown for ${locale}`);
+  }
+});
+
+test("hub route GET returns 404 for invalid locale", async () => {
+  const response = await hubGET(new Request("https://sismosmart.com/markdown/guides/es"), {
+    params: Promise.resolve({ locale: "es" }),
+  });
+  assert.equal(response.status, 404, "Hub route must return 404 for invalid locale");
+});
+
+test("hub route GET returns 404 for missing locale", async () => {
+  const response = await hubGET(new Request("https://sismosmart.com/markdown/guides/"), {
+    params: Promise.resolve({ locale: "" }),
+  });
+  assert.equal(response.status, 404, "Hub route must return 404 for empty locale");
+});
+
+test("detail route GET returns correct headers for all 12 guides", async () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const response = await detailGET(new Request(`https://sismosmart.com/markdown/guides/${locale}/${guide.slug}`), {
+        params: Promise.resolve({ locale, slug: guide.slug }),
+      });
+      assert.equal(response.status, 200, `Detail route must return 200 for ${locale}/${guide.slug}`);
+      assert.equal(response.headers.get("content-type"), "text/markdown; charset=utf-8", `content-type must be text/markdown for ${locale}/${guide.slug}`);
+      assert.equal(response.headers.get("cache-control"), "public, max-age=3600", `cache-control must be correct for ${locale}/${guide.slug}`);
+      assert.equal(response.headers.get("vary"), "Accept", `Vary must be Accept for ${locale}/${guide.slug}`);
+      const canonicalPath = getGuideCanonicalPath(guide);
+      assert.equal(response.headers.get("link"), `<${siteUrl}${canonicalPath}>; rel="canonical"`, `Link must point to canonical for ${locale}/${guide.slug}`);
+    }
+  }
+});
+
+test("detail route GET body matches renderGuideMarkdown output for all 12 guides", async () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const response = await detailGET(new Request(`https://sismosmart.com/markdown/guides/${locale}/${guide.slug}`), {
+        params: Promise.resolve({ locale, slug: guide.slug }),
+      });
+      const body = await response.text();
+      const expected = renderGuideMarkdown(guide);
+      assert.equal(body, expected, `Detail body must match renderGuideMarkdown for ${locale}/${guide.slug}`);
+    }
+  }
+});
+
+test("detail route GET returns 404 for invalid locale", async () => {
+  const response = await detailGET(new Request("https://sismosmart.com/markdown/guides/es/building-seismic-monitoring-device"), {
+    params: Promise.resolve({ locale: "es", slug: "building-seismic-monitoring-device" }),
+  });
+  assert.equal(response.status, 404, "Detail route must return 404 for invalid locale");
+});
+
+test("detail route GET returns 404 for invalid slug", async () => {
+  const response = await detailGET(new Request("https://sismosmart.com/markdown/guides/en/nonexistent-slug"), {
+    params: Promise.resolve({ locale: "en", slug: "nonexistent-slug" }),
+  });
+  assert.equal(response.status, 404, "Detail route must return 404 for invalid slug");
+});
+
+test("detail route GET returns 404 for missing slug", async () => {
+  const response = await detailGET(new Request("https://sismosmart.com/markdown/guides/en/"), {
+    params: Promise.resolve({ locale: "en", slug: "" }),
+  });
+  assert.equal(response.status, 404, "Detail route must return 404 for empty slug");
+});
+
+test("detail route GET body does not include global safetyNotices or productStageNotices", async () => {
+  const { safetyNotices, productStageNotices } = await import("../src/lib/site.ts");
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const response = await detailGET(new Request(`https://sismosmart.com/markdown/guides/${locale}/${guide.slug}`), {
+        params: Promise.resolve({ locale, slug: guide.slug }),
+      });
+      const body = await response.text();
+      assert.doesNotMatch(body, new RegExp(safetyNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Body must not include global safetyNotice for ${locale}/${guide.slug}`);
+      assert.doesNotMatch(body, new RegExp(productStageNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Body must not include global productStageNotice for ${locale}/${guide.slug}`);
+    }
+  }
+});
+
+test("detail route GET body includes exactly the guide safetyNotice", async () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const response = await detailGET(new Request(`https://sismosmart.com/markdown/guides/${locale}/${guide.slug}`), {
+        params: Promise.resolve({ locale, slug: guide.slug }),
+      });
+      const body = await response.text();
+      assert.match(body, new RegExp(guide.safetyNotice.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Body must include guide.safetyNotice for ${locale}/${guide.slug}`);
+    }
+  }
+});
+
+test("detail route GET body CTA uses localized URL", async () => {
+  for (const locale of ["en", "tr"]) {
+    const guides = getGuides(locale);
+    for (const guide of guides) {
+      const response = await detailGET(new Request(`https://sismosmart.com/markdown/guides/${locale}/${guide.slug}`), {
+        params: Promise.resolve({ locale, slug: guide.slug }),
+      });
+      const body = await response.text();
+      const expectedCtaHref = getLocalizedHref(locale, guide.cta.href);
+      const expectedCtaUrl = `${siteUrl}${expectedCtaHref}`;
+      assert.match(body, new RegExp(`\\[${guide.cta.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${expectedCtaUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`), `CTA must use localized URL for ${locale}/${guide.slug}`);
+    }
+  }
+});

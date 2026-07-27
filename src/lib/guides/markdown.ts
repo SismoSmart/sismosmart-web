@@ -1,4 +1,4 @@
-import type { GuideContent, GuideLocale } from "@/lib/guides/types";
+import type { GuideContent, GuideLocale, GuideTranslationKey } from "@/lib/guides/types";
 import {
   getGuideByTranslationKey,
   getGuideCanonicalPath,
@@ -7,7 +7,8 @@ import {
   getGuidesByCategory,
 } from "@/lib/guides/catalog";
 import { getGuideUiStrings } from "@/lib/guides/ui-strings";
-import { siteConfig, safetyNotices, productStageNotices } from "@/lib/site";
+import { siteConfig, getLocalizedHref } from "@/lib/site";
+import { partitionGuideSections } from "@/lib/guides/presentation";
 
 function escapeYaml(value: string) {
   return JSON.stringify(value.replaceAll("\r\n", "\n").replaceAll("\r", "\n"));
@@ -30,15 +31,12 @@ function hubLastUpdated(locale: GuideLocale): string {
 }
 
 function renderRelatedGuideLinks(
-  relatedKeys: readonly string[],
+  relatedKeys: readonly GuideTranslationKey[],
   guide: GuideContent,
 ): string {
   return relatedKeys
     .map((key) => {
-      const related = getGuideByTranslationKey(
-        guide.locale,
-        key as GuideContent["translationKey"],
-      );
+      const related = getGuideByTranslationKey(guide.locale, key);
       const path = getGuideCanonicalPath(related);
       return `- [${related.h1}](${siteConfig.url}${path})`;
     })
@@ -118,8 +116,12 @@ export function renderGuideMarkdown(guide: GuideContent): string {
     .map((item) => `- ${item}`)
     .join("\n");
 
-  const sections = guide.sections
-    .filter((section) => section.heading !== ui.limitations)
+  const { contentSections, limitationParagraphs } = partitionGuideSections(
+    guide.sections,
+    ui.limitations,
+  );
+
+  const sections = contentSections
     .map((section) => {
       const body = section.paragraphs.join("\n\n");
       const bullets = section.bullets?.length
@@ -129,6 +131,9 @@ export function renderGuideMarkdown(guide: GuideContent): string {
     })
     .join("\n\n");
 
+  const limitationPara = limitationParagraphs.length
+    ? limitationParagraphs.join("\n\n") + "\n\n"
+    : "";
   const limitations = guide.limitations.map((l) => `- ${l}`).join("\n");
   const sismosmartFit = guide.sismosmartFit.map((s) => `- ${s}`).join("\n");
   const relatedGlossaryTerms = guide.relatedGlossaryTerms
@@ -141,6 +146,7 @@ export function renderGuideMarkdown(guide: GuideContent): string {
         `- [${ref.label}](${ref.url}) — ${ref.organization}`,
     )
     .join("\n");
+  const ctaUrl = `${siteConfig.url}${getLocalizedHref(guide.locale, guide.cta.href)}`;
 
   return `---
 title: ${escapeYaml(guide.title)}
@@ -163,7 +169,7 @@ ${sections}
 
 ## ${ui.limitations}
 
-${limitations}
+${limitationPara}${limitations}
 
 ## ${ui.sismosmartFit}
 
@@ -185,11 +191,7 @@ ${references}
 
 ${guide.safetyNotice}
 
-${safetyNotices[guide.locale]}
-
-${productStageNotices[guide.locale]}
-
-**${guide.cta.label}:** ${guide.cta.description} [${guide.cta.label}](${siteConfig.url}${guide.cta.href})
+**${guide.cta.label}:** ${guide.cta.description} [${guide.cta.label}](${ctaUrl})
 
 ## Sitemap
 

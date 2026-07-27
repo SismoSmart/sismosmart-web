@@ -15,8 +15,10 @@ function acceptsMarkdown(acceptHeader: string | null) {
       .map((part) => part.trim().toLowerCase());
     if (mediaType !== "text/markdown") return false;
 
-    const quality = parameters.find((parameter) => parameter.startsWith("q="));
-    return quality !== "q=0" && quality !== "q=0.0" && quality !== "q=0.00";
+    const qualityParam = parameters.find((parameter) => parameter.startsWith("q="));
+    if (!qualityParam) return true;
+    const q = Number(qualityParam.slice(2));
+    return Number.isFinite(q) && q > 0;
   });
 }
 

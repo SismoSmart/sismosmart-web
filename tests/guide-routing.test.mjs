@@ -668,6 +668,68 @@ test("forbidden-property matcher rejects review and offers property keys", () =>
   assertNoForbiddenProperties(valid, "valid-entity-set");
 });
 
+test("guide markdown hub and detail route files exist", () => {
+  const hubRoute = path.join(
+    rootDir,
+    "src",
+    "app",
+    "markdown",
+    "guides",
+    "[locale]",
+    "route.ts",
+  );
+  const detailRoute = path.join(
+    rootDir,
+    "src",
+    "app",
+    "markdown",
+    "guides",
+    "[locale]",
+    "[slug]",
+    "route.ts",
+  );
+  assert.ok(fs.existsSync(hubRoute), "src/app/markdown/guides/[locale]/route.ts must exist");
+  assert.ok(fs.existsSync(detailRoute), "src/app/markdown/guides/[locale]/[slug]/route.ts must exist");
+});
+
+test("guide markdown module exports renderGuideHubMarkdown and renderGuideMarkdown", () => {
+  const source = readText("src/lib/guides/markdown.ts");
+  assert.match(source, /export function renderGuideHubMarkdown/, "markdown.ts must export renderGuideHubMarkdown");
+  assert.match(source, /export function renderGuideMarkdown/, "markdown.ts must export renderGuideMarkdown");
+});
+
+test("hub markdown static params returns exactly en and tr", async () => {
+  const mod = await import("../src/app/markdown/guides/[locale]/route.ts");
+  const params = mod.generateStaticParams();
+  assert.deepEqual(params.map(p => p.locale).sort(), ["en", "tr"]);
+});
+
+test("detail markdown static params returns exactly 12 locale/slug pairs", async () => {
+  const mod = await import("../src/app/markdown/guides/[locale]/[slug]/route.ts");
+  const params = mod.generateStaticParams();
+  assert.equal(params.length, 12);
+  for (const param of params) {
+    assert.ok(isGuideLocale(param.locale), `Invalid locale in markdown static params: ${param.locale}`);
+    assert.equal(typeof param.slug, "string", "Missing slug in markdown static params");
+    assert.ok(
+      getGuideBySlug(param.locale, param.slug) !== null,
+      `Slug "${param.slug}" not found for locale "${param.locale}"`,
+    );
+  }
+});
+
+test("hub metadata includes markdown alternate for guide hubs", () => {
+  for (const locale of ["en", "tr"]) {
+    const metadata = buildGuideHubMetadata(locale);
+    assert.ok(metadata.alternates?.types?.["text/markdown"], `Hub metadata for ${locale} must include text/markdown alternate`);
+    assert.match(
+      metadata.alternates.types["text/markdown"],
+      new RegExp(`/${locale}/guides\\.md`),
+      `Hub markdown alternate must end with /${locale}/guides.md`,
+    );
+  }
+});
+
 test("hub route StructuredData call uses exact data and id", () => {
   const source = readText("src/app/[locale]/guides/page.tsx");
   assert.match(source, /import.*StructuredData.*from\s*["']@\/components\/structured-data["']/, "Hub route must import StructuredData");

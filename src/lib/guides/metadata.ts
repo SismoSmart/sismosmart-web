@@ -19,6 +19,7 @@ export function buildGuideHubMetadata(locale: GuideLocale): Metadata {
   const hub = getGuideHub(locale);
   const canonicalPath = `/${locale}/guides`;
   const canonical = `${siteConfig.url}${canonicalPath}`;
+  const markdownPath = `/${locale}/guides.md`;
   const ogImage = `${siteConfig.url}${assetPaths.ogImage}`;
 
   return {
@@ -35,6 +36,9 @@ export function buildGuideHubMetadata(locale: GuideLocale): Metadata {
         en: `${siteConfig.url}/en/guides`,
         tr: `${siteConfig.url}/tr/guides`,
         "x-default": `${siteConfig.url}/en/guides`,
+      },
+      types: {
+        "text/markdown": `${siteConfig.url}${markdownPath}`,
       },
     },
     openGraph: {

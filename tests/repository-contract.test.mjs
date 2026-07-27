@@ -776,6 +776,45 @@ test("browser runner is portable, animation-stable, and retry-safe", () => {
   );
 });
 
+test("guide markdown negotiation files exist and are self-contained", () => {
+  assert.ok(
+    fs.existsSync(path.join(rootDir, "src/lib/guides/markdown.ts")),
+    "src/lib/guides/markdown.ts must exist",
+  );
+  assert.ok(
+    fs.existsSync(path.join(rootDir, "src/app/markdown/guides/[locale]/route.ts")),
+    "src/app/markdown/guides/[locale]/route.ts must exist",
+  );
+  assert.ok(
+    fs.existsSync(path.join(rootDir, "src/app/markdown/guides/[locale]/[slug]/route.ts")),
+    "src/app/markdown/guides/[locale]/[slug]/route.ts must exist",
+  );
+  const markdownSource = readText("src/lib/guides/markdown.ts");
+  assert.doesNotMatch(markdownSource, /import.*fetch|node-fetch|axios/, "markdown.ts must not fetch HTML over HTTP");
+  assert.doesNotMatch(markdownSource, /user-agent/i, "markdown.ts must not detect user agents");
+  assert.match(markdownSource, /GuideHubCopy|GuideContent/, "markdown.ts must use GuideHubCopy or GuideContent");
+});
+
+test("guide hub metadata advertises text/markdown alternate", () => {
+  const source = readText("src/lib/guides/metadata.ts");
+  assert.match(
+    source,
+    /"text\/markdown"/,
+    "metadata.ts must advertise text/markdown in alternates.types",
+  );
+  assert.match(
+    source,
+    /types\s*:\s*\{/,
+    "metadata.ts must include types block in alternates",
+  );
+});
+
+test("proxy validates guide slugs via getGuideBySlug", () => {
+  const source = readText("src/proxy.ts");
+  assert.match(source, /getGuideBySlug/, "proxy.ts must import and use getGuideBySlug");
+  assert.match(source, /isGuideLocale/, "proxy.ts must validate locale via isGuideLocale");
+});
+
 test("vulnerable transitive dependency paths use patched compatibility releases", () => {
   const compareVersions = (left, right) => {
     const leftParts = left.split(".").map(Number);

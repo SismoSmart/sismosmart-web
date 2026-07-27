@@ -6,6 +6,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { getPages } from "../src/lib/pages.ts";
 import { buildPageMetadata } from "../src/lib/metadata.ts";
+import {
+  getGuides,
+} from "../src/lib/guides/catalog.ts";
+import { guideLocales, guideTranslationKeys } from "../src/lib/guides/types.ts";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -316,6 +320,71 @@ test("public AGENTS.md exposes required sections without private operations data
     "Safety and limitations",
   ]) {
     assert.match(body, new RegExp(`^## ${heading}$`, "m"));
+  }
+  assertPublicOutput(body);
+});
+
+test("sitemap.md includes English and Turkish guide sections with hub and detail links", async () => {
+  const { GET } = await loadRoute("src/app/sitemap.md/route.ts");
+  const body = await GET().text();
+  assert.match(body, /## English guides/m);
+  assert.match(body, /## Turkish guides/m);
+  assert.match(body, /https:\/\/sismosmart\.com\/en\/guides/);
+  assert.match(body, /https:\/\/sismosmart\.com\/tr\/guides/);
+  for (const key of guideTranslationKeys) {
+    const enGuides = getGuides("en");
+    const trGuides = getGuides("tr");
+    const enGuide = enGuides.find((g) => g.translationKey === key);
+    const trGuide = trGuides.find((g) => g.translationKey === key);
+    assert.ok(enGuide, `EN guide ${key} must exist`);
+    assert.ok(trGuide, `TR guide ${key} must exist`);
+    assert.match(body, new RegExp(`https://sismosmart\\.com/en/guides/${enGuide.slug}`));
+    assert.match(body, new RegExp(`https://sismosmart\\.com/tr/guides/${trGuide.slug}`));
+  }
+  assertPublicOutput(body);
+});
+
+test("llms.txt includes English Guides section with hub and all six English guide links", async () => {
+  const { GET } = await loadRoute("src/app/llms.txt/route.ts");
+  const body = await GET().text();
+  assert.match(body, /## Guides/m);
+  assert.match(body, /https:\/\/sismosmart\.com\/en\/guides/);
+  for (const key of guideTranslationKeys) {
+    const enGuides = getGuides("en");
+    const guide = enGuides.find((g) => g.translationKey === key);
+    assert.ok(guide, `EN guide ${key} must exist`);
+    assert.match(body, new RegExp(`https://sismosmart\\.com/en/guides/${guide.slug}`));
+  }
+  assertPublicOutput(body);
+});
+
+test("llms-full.txt includes both hubs and all twelve guide entries with concise summaries", async () => {
+  const { GET } = await loadRoute("src/app/llms-full.txt/route.ts");
+  const body = await GET().text();
+  assert.match(body, /https:\/\/sismosmart\.com\/en\/guides/);
+  assert.match(body, /https:\/\/sismosmart\.com\/tr\/guides/);
+  for (const locale of guideLocales) {
+    for (const key of guideTranslationKeys) {
+      const guides = getGuides(locale);
+      const guide = guides.find((g) => g.translationKey === key);
+      assert.ok(guide, `${locale} guide ${key} must exist`);
+      assert.match(body, new RegExp(`https://sismosmart\\.com/${locale}/guides/${guide.slug}`));
+    }
+  }
+  assertPublicOutput(body);
+});
+
+test("Markdown index includes guide Markdown URLs for both hubs and all twelve detail pages", async () => {
+  const { GET } = await loadRoute("src/app/markdown/route.ts");
+  const body = await GET().text();
+  for (const locale of guideLocales) {
+    assert.match(body, new RegExp(`https://sismosmart\\.com/${locale}/guides\\.md`));
+    for (const key of guideTranslationKeys) {
+      const guides = getGuides(locale);
+      const guide = guides.find((g) => g.translationKey === key);
+      assert.ok(guide, `${locale} guide ${key} must exist`);
+      assert.match(body, new RegExp(`https://sismosmart\\.com/${locale}/guides/${guide.slug}\\.md`));
+    }
   }
   assertPublicOutput(body);
 });

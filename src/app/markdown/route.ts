@@ -3,6 +3,12 @@ import {
   getAgentPageDescriptor,
 } from "@/lib/agent-discovery";
 import { localeLabels, locales, siteConfig } from "@/lib/site";
+import {
+  getGuides,
+  getGuideMarkdownPath,
+  getGuideHub,
+} from "@/lib/guides/catalog";
+import { guideLocales } from "@/lib/guides/types";
 
 export const dynamic = "force-static";
 
@@ -20,11 +26,30 @@ export function GET(): Response {
     })
     .join("\n\n");
 
+  const guideSection = guideLocales
+    .map((locale) => {
+      const hub = getGuideHub(locale);
+      const hubMarkdown = `/${locale}/guides.md`;
+      const guides = getGuides(locale);
+      const detailLinks = guides
+        .map((guide) => {
+          const markdown = getGuideMarkdownPath(guide);
+          return `- [${guide.title}](${siteConfig.url}${markdown})`;
+        })
+        .join("\n");
+      return `### ${hub.title}\n\n- [${hub.h1}](${siteConfig.url}${hubMarkdown})\n\n${detailLinks}`;
+    })
+    .join("\n\n");
+
   const body = `# ${siteConfig.name} Markdown alternatives
 
 > Localized Markdown views generated from the same public page copy used by the HTML website.
 
 ${sections}
+
+## Guide Markdown
+
+${guideSection}
 
 ## Other machine-readable resources
 

@@ -15,6 +15,11 @@ import {
   safetyNotices,
   siteConfig,
 } from "../src/lib/site.ts";
+import {
+  getGuides,
+  getGuideCanonicalPath,
+} from "../src/lib/guides/catalog.ts";
+import { guideLocales, guideTranslationKeys } from "../src/lib/guides/types.ts";
 
 const root = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 
@@ -66,7 +71,10 @@ test("canonical metadata and hreflang stay aligned for every locale and route", 
 
 test("sitemap contains each canonical indexable locale route exactly once", () => {
   const entries = sitemap();
-  const expectedCount = locales.length * (1 + staticPageKeys.length);
+  const expectedStaticCount = locales.length * (1 + staticPageKeys.length);
+  const guideDetailCount = guideLocales.length * guideTranslationKeys.length;
+  const hubCount = guideLocales.length;
+  const expectedCount = expectedStaticCount + hubCount + guideDetailCount;
   assert.equal(entries.length, expectedCount);
   const urls = entries.map((entry) => entry.url);
   assert.equal(new Set(urls).size, urls.length);
@@ -74,11 +82,83 @@ test("sitemap contains each canonical indexable locale route exactly once", () =
   assert.ok(urls.every((url) => !url.includes("/api/")));
   assert.ok(!urls.includes(siteConfig.url));
   for (const entry of entries) {
+    const isGuide = entry.url.includes("/guides");
     assert.equal(entry.alternates?.languages?.["x-default"]?.startsWith(`${siteConfig.url}/en`), true);
-    assert.deepEqual(
-      Object.keys(entry.alternates?.languages || {}).sort(),
-      [...locales, "x-default"].sort(),
-    );
+    if (isGuide) {
+      assert.deepEqual(
+        Object.keys(entry.alternates?.languages || {}).sort(),
+        ["en", "tr", "x-default"].sort(),
+      );
+    } else {
+      assert.deepEqual(
+        Object.keys(entry.alternates?.languages || {}).sort(),
+        [...locales, "x-default"].sort(),
+      );
+    }
+  }
+});
+
+test("sitemap contains exactly 98 entries: 84 static plus 14 guide entries", () => {
+  const entries = sitemap();
+  const expectedStaticCount = locales.length * (1 + staticPageKeys.length);
+  const guideDetailCount = guideLocales.length * guideTranslationKeys.length;
+  const hubCount = guideLocales.length;
+  const expectedTotal = expectedStaticCount + hubCount + guideDetailCount;
+  assert.equal(entries.length, expectedTotal, `Expected ${expectedTotal} sitemap entries (84 static + ${hubCount} hubs + ${guideDetailCount} details)`);
+});
+
+test("sitemap guide entries advertise exactly en, tr, x-default alternates", () => {
+  const entries = sitemap();
+  const guideUrls = entries
+    .filter((e) => e.url.includes("/guides"))
+    .map((e) => e.url);
+  assert.equal(guideUrls.length, 14, "Expected 14 guide URLs in sitemap");
+
+  for (const entry of entries.filter((e) => e.url.includes("/guides"))) {
+    const alternates = entry.alternates?.languages || {};
+    const keys = Object.keys(alternates).sort();
+    assert.deepEqual(keys, ["en", "tr", "x-default"], `Guide ${entry.url} must have exactly en, tr, x-default alternates`);
+    assert.equal(alternates["x-default"].startsWith(`${siteConfig.url}/en/guides`), true);
+  }
+});
+
+test("sitemap hub entries use monthly frequency, priority 0.8, and max updatedAt of locale guides", () => {
+  const entries = sitemap();
+  for (const locale of guideLocales) {
+    const hub = entries.find((e) => e.url === `${siteConfig.url}/${locale}/guides`);
+    assert.ok(hub, `Hub entry for ${locale}/guides must exist`);
+    assert.equal(hub.changeFrequency, "monthly");
+    assert.equal(hub.priority, 0.8);
+    const guides = getGuides(locale);
+    const maxUpdatedAt = guides.reduce((max, g) => (g.updatedAt > max ? g.updatedAt : max), guides[0].updatedAt);
+    assert.equal(hub.lastModified.toISOString().startsWith(maxUpdatedAt), true, `Hub lastModified must equal max updatedAt ${maxUpdatedAt}`);
+  }
+});
+
+test("sitemap detail guide entries use monthly frequency, priority 0.7, and exact updatedAt", () => {
+  const entries = sitemap();
+  for (const locale of guideLocales) {
+    for (const key of guideTranslationKeys) {
+      const guides = getGuides(locale);
+      const guide = guides.find((g) => g.translationKey === key);
+      assert.ok(guide, `Guide ${key} for ${locale} must exist`);
+      const canonicalPath = getGuideCanonicalPath(guide);
+      const entry = entries.find((e) => e.url === `${siteConfig.url}${canonicalPath}`);
+      assert.ok(entry, `Detail entry for ${canonicalPath} must exist`);
+      assert.equal(entry.changeFrequency, "monthly");
+      assert.equal(entry.priority, 0.7);
+      assert.equal(entry.lastModified.toISOString().startsWith(guide.updatedAt), true, `Detail lastModified must equal updatedAt ${guide.updatedAt}`);
+    }
+  }
+});
+
+test("sitemap does not contain unsupported locale guide URLs", () => {
+  const entries = sitemap();
+  const unsupportedLocales = ["es", "id", "pt", "it"];
+  for (const entry of entries) {
+    for (const locale of unsupportedLocales) {
+      assert.doesNotMatch(entry.url, new RegExp(`/${locale}/guides`), `Must not contain unsupported /${locale}/guides URL`);
+    }
   }
 });
 

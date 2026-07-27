@@ -13,6 +13,18 @@ function readText(relativePath) {
   return fs.readFileSync(path.join(rootDir, relativePath), "utf8");
 }
 
+function assertIncludes(text, expected, message) {
+  assert.ok(text.includes(expected), message);
+}
+
+function assertExcludes(text, unexpected, message) {
+  assert.equal(text.includes(unexpected), false, message);
+}
+
+function assertLine(text, expected, message) {
+  assert.ok(text.split("\n").includes(expected), message);
+}
+
 import { isGuideLocale, guideTranslationKeys } from "../src/lib/guides/types.ts";
 
 import {
@@ -722,9 +734,8 @@ test("hub metadata includes markdown alternate for guide hubs", () => {
   for (const locale of ["en", "tr"]) {
     const metadata = buildGuideHubMetadata(locale);
     assert.ok(metadata.alternates?.types?.["text/markdown"], `Hub metadata for ${locale} must include text/markdown alternate`);
-    assert.match(
-      metadata.alternates.types["text/markdown"],
-      new RegExp(`/${locale}/guides\\.md`),
+    assert.ok(
+      metadata.alternates.types["text/markdown"].endsWith(`/${locale}/guides.md`),
       `Hub markdown alternate must end with /${locale}/guides.md`,
     );
   }
@@ -779,8 +790,8 @@ test("renderGuideHubMarkdown produces valid frontmatter for both locales", () =>
     assert.match(front, /canonical_url:/, "frontmatter must have canonical_url");
     assert.match(front, /published_at:/, "frontmatter must have published_at");
     assert.match(front, /last_updated:/, "frontmatter must have last_updated");
-    assert.match(front, new RegExp(`locale: ${locale}`), `locale must be ${locale}`);
-    assert.match(front, new RegExp(`canonical_url:.*${locale}/guides`), "canonical_url must point to localized guides");
+    assertLine(front, `locale: ${locale}`, `locale must be ${locale}`);
+    assertLine(front, `canonical_url: "${siteUrl}/${locale}/guides"`, "canonical_url must point to localized guides");
   }
 });
 
@@ -790,8 +801,8 @@ test("renderGuideHubMarkdown dates are deterministic catalog extrema", () => {
     const expectedPublished = guides.reduce((min, g) => g.publishedAt < min ? g.publishedAt : min, guides[0].publishedAt);
     const expectedUpdated = guides.reduce((max, g) => g.updatedAt > max ? g.updatedAt : max, guides[0].updatedAt);
     const md = renderGuideHubMarkdown(locale);
-    assert.match(md, new RegExp(`published_at:.*${expectedPublished.replace(/[-.]/g, '\\$&')}`), `published_at must be ${expectedPublished} for ${locale}`);
-    assert.match(md, new RegExp(`last_updated:.*${expectedUpdated.replace(/[-.]/g, '\\$&')}`), `last_updated must be ${expectedUpdated} for ${locale}`);
+    assertLine(md, `published_at: "${expectedPublished}"`, `published_at must be ${expectedPublished} for ${locale}`);
+    assertLine(md, `last_updated: "${expectedUpdated}"`, `last_updated must be ${expectedUpdated} for ${locale}`);
   }
 });
 
@@ -801,7 +812,7 @@ test("renderGuideHubMarkdown includes all 6 guide links for both locales", () =>
     const guides = getGuides(locale);
     for (const guide of guides) {
       const path = getGuideCanonicalPath(guide);
-      assert.match(md, new RegExp(`\\[.*\\]\\(${siteUrl.replace(/\//g, '\\/')}${path.replace(/\//g, '\\/')}\\)`), `Hub must link to ${path} for ${locale}`);
+      assertIncludes(md, `](${siteUrl}${path})`, `Hub must link to ${path} for ${locale}`);
     }
   }
 });
@@ -846,7 +857,7 @@ test("renderGuideMarkdown CTA uses localized URL", () => {
       const md = renderGuideMarkdown(guide);
       const expectedCtaHref = getLocalizedHref(locale, guide.cta.href);
       const expectedCtaUrl = `${siteUrl}${expectedCtaHref}`;
-      assert.match(md, new RegExp(`\\[${guide.cta.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${expectedCtaUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`), `CTA must use localized URL ${expectedCtaUrl} for ${guide.translationKey}`);
+      assertIncludes(md, `[${guide.cta.label}](${expectedCtaUrl})`, `CTA must use localized URL ${expectedCtaUrl} for ${guide.translationKey}`);
     }
   }
 });
@@ -857,8 +868,8 @@ test("renderGuideMarkdown does not include safetyNotices or productStageNotices 
     const guides = getGuides(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.doesNotMatch(md, new RegExp(safetyNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Markdown must not include global safetyNotice for ${guide.translationKey}`);
-      assert.doesNotMatch(md, new RegExp(productStageNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Markdown must not include global productStageNotice for ${guide.translationKey}`);
+      assertExcludes(md, safetyNotices[locale], `Markdown must not include global safetyNotice for ${guide.translationKey}`);
+      assertExcludes(md, productStageNotices[locale], `Markdown must not include global productStageNotice for ${guide.translationKey}`);
     }
   }
 });
@@ -868,7 +879,7 @@ test("renderGuideMarkdown includes exactly the guide safetyNotice", () => {
     const guides = getGuides(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(guide.safetyNotice.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Markdown must include guide.safetyNotice for ${guide.translationKey}`);
+      assertIncludes(md, guide.safetyNotice, `Markdown must include guide.safetyNotice for ${guide.translationKey}`);
     }
   }
 });
@@ -878,10 +889,8 @@ test("renderGuideMarkdown frontmatter dates equal guide.publishedAt and guide.up
     const guides = getGuides(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      const pubEscaped = guide.publishedAt.replace(/[-.]/g, '\\$&');
-      const updEscaped = guide.updatedAt.replace(/[-.]/g, '\\$&');
-      assert.match(md, new RegExp(`published_at:.*${pubEscaped}`), `published_at must match guide.publishedAt for ${guide.translationKey}`);
-      assert.match(md, new RegExp(`last_updated:.*${updEscaped}`), `last_updated must match guide.updatedAt for ${guide.translationKey}`);
+      assertLine(md, `published_at: "${guide.publishedAt}"`, `published_at must match guide.publishedAt for ${guide.translationKey}`);
+      assertLine(md, `last_updated: "${guide.updatedAt}"`, `last_updated must match guide.updatedAt for ${guide.translationKey}`);
     }
   }
 });
@@ -894,13 +903,13 @@ test("renderGuideMarkdown includes all sections, paragraphs, and bullets", () =>
       const md = renderGuideMarkdown(guide);
       const contentSections = guide.sections.filter(s => s.heading !== ui.limitations);
       for (const section of contentSections) {
-        assert.match(md, new RegExp(`## ${section.heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have heading "${section.heading}" for ${guide.translationKey}`);
+        assertLine(md, `## ${section.heading}`, `Must have heading "${section.heading}" for ${guide.translationKey}`);
         for (const para of section.paragraphs) {
           assert.ok(md.includes(para), `Must include paragraph from "${section.heading}" for ${guide.translationKey}`);
         }
         if (section.bullets) {
           for (const bullet of section.bullets) {
-            assert.match(md, new RegExp(`^- ${bullet.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'), `Must include bullet for ${guide.translationKey}`);
+            assertLine(md, `- ${bullet}`, `Must include bullet for ${guide.translationKey}`);
           }
         }
       }
@@ -916,7 +925,7 @@ test("renderGuideMarkdown includes all related guide links with locale-correct s
       for (const relKey of guide.relatedGuides) {
         const related = getGuideByTranslationKey(locale, relKey);
         const relPath = getGuideCanonicalPath(related);
-        assert.match(md, new RegExp(`\\[.*\\]\\(${siteUrl.replace(/\//g, '\\/')}${relPath.replace(/\//g, '\\/')}\\)`), `Related guide ${relKey} must use locale ${locale} slug for ${guide.translationKey}`);
+        assertIncludes(md, `](${siteUrl}${relPath})`, `Related guide ${relKey} must use locale ${locale} slug for ${guide.translationKey}`);
       }
     }
   }
@@ -928,7 +937,7 @@ test("renderGuideMarkdown includes references with organization", () => {
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
       for (const ref of guide.references) {
-        assert.match(md, new RegExp(`\\[${ref.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${ref.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\) — ${ref.organization.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must include reference ${ref.label} for ${guide.translationKey}`);
+        assertIncludes(md, `[${ref.label}](${ref.url}) — ${ref.organization}`, `Must include reference ${ref.label} for ${guide.translationKey}`);
       }
     }
   }
@@ -957,9 +966,9 @@ test("renderGuideMarkdown keyTakeaways section uses localized heading", () => {
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.keyTakeaways.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.keyTakeaways} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.keyTakeaways}`, `Must have ${ui.keyTakeaways} heading for ${guide.translationKey}`);
       for (const item of guide.keyTakeaways) {
-        assert.match(md, new RegExp(`^- ${item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'), `Must include key takeaway for ${guide.translationKey}`);
+        assertLine(md, `- ${item}`, `Must include key takeaway for ${guide.translationKey}`);
       }
     }
   }
@@ -971,7 +980,7 @@ test("renderGuideMarkdown glossary terms link to locale glossary", () => {
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
       for (const term of guide.relatedGlossaryTerms) {
-        assert.match(md, new RegExp(`\\[${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${siteUrl.replace(/\//g, '\\/')}/${locale}/glossary\\)`), `Glossary link must point to ${locale}/glossary for ${guide.translationKey}`);
+        assertIncludes(md, `[${term}](${siteUrl}/${locale}/glossary)`, `Glossary link must point to ${locale}/glossary for ${guide.translationKey}`);
       }
     }
   }
@@ -983,9 +992,9 @@ test("renderGuideMarkdown SismoSmart fit section uses localized heading", () => 
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.sismosmartFit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.sismosmartFit} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.sismosmartFit}`, `Must have ${ui.sismosmartFit} heading for ${guide.translationKey}`);
       for (const item of guide.sismosmartFit) {
-        assert.match(md, new RegExp(`^- ${item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'), `Must include SismoSmart fit item for ${guide.translationKey}`);
+        assertLine(md, `- ${item}`, `Must include SismoSmart fit item for ${guide.translationKey}`);
       }
     }
   }
@@ -997,7 +1006,7 @@ test("renderGuideMarkdown limitations section uses localized heading", () => {
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.limitations.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.limitations} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.limitations}`, `Must have ${ui.limitations} heading for ${guide.translationKey}`);
     }
   }
 });
@@ -1008,7 +1017,7 @@ test("renderGuideMarkdown references section uses localized heading", () => {
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.references.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.references} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.references}`, `Must have ${ui.references} heading for ${guide.translationKey}`);
     }
   }
 });
@@ -1019,7 +1028,7 @@ test("renderGuideMarkdown related guides section uses localized heading", () => 
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.relatedGuides.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.relatedGuides} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.relatedGuides}`, `Must have ${ui.relatedGuides} heading for ${guide.translationKey}`);
     }
   }
 });
@@ -1030,7 +1039,7 @@ test("renderGuideMarkdown related glossary terms section uses localized heading"
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.relatedGlossaryTerms.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.relatedGlossaryTerms} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.relatedGlossaryTerms}`, `Must have ${ui.relatedGlossaryTerms} heading for ${guide.translationKey}`);
     }
   }
 });
@@ -1041,7 +1050,7 @@ test("renderGuideMarkdown safety notice section uses localized heading", () => {
     const ui = getGuideUiStrings(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`## ${ui.safetyNotice.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Must have ${ui.safetyNotice} heading for ${guide.translationKey}`);
+      assertLine(md, `## ${ui.safetyNotice}`, `Must have ${ui.safetyNotice} heading for ${guide.translationKey}`);
     }
   }
 });
@@ -1051,7 +1060,7 @@ test("renderGuideMarkdown locale field matches guide locale", () => {
     const guides = getGuides(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`locale: ${locale}`), `locale must be ${locale} for ${guide.translationKey}`);
+      assertLine(md, `locale: ${locale}`, `locale must be ${locale} for ${guide.translationKey}`);
     }
   }
 });
@@ -1062,7 +1071,7 @@ test("renderGuideMarkdown canonical_url uses localized path", () => {
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
       const path = getGuideCanonicalPath(guide);
-      assert.match(md, new RegExp(`canonical_url:.*${path.replace(/\//g, '\\/')}`), `canonical_url must use ${path} for ${guide.translationKey}`);
+      assertLine(md, `canonical_url: "${siteUrl}${path}"`, `canonical_url must use ${path} for ${guide.translationKey}`);
     }
   }
 });
@@ -1072,7 +1081,7 @@ test("renderGuideMarkdown H1 matches guide.h1", () => {
     const guides = getGuides(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`# ${guide.h1.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `H1 must match guide.h1 for ${guide.translationKey}`);
+      assertLine(md, `# ${guide.h1}`, `H1 must match guide.h1 for ${guide.translationKey}`);
     }
   }
 });
@@ -1082,7 +1091,7 @@ test("renderGuideMarkdown summary appears as blockquote", () => {
     const guides = getGuides(locale);
     for (const guide of guides) {
       const md = renderGuideMarkdown(guide);
-      assert.match(md, new RegExp(`> ${guide.summary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`), `Summary must appear as blockquote for ${guide.translationKey}`);
+      assertLine(md, `> ${guide.summary}`, `Summary must appear as blockquote for ${guide.translationKey}`);
     }
   }
 });
@@ -1186,8 +1195,8 @@ test("detail route GET body does not include global safetyNotices or productStag
         params: Promise.resolve({ locale, slug: guide.slug }),
       });
       const body = await response.text();
-      assert.doesNotMatch(body, new RegExp(safetyNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Body must not include global safetyNotice for ${locale}/${guide.slug}`);
-      assert.doesNotMatch(body, new RegExp(productStageNotices[locale].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Body must not include global productStageNotice for ${locale}/${guide.slug}`);
+      assertExcludes(body, safetyNotices[locale], `Body must not include global safetyNotice for ${locale}/${guide.slug}`);
+      assertExcludes(body, productStageNotices[locale], `Body must not include global productStageNotice for ${locale}/${guide.slug}`);
     }
   }
 });
@@ -1200,7 +1209,7 @@ test("detail route GET body includes exactly the guide safetyNotice", async () =
         params: Promise.resolve({ locale, slug: guide.slug }),
       });
       const body = await response.text();
-      assert.match(body, new RegExp(guide.safetyNotice.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `Body must include guide.safetyNotice for ${locale}/${guide.slug}`);
+      assertIncludes(body, guide.safetyNotice, `Body must include guide.safetyNotice for ${locale}/${guide.slug}`);
     }
   }
 });
@@ -1215,7 +1224,7 @@ test("detail route GET body CTA uses localized URL", async () => {
       const body = await response.text();
       const expectedCtaHref = getLocalizedHref(locale, guide.cta.href);
       const expectedCtaUrl = `${siteUrl}${expectedCtaHref}`;
-      assert.match(body, new RegExp(`\\[${guide.cta.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]\\(${expectedCtaUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`), `CTA must use localized URL for ${locale}/${guide.slug}`);
+      assertIncludes(body, `[${guide.cta.label}](${expectedCtaUrl})`, `CTA must use localized URL for ${locale}/${guide.slug}`);
     }
   }
 });

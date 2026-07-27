@@ -1001,6 +1001,7 @@ test("Search Console performance path resolves safe dates, optional comparison, 
 test("Search Console performance documentation preserves the Doppler and privacy boundary", () => {
   const runbook = readText("docs/operations/analytics-observability.md");
 
+  const normalizedRunbook = runbook.toLowerCase();
   for (const phrase of [
     "sismosmart-web",
     "prd_ops",
@@ -1012,7 +1013,7 @@ test("Search Console performance documentation preserves the Doppler and privacy
     "does not persist private reports",
     "https://www.googleapis.com/auth/webmasters.readonly",
   ]) {
-    assert.match(runbook, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    assert.ok(normalizedRunbook.includes(phrase.toLowerCase()), `Runbook must include ${phrase}`);
   }
   assert.doesNotMatch(runbook, /performance[^\n]*searchConsole OAuth scope/i);
 });

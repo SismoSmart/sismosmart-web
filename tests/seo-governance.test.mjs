@@ -18,6 +18,8 @@ import {
 import {
   getGuides,
   getGuideCanonicalPath,
+  getGuideAlternates,
+  getGuideByTranslationKey,
 } from "../src/lib/guides/catalog.ts";
 import { guideLocales, guideTranslationKeys } from "../src/lib/guides/types.ts";
 
@@ -149,6 +151,44 @@ test("sitemap detail guide entries use monthly frequency, priority 0.7, and exac
       assert.equal(entry.priority, 0.7);
       assert.equal(entry.lastModified.toISOString().startsWith(guide.updatedAt), true, `Detail lastModified must equal updatedAt ${guide.updatedAt}`);
     }
+  }
+});
+
+test("sitemap detail guide alternates exactly match getGuideAlternates with distinct EN/TR slugs", () => {
+  const entries = sitemap();
+  for (const key of guideTranslationKeys) {
+    const alternates = getGuideAlternates(key);
+    const enGuide = getGuideByTranslationKey("en", key);
+    const trGuide = getGuideByTranslationKey("tr", key);
+    assert.notEqual(enGuide.slug, trGuide.slug, `${key} must have distinct EN/TR slugs`);
+    for (const locale of guideLocales) {
+      const guide = getGuideByTranslationKey(locale, key);
+      const canonicalPath = getGuideCanonicalPath(guide);
+      const entry = entries.find((e) => e.url === `${siteConfig.url}${canonicalPath}`);
+      assert.ok(entry, `Detail entry for ${canonicalPath} must exist`);
+      assert.deepEqual(
+        entry.alternates.languages,
+        alternates,
+        `${canonicalPath} alternates must equal getGuideAlternates("${key}")`,
+      );
+    }
+  }
+});
+
+test("sitemap detail guide alternates fail when EN slug is used for TR entry", () => {
+  const entries = sitemap();
+  for (const key of guideTranslationKeys) {
+    const enGuide = getGuideByTranslationKey("en", key);
+    const trGuide = getGuideByTranslationKey("tr", key);
+    const trCanonicalPath = getGuideCanonicalPath(trGuide);
+    const trEntry = entries.find((e) => e.url === `${siteConfig.url}${trCanonicalPath}`);
+    assert.ok(trEntry, `TR detail entry for ${trCanonicalPath} must exist`);
+    const wrongAlternate = `https://sismosmart.com/tr/guides/${enGuide.slug}`;
+    assert.notEqual(
+      trEntry.alternates.languages.tr,
+      wrongAlternate,
+      `TR alternate for ${trCanonicalPath} must NOT use EN slug "${enGuide.slug}"`,
+    );
   }
 });
 

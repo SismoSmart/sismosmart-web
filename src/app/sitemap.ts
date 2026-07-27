@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { routeSegments, staticPageKeys } from "@/lib/pages";
 import { locales, siteConfig } from "@/lib/site";
-import { getGuides, getGuideCanonicalPath } from "@/lib/guides/catalog";
+import { getGuides, getGuideCanonicalPath, getGuideAlternates } from "@/lib/guides/catalog";
 import { guideLocales } from "@/lib/guides/types";
 
 function languageAlternates(path: string) {
@@ -81,11 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: "monthly",
         priority: 0.7,
         alternates: {
-          languages: {
-            en: `https://sismosmart.com/en/guides/${guide.slug}`,
-            tr: `https://sismosmart.com/tr/guides/${guide.slug}`,
-            "x-default": `https://sismosmart.com/en/guides/${guide.slug}`,
-          },
+          languages: getGuideAlternates(guide.translationKey),
         },
       });
     }

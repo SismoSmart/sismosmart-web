@@ -3,7 +3,7 @@ import {
   type AgentPageKey,
 } from "@/lib/agent-discovery";
 import { locales, siteConfig } from "@/lib/site";
-import { getGuides, getGuideCanonicalPath } from "@/lib/guides/catalog";
+import { getGuideCanonicalPath, getGuideMarkdownPath, getGuideByTranslationKey } from "@/lib/guides/catalog";
 import { guideTranslationKeys } from "@/lib/guides/types";
 
 /** A concise, link-first public summary following the llmstxt.org convention. */
@@ -34,12 +34,12 @@ export function GET(): Response {
     .join("\n");
   const homeMarkdown = getAgentPageDescriptor("en", "home").markdownUrl;
 
-  const enGuides = getGuides("en");
   const guideLinks = guideTranslationKeys
     .map((key) => {
-      const guide = enGuides.find((g) => g.translationKey === key);
-      const canonical = getGuideCanonicalPath(guide!);
-      return `- [${guide!.title}](${siteConfig.url}${canonical}): ${guide!.description}`;
+      const guide = getGuideByTranslationKey("en", key);
+      const canonical = getGuideCanonicalPath(guide);
+      const markdown = getGuideMarkdownPath(guide);
+      return `- [${guide.title}](${siteConfig.url}${canonical}): ${guide.description} [Markdown](${siteConfig.url}${markdown})`;
     })
     .join("\n");
 
@@ -55,7 +55,7 @@ ${keyPages}
 
 ## Guides
 
-- [English guide hub](${siteConfig.url}/en/guides)
+- [English guide hub](${siteConfig.url}/en/guides): Hub for all English guides. [Markdown](${siteConfig.url}/en/guides.md)
 
 ${guideLinks}
 

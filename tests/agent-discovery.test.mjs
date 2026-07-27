@@ -8,6 +8,9 @@ import { getPages } from "../src/lib/pages.ts";
 import { buildPageMetadata } from "../src/lib/metadata.ts";
 import {
   getGuides,
+  getGuideCanonicalPath,
+  getGuideMarkdownPath,
+  getGuideByTranslationKey,
 } from "../src/lib/guides/catalog.ts";
 import { guideLocales, guideTranslationKeys } from "../src/lib/guides/types.ts";
 
@@ -356,6 +359,45 @@ test("llms.txt includes English Guides section with hub and all six English guid
     assert.match(body, new RegExp(`https://sismosmart\\.com/en/guides/${guide.slug}`));
   }
   assertPublicOutput(body);
+});
+
+test("llms.txt guide entries pair each canonical URL with its exact Markdown URL", async () => {
+  const { GET } = await loadRoute("src/app/llms.txt/route.ts");
+  const body = await GET().text();
+  const lines = body.split("\n");
+  const guideSectionStart = lines.findIndex((l) => l === "## Guides");
+  assert.ok(guideSectionStart >= 0, "## Guides section must exist");
+  const guideLines = lines.slice(guideSectionStart + 1).filter((l) => l.startsWith("- ["));
+  const hubLine = guideLines.find((l) => l.includes("/en/guides)"));
+  assert.ok(hubLine, "English guide hub link must exist in Guides section");
+  assert.match(hubLine, /\[Markdown\]\(https:\/\/sismosmart\.com\/en\/guides\.md\)/, "Hub entry must include Markdown link to /en/guides.md");
+  for (const key of guideTranslationKeys) {
+    const enGuide = getGuideByTranslationKey("en", key);
+    const canonicalPath = getGuideCanonicalPath(enGuide);
+    const markdownPath = getGuideMarkdownPath(enGuide);
+    const guideLine = guideLines.find((l) => l.includes(canonicalPath));
+    assert.ok(guideLine, `Guide line for ${canonicalPath} must exist`);
+    assert.match(
+      guideLine,
+      new RegExp(`\\[Markdown\\]\\(https://sismosmart\\.com${markdownPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\)`),
+      `${canonicalPath} must pair canonical with Markdown URL ${markdownPath}`,
+    );
+  }
+});
+
+test("llms.txt guide Markdown links fail when omitted from source", async () => {
+  const { GET } = await loadRoute("src/app/llms.txt/route.ts");
+  const body = await GET().text();
+  assert.match(body, /\[Markdown\]\(https:\/\/sismosmart\.com\/en\/guides\.md\)/, "Omission check: hub Markdown link must be present");
+  for (const key of guideTranslationKeys) {
+    const enGuide = getGuideByTranslationKey("en", key);
+    const markdownPath = getGuideMarkdownPath(enGuide);
+    assert.match(
+      body,
+      new RegExp(`\\[Markdown\\]\\(https://sismosmart\\.com${markdownPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\)`),
+      `Omission check: guide Markdown link ${markdownPath} must be present`,
+    );
+  }
 });
 
 test("llms-full.txt includes both hubs and all twelve guide entries with concise summaries", async () => {

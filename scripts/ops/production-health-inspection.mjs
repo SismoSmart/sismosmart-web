@@ -109,8 +109,8 @@ if [ -d "$diagnostic_home" ]; then
     }
     {
       kib = $1 + 0
-      name = $2
-      sub(/^.*\//, "", name)
+      pathCount = split($2, pathParts, "/")
+      name = pathParts[pathCount]
       label = category(name)
       bytes = kib * 1024
       totals[label] += bytes

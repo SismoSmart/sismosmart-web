@@ -292,3 +292,18 @@ test("capacity diagnostic parser keeps only allowlisted aggregate labels", () =>
   });
   assert.doesNotMatch(JSON.stringify(result.capacityDiagnostics), /private-name/);
 });
+
+test("capacity diagnostics derive basenames without slash-escape-sensitive awk regex", () => {
+  const script = buildRemoteInspectionScript({
+    capacityDiagnostics: true,
+    config,
+    htaccessPath: "/home/example/public_html/.htaccess",
+    passenger: "/home/example/apps/site/releases/active",
+    remoteAppRoot: "/home/example/apps/site/current",
+    remoteReleasesRoot: "/home/example/apps/site/releases",
+  });
+
+  assert.match(script, /split\(\$2, pathParts, "\/"\)/);
+  assert.match(script, /name = pathParts\[pathCount\]/);
+  assert.doesNotMatch(script, /sub\(\/\^\.\*\/\//);
+});

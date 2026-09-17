@@ -236,3 +236,74 @@ test("remote inspection propagates external adapter failures", async () => {
     (error) => error === commandError,
   );
 });
+
+test("capacity diagnostics stay disabled unless explicitly requested", () => {
+  const script = buildRemoteInspectionScript({
+    config,
+    htaccessPath: "/home/example/public_html/.htaccess",
+    passenger: "/home/example/apps/site/releases/active",
+    remoteAppRoot: "/home/example/apps/site/current",
+    remoteReleasesRoot: "/home/example/apps/site/releases",
+  });
+
+  assert.doesNotMatch(script, /diagnosticCategory/);
+  assert.doesNotMatch(script, /diagnostic\thomeBytes/);
+});
+
+test("capacity diagnostics expose only aggregate safe categories", () => {
+  const script = buildRemoteInspectionScript({
+    capacityDiagnostics: true,
+    config,
+    htaccessPath: "/home/example/public_html/.htaccess",
+    passenger: "/home/example/apps/site/releases/active",
+    remoteAppRoot: "/home/example/apps/site/current",
+    remoteReleasesRoot: "/home/example/apps/site/releases",
+  });
+
+  for (const category of ["apps", "public", "logs", "mail", "cache", "localData", "tmp", "backups", "other"]) {
+    assert.ok(script.includes(`diagnosticCategory\\t${category}\\t`));
+  }
+  assert.match(script, /diagnostic\\thomeBytes\\t/);
+  assert.match(script, /diagnostic\\tfilesystemTotalBytes\\t/);
+  assert.doesNotMatch(script, /diagnosticCategory\\t%s/);
+});
+
+test("capacity diagnostic parser keeps only allowlisted aggregate labels", () => {
+  const result = parseRemoteInspection(
+    [
+      "diagnostic\thomeBytes\t1000",
+      "diagnostic\tfilesystemTotalBytes\t10000",
+      "diagnostic\tfilesystemUsedBytes\t9700",
+      "diagnostic\tfilesystemAvailableBytes\t300",
+      "diagnosticCategory\tapps\t400",
+      "diagnosticCategory\tlogs\t500",
+      "diagnosticCategory\tprivate-name\t9000",
+      "diagnosticCategory\tother\t100",
+    ].join("\n"),
+    "/releases/active",
+  );
+
+  assert.deepEqual(result.capacityDiagnostics, {
+    categories: { apps: 400, logs: 500, other: 100 },
+    filesystemAvailableBytes: 300,
+    filesystemTotalBytes: 10000,
+    filesystemUsedBytes: 9700,
+    homeBytes: 1000,
+  });
+  assert.doesNotMatch(JSON.stringify(result.capacityDiagnostics), /private-name/);
+});
+
+test("capacity diagnostics derive basenames without slash-escape-sensitive awk regex", () => {
+  const script = buildRemoteInspectionScript({
+    capacityDiagnostics: true,
+    config,
+    htaccessPath: "/home/example/public_html/.htaccess",
+    passenger: "/home/example/apps/site/releases/active",
+    remoteAppRoot: "/home/example/apps/site/current",
+    remoteReleasesRoot: "/home/example/apps/site/releases",
+  });
+
+  assert.match(script, /split\(\$2, pathParts, "\/"\)/);
+  assert.match(script, /name = pathParts\[pathCount\]/);
+  assert.doesNotMatch(script, /sub\(\/\^\.\*\/\//);
+});

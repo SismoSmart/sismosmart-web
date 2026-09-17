@@ -664,7 +664,7 @@ test("safe log summary preserves actionable evidence without infrastructure path
       ok: false,
       privatePath: "/home/example/releases/1",
     },
-    warnings: ["filesystem usage is above the warning threshold"],
+    warnings: ["host filesystem usage is above the warning threshold"],
     workflows: {
       blocking: false,
       targets: {

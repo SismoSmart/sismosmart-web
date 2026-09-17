@@ -16,6 +16,28 @@ function safeFailureProbe(probe) {
   };
 }
 
+function safeCapacityDiagnostics(diagnostics) {
+  if (!diagnostics) return null;
+  const categories = diagnostics.categories || {};
+  return {
+    categories: {
+      apps: categories.apps ?? 0,
+      public: categories.public ?? 0,
+      logs: categories.logs ?? 0,
+      mail: categories.mail ?? 0,
+      cache: categories.cache ?? 0,
+      localData: categories.localData ?? 0,
+      tmp: categories.tmp ?? 0,
+      backups: categories.backups ?? 0,
+      other: categories.other ?? 0,
+    },
+    filesystemAvailableBytes: diagnostics.filesystemAvailableBytes ?? null,
+    filesystemTotalBytes: diagnostics.filesystemTotalBytes ?? null,
+    filesystemUsedBytes: diagnostics.filesystemUsedBytes ?? null,
+    homeBytes: diagnostics.homeBytes ?? null,
+  };
+}
+
 function failedRouteSummaries(routeSet) {
   return (routeSet?.routes || [])
     .filter((route) => !route?.cold?.ok || !route?.warm?.ok)
@@ -31,6 +53,9 @@ export function formatSafeLogSummary(report) {
     blocking: Boolean(report?.blocking),
     capacity: {
       filesystem: report?.capacity?.filesystem || null,
+      ...(report?.capacity?.diagnostics
+        ? { diagnostics: safeCapacityDiagnostics(report.capacity.diagnostics) }
+        : {}),
       quota: report?.capacity?.quota
         ? {
             severity: report.capacity.quota.severity,

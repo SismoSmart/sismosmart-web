@@ -15,7 +15,7 @@ The audit records:
 - direct-origin HTTPS timing while preserving the canonical Host header and TLS SNI;
 - `/`, `/en`, `/tr`, `/robots.txt`, `/sitemap.xml`, `/site.webmanifest`, `/api/contact`, and `/api/waitlist` behavior;
 - agreement between the `current` symlink, Passenger app root, `PassengerAppRoot` in `.htaccess`, a running `next-server` process working directory, and the active `.next/BUILD_ID`;
-- retained release count and storage, filesystem use, account quota when available, and cPanel LVE resource usage when exposed by the provider;
+- retained release count and storage, host filesystem use, account quota when available, and cPanel LVE resource usage when exposed by the provider;
 - aggregate HTTP status classes for the two form APIs from a bounded access-log tail;
 - the latest completed Deploy Production, Security, and Lighthouse workflow conclusions.
 
@@ -33,14 +33,14 @@ Latency reflects a shared hosting environment and is warning-only. Lighthouse re
 | --- | --- | --- |
 | Public warm TTFB | above 1,500 ms | only when the route or expected status fails |
 | Origin warm TTFB | above 1,200 ms | only when the route or expected status fails |
-| Filesystem usage | 85% or higher | 95% or higher |
+| Host filesystem usage (`df`) | 85% or higher; 95% or higher is critical host pressure | never by itself on shared hosting |
 | Account quota usage | 80% or higher | 90% or higher |
 | Retained release count | more than 8 | more than 12 |
 | Release storage | more than 1 GiB | more than 2 GiB |
 | Form API server errors | any sampled `5xx` | five or more `5xx` responses and at least 20% of sampled form API requests |
 | Deploy, Security, or Lighthouse history | latest completed run failed once | two consecutive completed runs failed |
 
-A missing optional quota, LVE, or access-log measurement produces a warning rather than a false outage. Missing release-state inspection is blocking because consistency cannot be proved safely.
+A missing optional quota, LVE, or access-log measurement produces a warning rather than a false outage. On shared hosting, `df` reports host-filesystem pressure rather than the cPanel account quota, so even a critical host-filesystem percentage is advisory by itself. Account quota, retained release count, and release storage remain account/application-scoped blocking capacity signals. Missing release-state inspection is blocking because consistency cannot be proved safely.
 
 ## Fault domains
 
@@ -68,13 +68,13 @@ Pages are available but a form status endpoint is not configured/healthy, or the
 
 ### `capacity`
 
-Filesystem, account quota, retained release count, or release storage crossed a blocking threshold. Review the exact measurements, run retention in dry-run mode, and remove only entries selected by the protected release planner. For account or filesystem constraints outside the account boundary, escalate to the hosting provider.
+Account quota, retained release count, or release storage crossed a blocking threshold. Review the exact measurements, run retention in dry-run mode, and remove only entries selected by the protected release planner. A critical host-filesystem `df` reading is reported as provider pressure but does not create a capacity block by itself on shared hosting; escalate persistent host pressure to the hosting provider.
 
 ### `github-actions`
 
 At least one target workflow has two consecutive completed failures. Open both runs, identify the first failed job/step, and distinguish a repository defect from GitHub-hosted runner, artifact, or external provider failure before rerunning.
 
-`healthy-with-warnings` means no blocking fault was found, but latency, optional telemetry, a single workflow failure, form `5xx`, or approaching capacity requires review. `healthy` means all required checks passed with no warnings.
+`healthy-with-warnings` means no blocking fault was found, but latency, optional telemetry, host-filesystem pressure, a single workflow failure, form `5xx`, or approaching account/application capacity requires review. `healthy` means all required checks passed with no warnings.
 
 ## Manual dispatch and report review
 
@@ -90,12 +90,12 @@ If the Actions artifact quota prevents upload, use the compact `PRODUCTION_HEALT
 
 ## Hosting constraints and escalation
 
-The application runs under cPanel/CloudLinux Passenger on shared infrastructure. Host-wide load averages, disk pressure, noisy-neighbor effects, and provider throttling can affect TTFB even when repository code is unchanged. The audit records cPanel quota and LVE CPU/I/O/resource usage when the provider module returns them; it does not invent an LVE ceiling when the API omits one.
+The application runs under cPanel/CloudLinux Passenger on shared infrastructure. Host-wide load averages, `df` disk pressure, noisy-neighbor effects, and provider throttling can affect TTFB even when repository code is unchanged. A filesystem percentage from `df` therefore describes the shared host mount, not the SismoSmart account quota. The audit records cPanel quota and LVE CPU/I/O/resource usage when the provider module returns them; it does not invent an LVE ceiling when the API omits one.
 
 Escalate to the hosting provider when any of the following persists after a warm rerun:
 
 - origin warm TTFB remains above 1,200 ms while application and release state are healthy;
-- filesystem or account quota approaches the blocking threshold and cannot be corrected by reviewed release retention;
+- host filesystem usage remains at or above 95%, or account quota approaches its blocking threshold and cannot be corrected by reviewed release retention;
 - LVE CPU, memory, entry-process, process-count, or I/O usage repeatedly reaches the provider maximum;
 - Passenger becomes unavailable despite a consistent release and valid runtime configuration;
 - origin TLS or provider networking fails independently of Cloudflare.

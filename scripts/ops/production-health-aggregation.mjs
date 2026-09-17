@@ -68,7 +68,7 @@ export function buildProductionHealthCapacityResult(remote, quota, resources, wa
   });
 
   for (const [label, measurement] of [
-    ["filesystem usage", filesystem],
+    ["host filesystem usage", filesystem],
     ["release count", releaseCount],
     ["release bytes", releaseBytes],
     ["account quota", quotaThreshold],
@@ -87,10 +87,15 @@ export function buildProductionHealthCapacityResult(remote, quota, resources, wa
   if (!quota.available) warnings.push("account quota limit is unavailable");
 
   return {
-    blocking: [filesystem, releaseCount, releaseBytes, quotaThreshold].some(
+    // `df` reflects the host filesystem on shared hosting, not the account quota.
+    // Keep it visible as capacity evidence, but only account/app-scoped limits block.
+    blocking: [releaseCount, releaseBytes, quotaThreshold].some(
       (measurement) => measurement?.severity === "error",
     ),
     filesystem,
+    ...(remote?.capacityDiagnostics
+      ? { diagnostics: remote.capacityDiagnostics }
+      : {}),
     quota: { ...quota, severity: quotaThreshold?.severity || "unavailable" },
     releaseBytes,
     releaseCount,

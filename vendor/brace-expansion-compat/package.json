@@ -1,6 +1,6 @@
 {
   "name": "brace-expansion",
-  "version": "5.0.8",
+  "version": "5.0.12",
   "private": true,
   "description": "CommonJS compatibility wrapper for patched brace-expansion.",
   "main": "index.js",
@@ -9,6 +9,6 @@
     "node": "20 || >=22"
   },
   "dependencies": {
-    "brace-expansion-upstream": "npm:brace-expansion@5.0.8"
+    "brace-expansion-upstream": "npm:brace-expansion@5.0.12"
   }
 }

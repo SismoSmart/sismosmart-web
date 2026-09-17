@@ -172,7 +172,7 @@ test("capacity aggregation preserves warning thresholds and resource rounding", 
 
   assert.deepEqual(warnings, [
     "existing warning",
-    "filesystem usage is above the warning threshold",
+    "host filesystem usage is above the warning threshold",
     "release count is above the warning threshold",
     "release bytes is above the warning threshold",
     "account quota is above the warning threshold",
@@ -192,6 +192,32 @@ test("capacity aggregation preserves warning thresholds and resource rounding", 
   ]);
 });
 
+test("critical shared filesystem usage stays non-blocking without account quota evidence", () => {
+  const warnings = [];
+  const result = buildProductionHealthCapacityResult(
+    {
+      filesystemUsagePercent: 97,
+      releaseBytes: 579_616_768,
+      releaseCount: 6,
+    },
+    {
+      available: false,
+      limitBytes: null,
+      usageBytes: null,
+      usagePercent: null,
+    },
+    [],
+    warnings,
+  );
+
+  assert.equal(result.filesystem.severity, "error");
+  assert.equal(result.blocking, false);
+  assert.deepEqual(warnings, [
+    "host filesystem usage is above the critical threshold",
+    "account quota limit is unavailable",
+  ]);
+});
+
 test("capacity aggregation preserves critical blocking and warning order", () => {
   const warnings = [];
   const result = buildProductionHealthCapacityResult(
@@ -207,7 +233,7 @@ test("capacity aggregation preserves critical blocking and warning order", () =>
 
   assert.equal(result.blocking, true);
   assert.deepEqual(warnings, [
-    "filesystem usage is above the critical threshold",
+    "host filesystem usage is above the critical threshold",
     "release count is above the critical threshold",
     "release bytes is above the critical threshold",
     "account quota is above the critical threshold",
@@ -232,7 +258,7 @@ test("capacity aggregation preserves unavailable measurements and quota warning"
 
   assert.equal(result.blocking, false);
   assert.deepEqual(warnings, [
-    "filesystem usage measurement is unavailable",
+    "host filesystem usage measurement is unavailable",
     "release count measurement is unavailable",
     "release bytes measurement is unavailable",
     "account quota limit is unavailable",
@@ -389,4 +415,35 @@ test("workflow aggregation preserves all targets for missing input", () => {
       latestConclusion: null,
     },
   });
+});
+
+test("capacity aggregation carries diagnostics only when inspection provides them", () => {
+  const diagnostics = {
+    categories: { apps: 400, logs: 500, other: 100 },
+    filesystemAvailableBytes: 300,
+    filesystemTotalBytes: 10000,
+    filesystemUsedBytes: 9700,
+    homeBytes: 1000,
+  };
+  const warnings = [];
+  const result = buildProductionHealthCapacityResult(
+    {
+      capacityDiagnostics: diagnostics,
+      filesystemUsagePercent: 20,
+      releaseBytes: 10,
+      releaseCount: 1,
+    },
+    { available: true, usagePercent: 10 },
+    [],
+    warnings,
+  );
+
+  assert.deepEqual(result.diagnostics, diagnostics);
+  const without = buildProductionHealthCapacityResult(
+    { filesystemUsagePercent: 20, releaseBytes: 10, releaseCount: 1 },
+    { available: true, usagePercent: 10 },
+    [],
+    [],
+  );
+  assert.equal("diagnostics" in without, false);
 });

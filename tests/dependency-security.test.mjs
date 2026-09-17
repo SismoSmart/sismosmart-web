@@ -4,6 +4,9 @@ import test from "node:test";
 
 const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
 const lock = JSON.parse(readFileSync("package-lock.json", "utf8"));
+const braceCompat = JSON.parse(
+  readFileSync("vendor/brace-expansion-compat/package.json", "utf8"),
+);
 
 function parts(version) {
   return String(version).replace(/^[^0-9]*/, "").split(".").slice(0, 3).map(Number);
@@ -20,8 +23,8 @@ function atLeast(version, minimum) {
 }
 
 test("direct dependencies meet the reviewed high-severity security floor", () => {
-  assert.equal(atLeast(packageJson.dependencies.next, "16.2.11"), true);
-  assert.equal(atLeast(packageJson.dependencies.sharp, "0.35.3"), true);
+  assert.equal(atLeast(packageJson.dependencies.next, "16.3.3"), true);
+  assert.equal(atLeast(packageJson.dependencies.sharp, "0.35.4"), true);
   assert.equal(atLeast(packageJson.dependencies.react, "19.2.8"), true);
   assert.equal(atLeast(packageJson.dependencies["react-dom"], "19.2.8"), true);
   assert.equal(atLeast(packageJson.dependencies["@sentry/nextjs"], "10.67.0"), true);
@@ -33,10 +36,9 @@ test("all locked fast-uri instances use the patched compatible release", () => {
     .map(([, metadata]) => metadata.version);
   assert.ok(versions.length > 0, "No fast-uri instances found in lockfile");
   for (const version of versions) {
-    assert.equal(atLeast(version, "3.1.4"), true, `Unsafe fast-uri version: ${version}`);
+    assert.equal(atLeast(version, "3.1.8"), true, `Unsafe fast-uri version: ${version}`);
   }
 });
-
 
 test("all locked sharp instances use a patched libvips line", () => {
   const versions = Object.entries(lock.packages || {})
@@ -44,6 +46,13 @@ test("all locked sharp instances use a patched libvips line", () => {
     .map(([, metadata]) => metadata.version);
   assert.ok(versions.length > 0, "No sharp instances found in lockfile");
   for (const version of versions) {
-    assert.equal(atLeast(version, "0.35.0"), true, `Unsafe sharp version: ${version}`);
+    assert.equal(atLeast(version, "0.35.4"), true, `Unsafe sharp version: ${version}`);
   }
+});
+
+test("brace-expansion compatibility wrapper uses the reviewed patched line", () => {
+  assert.equal(
+    atLeast(braceCompat.dependencies["brace-expansion-upstream"], "5.0.9"),
+    true,
+  );
 });

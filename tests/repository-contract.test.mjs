@@ -845,10 +845,10 @@ test("vulnerable transitive dependency paths use patched compatibility releases"
 
   const compatPackage = readJson("vendor/brace-expansion-compat/package.json");
   assert.equal(compatPackage.name, "brace-expansion");
-  assert.equal(compareVersions(compatPackage.version, "5.0.8") >= 0, true);
+  assert.equal(compareVersions(compatPackage.version, "5.0.9") >= 0, true);
   assert.equal(
     compatPackage.dependencies?.["brace-expansion-upstream"],
-    "npm:brace-expansion@5.0.8",
+    "npm:brace-expansion@5.0.12",
   );
 
   const compatModule = readText("vendor/brace-expansion-compat/index.js");
@@ -863,7 +863,7 @@ test("vulnerable transitive dependency paths use patched compatibility releases"
   assert.ok(braceVersions.length > 0, "No brace-expansion instances found in lockfile");
   for (const version of braceVersions) {
     assert.equal(
-      compareVersions(version, "5.0.8") >= 0,
+      compareVersions(version, "5.0.9") >= 0,
       true,
       `Vulnerable brace-expansion version found: ${version}`,
     );
@@ -1016,4 +1016,19 @@ test("Search Console performance documentation preserves the Doppler and privacy
     assert.ok(normalizedRunbook.includes(phrase.toLowerCase()), `Runbook must include ${phrase}`);
   }
   assert.doesNotMatch(runbook, /performance[^\n]*searchConsole OAuth scope/i);
+});
+
+test("production health capacity diagnostics are manual and opt-in", () => {
+  const workflow = readText(".github/workflows/production-health.yml");
+
+  assert.match(
+    workflow,
+    /workflow_dispatch:\s*\r?\n\s+inputs:\s*\r?\n\s+capacity_diagnostics:/,
+  );
+  assert.match(workflow, /capacity_diagnostics:[\s\S]*type:\s*boolean/);
+  assert.match(workflow, /capacity_diagnostics:[\s\S]*default:\s*false/);
+  assert.match(
+    workflow,
+    /PRODUCTION_HEALTH_CAPACITY_DIAGNOSTICS:\s*\$\{\{\s*github\.event_name == 'workflow_dispatch' && inputs\.capacity_diagnostics \|\| false\s*\}\}/,
+  );
 });

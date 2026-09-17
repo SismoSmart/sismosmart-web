@@ -147,3 +147,24 @@ test("report writer preserves private artifact and console behavior", async () =
     rmSync(directory, { force: true, recursive: true });
   }
 });
+
+test("safe log includes only allowlisted capacity diagnostic fields", () => {
+  const report = sampleReport();
+  report.capacity.diagnostics = {
+    categories: { apps: 400, logs: 500, other: 100, privateName: 9000 },
+    filesystemAvailableBytes: 300,
+    filesystemTotalBytes: 10000,
+    filesystemUsedBytes: 9700,
+    homeBytes: 1000,
+    privatePath: "/home/private",
+  };
+
+  const safe = formatSafeLogSummary(report);
+  assert.match(safe, /"diagnostics":/);
+  assert.match(safe, /"homeBytes":1000/);
+  assert.match(safe, /"apps":400/);
+  assert.match(safe, /"other":100/);
+  assert.doesNotMatch(safe, /privateName/);
+  assert.doesNotMatch(safe, /privatePath/);
+  assert.doesNotMatch(safe, /home\/private/);
+});

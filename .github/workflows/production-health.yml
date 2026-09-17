@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
+    inputs:
+      capacity_diagnostics:
+        description: "Include sanitized read-only capacity diagnostics"
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: production-health
@@ -29,6 +35,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PUBLIC_BASE_URL: https://sismosmart.com
       PRODUCTION_HEALTH_OUTPUT: .artifacts/production-health.json
+      PRODUCTION_HEALTH_CAPACITY_DIAGNOSTICS: ${{ github.event_name == 'workflow_dispatch' && inputs.capacity_diagnostics || false }}
       REMOTE_APP_DOMAIN: ${{ secrets.REMOTE_APP_DOMAIN || secrets.DOMAIN }}
       REMOTE_APP_ROOT: ${{ secrets.REMOTE_APP_ROOT || 'apps/sismosmart-web/current' }}
       REMOTE_APP_URI: ${{ secrets.REMOTE_APP_URI || '/' }}

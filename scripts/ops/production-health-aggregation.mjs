@@ -91,6 +91,9 @@ export function buildProductionHealthCapacityResult(remote, quota, resources, wa
       (measurement) => measurement?.severity === "error",
     ),
     filesystem,
+    ...(remote?.capacityDiagnostics
+      ? { diagnostics: remote.capacityDiagnostics }
+      : {}),
     quota: { ...quota, severity: quotaThreshold?.severity || "unavailable" },
     releaseBytes,
     releaseCount,

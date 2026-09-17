@@ -390,3 +390,34 @@ test("workflow aggregation preserves all targets for missing input", () => {
     },
   });
 });
+
+test("capacity aggregation carries diagnostics only when inspection provides them", () => {
+  const diagnostics = {
+    categories: { apps: 400, logs: 500, other: 100 },
+    filesystemAvailableBytes: 300,
+    filesystemTotalBytes: 10000,
+    filesystemUsedBytes: 9700,
+    homeBytes: 1000,
+  };
+  const warnings = [];
+  const result = buildProductionHealthCapacityResult(
+    {
+      capacityDiagnostics: diagnostics,
+      filesystemUsagePercent: 20,
+      releaseBytes: 10,
+      releaseCount: 1,
+    },
+    { available: true, usagePercent: 10 },
+    [],
+    warnings,
+  );
+
+  assert.deepEqual(result.diagnostics, diagnostics);
+  const without = buildProductionHealthCapacityResult(
+    { filesystemUsagePercent: 20, releaseBytes: 10, releaseCount: 1 },
+    { available: true, usagePercent: 10 },
+    [],
+    [],
+  );
+  assert.equal("diagnostics" in without, false);
+});

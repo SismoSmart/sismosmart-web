@@ -10,6 +10,30 @@ function shellEscape(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`;
 }
 
+const CAPACITY_DIAGNOSTIC_CATEGORIES = new Set([
+  "apps",
+  "public",
+  "logs",
+  "mail",
+  "cache",
+  "localData",
+  "tmp",
+  "backups",
+  "other",
+]);
+
+const CAPACITY_DIAGNOSTIC_METRICS = new Set([
+  "homeBytes",
+  "filesystemTotalBytes",
+  "filesystemUsedBytes",
+  "filesystemAvailableBytes",
+]);
+
+function ensureCapacityDiagnostics(result) {
+  result.capacityDiagnostics ||= { categories: {} };
+  return result.capacityDiagnostics;
+}
+
 export function parseRemoteInspection(stdout, passenger) {
   const result = {
     buildId: "",
@@ -40,6 +64,16 @@ export function parseRemoteInspection(stdout, passenger) {
       if (key === "releaseBytes") result.releaseBytes = Number(value);
       if (key === "releaseCount") result.releaseCount = Number(value);
     }
+    if (kind === "diagnostic" && CAPACITY_DIAGNOSTIC_METRICS.has(key)) {
+      const numeric = Number(value);
+      if (Number.isFinite(numeric)) ensureCapacityDiagnostics(result)[key] = numeric;
+    }
+    if (kind === "diagnosticCategory" && CAPACITY_DIAGNOSTIC_CATEGORIES.has(key)) {
+      const numeric = Number(value);
+      if (Number.isFinite(numeric)) {
+        ensureCapacityDiagnostics(result).categories[key] = numeric;
+      }
+    }
     if (kind === "formLog") result.formLogAvailable = key === "available";
     if (kind === "form") {
       result.formRecords.push({ route: key, status: Number(value) });
@@ -50,12 +84,62 @@ export function parseRemoteInspection(stdout, passenger) {
 }
 
 export function buildRemoteInspectionScript({
+  capacityDiagnostics = false,
   config,
   htaccessPath,
   passenger,
   remoteAppRoot,
   remoteReleasesRoot,
 }) {
+  const capacityDiagnosticScript = capacityDiagnostics
+    ? `
+diagnostic_home=${shellEscape(config.remoteHome)}
+if [ -d "$diagnostic_home" ]; then
+  du -sk "$diagnostic_home"/* "$diagnostic_home"/.[!.]* "$diagnostic_home"/..?* 2>/dev/null | awk -F '\\t' '
+    function category(name) {
+      if (name == "apps") return "apps"
+      if (name == "public_html") return "public"
+      if (name == "logs" || name == "access-logs" || name == "access_logs") return "logs"
+      if (name == "mail") return "mail"
+      if (name == ".cache" || name == ".npm") return "cache"
+      if (name == ".local") return "localData"
+      if (name == "tmp" || name == ".tmp") return "tmp"
+      if (name == "backup" || name == "backups" || name == "softaculous_backups") return "backups"
+      return "other"
+    }
+    {
+      kib = $1 + 0
+      name = $2
+      sub(/^.*\//, "", name)
+      label = category(name)
+      bytes = kib * 1024
+      totals[label] += bytes
+      home += bytes
+    }
+    END {
+      printf "diagnostic\\thomeBytes\\t%.0f\\n", home
+      printf "diagnosticCategory\\tapps\\t%.0f\\n", totals["apps"]
+      printf "diagnosticCategory\\tpublic\\t%.0f\\n", totals["public"]
+      printf "diagnosticCategory\\tlogs\\t%.0f\\n", totals["logs"]
+      printf "diagnosticCategory\\tmail\\t%.0f\\n", totals["mail"]
+      printf "diagnosticCategory\\tcache\\t%.0f\\n", totals["cache"]
+      printf "diagnosticCategory\\tlocalData\\t%.0f\\n", totals["localData"]
+      printf "diagnosticCategory\\ttmp\\t%.0f\\n", totals["tmp"]
+      printf "diagnosticCategory\\tbackups\\t%.0f\\n", totals["backups"]
+      printf "diagnosticCategory\\tother\\t%.0f\\n", totals["other"]
+    }
+  '
+  df -Pk "$diagnostic_home" 2>/dev/null | awk '
+    NR == 2 {
+      printf "diagnostic\\tfilesystemTotalBytes\\t%.0f\\n", $2 * 1024
+      printf "diagnostic\\tfilesystemUsedBytes\\t%.0f\\n", $3 * 1024
+      printf "diagnostic\\tfilesystemAvailableBytes\\t%.0f\\n", $4 * 1024
+    }
+  '
+fi
+`
+    : "";
+
   return `
 set -u
 domain=${shellEscape(config.domain)}
@@ -78,7 +162,7 @@ filesystem_usage="$(df -Pk ${shellEscape(config.remoteHome)} 2>/dev/null | awk '
 printf 'metric\treleaseCount\t%s\n' "\${release_count:-0}"
 printf 'metric\treleaseBytes\t%s\n' "\${release_bytes:-0}"
 printf 'metric\tfilesystemUsagePercent\t%s\n' "\${filesystem_usage:-0}"
-log_file=""
+${capacityDiagnosticScript}log_file=""
 for candidate in \
   "$HOME/access-logs/$domain" \
   "$HOME/access-logs/\${domain}-ssl_log" \
@@ -123,6 +207,9 @@ fi
 }
 
 export async function inspectRemoteProduction({
+  capacityDiagnostics = String(
+    process.env.PRODUCTION_HEALTH_CAPACITY_DIAGNOSTICS || "",
+  ).toLowerCase() === "true",
   config,
   getApplicationsImpl = getApplications,
   runRemoteCommandImpl = runRemoteCommand,
@@ -145,6 +232,7 @@ export async function inspectRemoteProduction({
   const htaccessPath = path.posix.join(publicHtmlPath, ".htaccess");
 
   const script = buildRemoteInspectionScript({
+    capacityDiagnostics,
     config,
     htaccessPath,
     passenger,

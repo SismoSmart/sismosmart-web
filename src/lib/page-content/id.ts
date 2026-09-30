@@ -2,60 +2,71 @@ import type { BaseRoutePagesCopy } from "@/lib/page-copy";
 
 export const idPages: BaseRoutePagesCopy = {
   product: {
-    meta: { title: "Perangkat SismoSmart", description: "Perangkat pemantauan seismik kecil untuk rumah atau kantor. Membaca guncangan dan merekam perilaku bangunan setelah gempa." },
+    meta: {
+      title: "Perangkat SismoSmart",
+      description:
+        "Perangkat seismik pra-peluncuran untuk rumah dan bangunan kecil, dirancang untuk merekam gerakan; kinerja, konektivitas, dan laporan masih menunggu validasi pilot.",
+    },
     eyebrow: "Produk",
     title: "Perangkat",
-    description: "Perangkat dinding bertenaga USB-C, ukuran 100 x 100 x 27 mm. Dibuat untuk pengukuran gerakan yang tetap dan hati-hati di rumah dan bangunan kecil.",
+    description:
+      "Perangkat dinding bertenaga USB-C dalam tahap pra-peluncuran. Sensor, konektivitas, pelaporan, dan kinerja masih merupakan target desain.",
     deviceDescription:
-      "Di dalam kotak ada perangkatnya, kabel USB-C, dan perekat dua sisi untuk memasang. Anda tidak perlu alat lain untuk memasangnya.",
+      "Casing pilot dirancang untuk dipasang tetap di dinding. Hardware dan petunjuk pemasangan final akan dikonfirmasi bersama perangkat yang tervalidasi.",
     meterTopLabel: "Sensor",
-    meterTopValue: "MEMS presisi",
+    meterTopValue: "Target MEMS",
     meterBottomLabel: "Data",
-    meterBottomValue: "Terenkripsi, minimal",
+    meterBottomValue: "Target keamanan",
     imageAlt: "Perangkat SismoSmart, tampak depan",
     specs: [
-      { label: "Sensor", value: "MEMS presisi tinggi" },
-      { label: "Koneksi", value: "Wi-Fi + Bluetooth" },
-      { label: "Pemasangan", value: "Lima menit, lewat app" },
-      { label: "Status", value: "LED RGB + app" },
+      { label: "Sensor", value: "Target MEMS kelas ADXL355" },
+      { label: "Koneksi", value: "Target Wi-Fi + Bluetooth" },
+      { label: "Pemasangan", value: "Target setup pilot" },
+      { label: "Status", value: "Target LED RGB + app" },
     ],
     useCases: [
-      { title: "Rumah dan apartemen", description: "Satu perangkat per unit, atau pilot multi-perangkat bersama pengelola gedung." },
-      { title: "Kampus dan pabrik", description: "Organisasi dengan beberapa gedung memantau semuanya dari satu dashboard." },
-      { title: "Bengkel dan kantor", description: "Pemantauan terjangkau dan cepat dipasang untuk bisnis kecil." },
-      { title: "Kemitraan universitas", description: "Kelompok riset gempa dapat mengakses data anonim." },
+      { title: "Rumah dan apartemen", description: "Kandidat lokasi pilot untuk pengukuran tetap; penempatan disepakati per bangunan." },
+      { title: "Kampus dan pabrik", description: "Pilot beberapa gedung dapat mengevaluasi visibilitas terpusat setelah alur perangkat tervalidasi." },
+      { title: "Bengkel dan kantor", description: "Penggunaan pada bangunan kecil adalah hipotesis pilot, bukan implementasi komersial tervalidasi." },
+      { title: "Kemitraan universitas", description: "Akses riset memerlukan perjanjian eksplisit, kontrol privasi, dan tujuan berbagi data yang jelas." },
     ],
     comparisonTitle: "Perbandingan",
-    comparisonDescription: "Di antara seismograf profesional dan app ponsel. Kami tidak mengganti keduanya; kami menawarkan perangkat nyata untuk skala rumah.",
+    comparisonDescription:
+      "SismoSmart dirancang sebagai perangkat tetap di antara sensor ponsel dan instrumentasi profesional. Sensitivitas, laporan, dan biaya masih merupakan asumsi validasi atau komersial.",
     comparisonRows: [
-      { label: "Pemasangan", sismosmart: "Lima menit, sendiri", traditional: "Butuh insinyur", mobile: "Tidak ada, hanya app" },
-      { label: "Perangkat tetap", sismosmart: "Ya, menempel ke bangunan", traditional: "Ya", mobile: "Tidak, ponsel bergerak" },
-      { label: "Bacaan kesehatan struktur", sismosmart: "Ya, laporan sederhana", traditional: "Ya, laporan ahli", mobile: "Tidak" },
-      { label: "Harga", sismosmart: "Skala rumah", traditional: "Skala perusahaan", mobile: "Gratis" },
+      { label: "Pemasangan", sismosmart: "Proses pilot", traditional: "Instalasi profesional bervariasi", mobile: "Setup app" },
+      { label: "Perangkat tetap", sismosmart: "Target: terpasang pada bangunan", traditional: "Ya", mobile: "Tidak, ponsel bergerak" },
+      { label: "Interpretasi struktur", sismosmart: "Validasi tertunda", traditional: "Alur ahli", mobile: "Bukan penilaian bangunan" },
+      { label: "Harga", sismosmart: "Pra-peluncuran; belum ada harga publik", traditional: "Harga sistem profesional", mobile: "Sering gratis" },
     ],
     ctaLabel: "Daftar pilot",
     ctaHref: "/pilot-program",
   },
   howItWorks: {
-    meta: { title: "Cara kerja SismoSmart", description: "Pasang perangkat, pasangkan ponsel, bangunan dikenali. Anda mendapat notifikasi saat guncangan terjadi, lalu laporan setelahnya." },
+    meta: {
+      title: "Cara kerja SismoSmart",
+      description:
+        "Desain pra-peluncuran untuk mengukur gerakan, menyimpan data kejadian, dan menyiapkan informasi untuk validasi pilot serta tinjauan tenaga ahli.",
+    },
     eyebrow: "Cara kerja",
     title: "Perangkat, cloud, app: bersama.",
-    description: "Ada tiga bagian. Perangkat mengukur getaran bangunan. Cloud menerima data terenkripsi dan membandingkan dengan perangkat lain. App hanya menunjukkan yang penting.",
+    description:
+      "Desain saat ini menggabungkan pengukuran lokal, jalur data terhubung, dan lapisan app/laporan. Deteksi, notifikasi, korelasi, dan laporan masih menunggu validasi pilot.",
     flow: [
-      { title: "Pasang perangkat", description: "Dinding dalam ruangan, idealnya dekat elemen struktur." },
-      { title: "Pasangkan dengan ponsel", description: "Temukan lewat Bluetooth dari app. Bagikan kredensial Wi-Fi dengan aman." },
-      { title: "Bangunan dipelajari", description: "Selama hari pertama, perangkat merekam profil getaran normal bangunan." },
-      { title: "Laporan saat kejadian", description: "Anda mendapat push saat guncangan terdeteksi. Laporan detail siap di app setelahnya." },
+      { title: "Pasang perangkat", description: "Penempatan pilot dipilih pada permukaan dalam ruangan yang stabil sesuai bangunan dan tujuan pengukuran." },
+      { title: "Pasangkan dengan ponsel", description: "Bluetooth dan Wi-Fi adalah target provisioning; keamanan final bergantung pada tinjauan implementasi." },
+      { title: "Bangun baseline", description: "Kalibrasi pilot dimaksudkan untuk merekam getaran harian dan menguji pemisahan gerakan yang tidak biasa." },
+      { title: "Rekam kejadian", description: "Desain menargetkan rekaman lokal dan tampilan app/laporan setelahnya; waktu dan kelengkapan masih divalidasi." },
     ],
     signals: [
-      { title: "Deteksi di perangkat", description: "Perangkat tidak menunggu cloud. Saat guncangan nyata mulai, ia bertindak lokal lalu mengonfirmasi." },
-      { title: "Laporan pascagempa", description: "Satu ringkasan: akselerasi puncak, durasi, dan pergeseran frekuensi alami bangunan." },
-      { title: "Hanya data yang perlu", description: "Kami tidak memantau aktivitas Anda. Perangkat membagikan getaran, suhu, kelembapan, tekanan, dan statusnya." },
+      { title: "Deteksi di perangkat", description: "Ini target desain. Ambang, positif palsu, kejadian terlewat, dan keandalan memerlukan bukti pilot berlabel." },
+      { title: "Laporan pascakejadian", description: "Laporan masa depan dapat merangkum besaran tervalidasi untuk tinjauan ahli. Bukan penentu keamanan." },
+      { title: "Hanya data yang perlu", description: "Alur data situs web didokumentasikan terpisah. Telemetri perangkat masa depan ditetapkan sebelum pengumpulan data pilot." },
     ],
     network: [
-      { title: "Jaringan lingkungan", description: "Saat tiga perangkat atau lebih di area yang sama aktif bersama, kejadian ditandai terkonfirmasi. Alarm palsu turun tajam." },
-      { title: "Pelacakan kesehatan struktur", description: "Profil getaran bangunan berubah selama minggu dan bulan. Perubahan mendadak bisa berarti masalah." },
-      { title: "Antarmuka sederhana", description: "Perangkat melakukan kerja rumit di belakang. Anda melihat status sederhana: hijau, kuning, merah." },
+      { title: "Korelasi antarperangkat", description: "Ini target desain; manfaat terhadap konfirmasi dan alarm palsu belum dibuktikan." },
+      { title: "Bukti struktural dari waktu ke waktu", description: "Perubahan terukur dapat memberi bukti tambahan kepada insinyur; bukan diagnosis." },
+      { title: "Antarmuka sederhana", description: "Tampilan status yang jelas adalah target produk; status dan ambang final bergantung pada validasi." },
     ],
   },
   about: {
@@ -74,10 +85,10 @@ export const idPages: BaseRoutePagesCopy = {
       { title: "Mengembalikan data ke pemilik", description: "Data bangunan Anda milik Anda. Agregat anonim dapat dipakai akademia atau pemerintah. Data pribadi tidak dijual." },
     ],
     timeline: [
-      { period: "Q1 2026", title: "Tim dan visi produk", description: "Tim inti terbentuk, keputusan utama dibuat, arsitektur sistem ditulis." },
-      { period: "Q2 2026", title: "Prototipe dan persiapan pilot", description: "Prototipe hardware pertama, kerangka app mobile, percakapan lokasi pilot pertama." },
-      { period: "Q3 2026", title: "Instalasi pilot pertama", description: "Lima sampai sepuluh bangunan, tiga bulan data, masukan, produk akhir." },
-      { period: "Q4 2026 / Q1 2027", title: "Sertifikasi dan produksi", description: "Sertifikasi CE, 1.000 perangkat pertama, peluncuran luas." },
+      { period: "Selesai", title: "Dasar produk dan sistem", description: "Konsep produk awal dan arsitektur sistem sudah dibentuk. Klaim publik tetap dibatasi oleh register bukti." },
+      { period: "Saat ini", title: "Validasi pilot", description: "Target hardware, deteksi, notifikasi, konektivitas, dan pelaporan divalidasi sebelum klaim diperluas." },
+      { period: "Berikutnya", title: "Bukti dan pembekuan desain", description: "BOM, algoritme, dan asumsi operasi dibekukan hanya setelah bukti uji meja dan lapangan ditinjau." },
+      { period: "Nanti", title: "Sertifikasi dan manufaktur", description: "Sertifikasi, manufaktur, dan peluncuran mengikuti gerbang bukti. Tidak ada tanggal pengiriman publik yang dijanjikan." },
     ],
     team: [
       { name: "Pendiri", role: "Hardware, software, produk", bio: "Bertanggung jawab atas embedded systems, IoT, cloud, dan produk." },
@@ -117,9 +128,9 @@ export const idPages: BaseRoutePagesCopy = {
     title: "Kebijakan privasi",
     description: "Kami tidak mengumpulkan data yang tidak diperlukan. Data yang dikumpulkan dipakai hanya untuk tujuan yang disebutkan. Tidak dijual.",
     sections: [
-      { title: "Data yang dikumpulkan", description: "Di situs: email, isi formulir kontak, dan pilihan cookie. Dari perangkat setelah peluncuran: getaran, suhu, kelembapan, tekanan, status, dan lokasi perkiraan." },
-      { title: "Untuk apa dipakai", description: "Membalas pesan, mengelola pilot, mengirim pengumuman, menjaga perangkat online, membandingkan kejadian, dan memperbaiki produk." },
-      { title: "Dengan siapa dibagikan", description: "Form bisa melewati penyedia formulir. Data perangkat diproses di lingkungan cloud yang dipilih. Kami tidak menjual data pribadi." },
+      { title: "Data yang dikumpulkan", description: "Di situs aktif: email, isi formulir kontak, dan pilihan cookie. Data perangkat pilot yang direncanakan dapat mencakup gerakan, pengukuran lingkungan, status, dan lokasi perkiraan; kategori tepatnya didokumentasikan sebelum pengumpulan." },
+      { title: "Untuk apa dipakai", description: "Data situs saat ini dipakai untuk membalas pesan, mengelola aplikasi pilot, dan mengirim komunikasi yang disetujui. Tujuan data perangkat masa depan ditetapkan dalam perjanjian sebelum pengumpulan." },
+      { title: "Dengan siapa dibagikan", description: "Form dapat melewati penyedia yang dikonfigurasi. Pemroses, lokasi pemrosesan, transfer, dan retensi data perangkat masa depan ditetapkan sebelum pilot. Kami tidak menjual data pribadi." },
       { title: "Hak Anda", description: "Anda dapat mengakses, memperbaiki, menghapus, atau mengekspor data. Tulis ke info@sismosmart.com." },
     ],
   },
@@ -130,7 +141,7 @@ export const idPages: BaseRoutePagesCopy = {
     description: "Situs ini belum diluncurkan penuh. Syarat berikut berlaku untuk fase ini.",
     sections: [
       { title: "Informasi", description: "Situs ini memberi informasi tentang SismoSmart dan menerima aplikasi pilot. Ini bukan layanan seismik resmi atau kanal peringatan gempa." },
-      { title: "Bukan jaminan", description: "Perangkat mendukung kesiapan gempa. Tidak menggantikan peringatan resmi, instruksi darurat, atau laporan insinyur struktur." },
+      { title: "Bukan jaminan", description: "Perangkat sedang dikembangkan untuk mendukung kesiapan dan tinjauan pascakejadian. Tidak menggantikan peringatan resmi, instruksi darurat, atau laporan insinyur struktur." },
       { title: "Kekayaan intelektual", description: "Nama, logo, desain produk, dan isi situs SismoSmart milik SismoSmart. Tidak boleh disalin tanpa izin." },
       { title: "Kontak", description: "Pertanyaan ke info@sismosmart.com." },
     ],
@@ -141,7 +152,7 @@ export const idPages: BaseRoutePagesCopy = {
     title: "Press kit",
     description: "Satu halaman sumber untuk media, mitra, dan permintaan wawancara.",
     sections: [
-      { title: "Deskripsi singkat", description: "SismoSmart membuat perangkat pemantauan seismik untuk rumah dan bangunan kecil. Perangkat mengukur bangunan, memberi notifikasi saat gempa, dan merekam kondisi setelahnya. Pilot pada 2026, peluncuran 2027." },
+      { title: "Deskripsi singkat", description: "SismoSmart mengembangkan perangkat pemantauan seismik pra-peluncuran untuk rumah dan bangunan kecil, dirancang untuk merekam gerakan bangunan dan mendukung tinjauan pascakejadian oleh tenaga ahli. Validasi pilot, sertifikasi, dan manufaktur akan menentukan jadwal." },
       { title: "Kontak media", description: "Untuk wawancara, gambar, atau demo: press@sismosmart.com." },
     ],
     links: [

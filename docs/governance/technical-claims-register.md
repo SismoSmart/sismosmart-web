@@ -1,5 +1,7 @@
 # Technical claims register
 
+Last reviewed: 2026-10-01
+
 ## Purpose
 
 This register governs high-impact product, safety, security, privacy, certification, and operational claims published by SismoSmart. It is an engineering and content-control record, not legal advice. The public site must not present a design target, roadmap item, simulation result, or unverified estimate as a deployed and independently validated capability.

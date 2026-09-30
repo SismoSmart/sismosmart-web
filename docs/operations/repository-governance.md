@@ -25,9 +25,15 @@ Production never deploys automatically from a push. `Deploy Production` is manua
 - run from `main`;
 - provide the exact current `main` SHA;
 - use the documented operation confirmation phrase;
-- pass the GitHub production environment approval;
+- satisfy the `production` environment branch policy, which currently allows deployment only from `main`;
 - use the scoped private-key credential or the explicitly configured password fallback;
 - preserve transactional activation and automatic rollback.
+
+## Production environment approval boundary
+
+The current `production` environment is shared by mutation deploy jobs and scheduled/read-only Production Health jobs. A required-reviewer rule was tested on this shared environment and removed because it also blocks unattended health monitoring.
+
+Current enforced controls are the main-only environment deployment policy, exact-SHA input, operation-specific confirmation, protected `main`, required repository checks, scoped credentials, transactional activation and rollback. If mandatory human approval for every production mutation is required, create a deploy-only environment or equivalent secret/workflow split before enabling required reviewers. Do not re-enable reviewer gating on the shared environment and silently break scheduled monitoring.
 
 ## Secret isolation
 

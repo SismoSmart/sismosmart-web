@@ -15,7 +15,7 @@ import {
 export type AgentPageKey = "home" | StaticPageKey;
 export type MarkdownPageKey = StaticPageKey;
 
-export const agentContentLastUpdated = "2026-07-26";
+export const agentContentLastUpdated = "2026-10-01";
 export const agentPageKeys: readonly AgentPageKey[] = ["home", ...staticPageKeys];
 export const markdownPageKeys: readonly MarkdownPageKey[] = staticPageKeys;
 

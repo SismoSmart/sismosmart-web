@@ -5,7 +5,7 @@ export const itCopy: SiteCopy = {
   meta: {
     title: "Monitoraggio sismico per il tuo edificio",
     description:
-      "SismoSmart è un piccolo dispositivo di monitoraggio sismico da montare a parete. Misura come si muove il tuo edificio e avvisa il telefono quando la scossa è seria. Un ingegnere può leggere la registrazione dopo.",
+      "SismoSmart è un monitor sismico per edifici in fase pre-lancio, progettato per registrare il movimento durante una scossa e fornire dati alla revisione successiva di tecnici qualificati.",
   },
   navigation: {
     eyebrow: "Monitoraggio sismico per edifici",
@@ -21,7 +21,7 @@ export const itCopy: SiteCopy = {
     badge: "Startup hardware in fase iniziale",
     title: "Come si è mosso il tuo edificio durante il terremoto? Abbiamo costruito un dispositivo che lo misura.",
     description:
-      "SismoSmart si collega a una presa e si fissa alla parete. Misura di continuo il movimento dell'edificio e avvisa il telefono quando la scossa è seria. Il suo lavoro vero è la registrazione che conserva: quando arriva l'ingegnere, può leggere come si è comportato l'edificio in quel momento.",
+      "SismoSmart è un dispositivo a parete in fase pre-lancio, progettato per misurare e registrare il movimento dell'edificio. Rilevamento, notifiche, connettività e prestazioni restano soggetti a validazione pilota.",
     primaryCta: "Candidati al pilota",
     secondaryCta: "Nota per investitori",
     tertiaryCta: "Vedi la tecnologia",
@@ -31,14 +31,14 @@ export const itCopy: SiteCopy = {
     stats: [
       { label: "Montaggio", value: "Fisso a parete" },
       { label: "Rilevamento", value: "Nel dispositivo" },
-      { label: "Campionamento", value: "250 Hz, 3 assi" },
-      { label: "Ponte di energia", value: "30-60 s supercap" },
+      { label: "Target campionamento", value: "250 Hz, 3 assi" },
+      { label: "Target energia", value: "30-60 s supercap" },
     ],
     deviceEyebrow: "Il dispositivo SismoSmart",
     deviceTitle: "100 × 100 mm. Si fissa alla parete e funziona dalla presa.",
     deviceDescription:
       "Lo attacchi al muro e lo colleghi alla presa. Lo abbini dall'app e gli dai il Wi-Fi. Da lì in poi lavora sullo sfondo: inizia a misurare la vibrazione dell'edificio e in una giornata normale non ti accorgi che c'è.",
-    deviceSpecs: ["Misura del movimento su tre assi", "Registrazione locale durante gli eventi", "Dati Wi-Fi cifrati"],
+    deviceSpecs: ["Target di misura su tre assi", "Target di registrazione locale", "Target di cifratura dei dati del dispositivo"],
     meterTopLabel: "Rilevamento",
     meterTopValue: "Nel dispositivo",
     meterBottomLabel: "Dati",
@@ -60,12 +60,12 @@ export const itCopy: SiteCopy = {
     eyebrow: "Come funziona",
     title: "L'installazione richiede pochi minuti, il resto avviene sullo sfondo.",
     description:
-      "Una volta montato non devi più fare nulla. Passa i primi giorni a imparare il profilo di vibrazione normale dell'edificio, e dopo riesce a distinguere ciò che normale non è.",
+      "La calibrazione pilota mira a imparare il profilo di vibrazione normale dell'edificio e a verificare se i movimenti insoliti possono essere separati dal rumore quotidiano. Restano possibili falsi positivi ed eventi mancati.",
     steps: [
       { title: "Montalo a parete", description: "Scegli una parete interna stabile. L'adesivo è già applicato e ci sono i fori per le viti se preferisci fissarlo meglio." },
       { title: "Abbinalo dall'app", description: "L'app trova il dispositivo via Bluetooth. Inserisci la password del Wi-Fi una volta sola e hai finito." },
       { title: "Impara l'edificio", description: "Per qualche giorno il dispositivo ascolta la vibrazione normale. Impara cosa succede quando passa un camion e cosa succede in una giornata di vento. Può riconoscere l'anomalia solo dopo aver conosciuto la normalità." },
-      { title: "Avvisa quando inizia la scossa", description: "Quando rileva una vibrazione seria, arriva una notifica sul telefono. Se altri dispositivi vicini hanno visto la stessa scossa, l'avviso arriva marcato come confermato." },
+      { title: "Valuta notifiche durante la scossa", description: "Il progetto può emettere una notifica dopo il rilevamento locale. Tempi e logica di conferma tra dispositivi restano soggetti a validazione pilota." },
       { title: "Registra l'evento", description: "I dati grezzi di durante e dopo la scossa restano sul dispositivo e vanno nel cloud. Da quella registrazione un ingegnere può leggere come ha risposto l'edificio." },
       { title: "Più dispositivi, risultati migliori", description: "Con più dispositivi nello stesso edificio si vede come si muovono i piani l'uno rispetto all'altro. Con più dispositivi nello stesso quartiere calano i falsi allarmi." },
     ],
@@ -74,21 +74,21 @@ export const itCopy: SiteCopy = {
     eyebrow: "Cosa fa",
     title: "In realtà fa più lavori diversi nello stesso momento.",
     description:
-      "Avvisarti durante il terremoto è solo uno di questi. La parte di valore sta prima e dopo: segue la salute dell'edificio per mesi e registra cosa è successo mentre il terreno si muoveva.",
+      "Il prodotto è progettato attorno alla registrazione degli eventi e a evidenze di movimento dell'edificio nel tempo. Notifiche e interpretazione strutturale sono obiettivi di validazione, non risultati garantiti.",
     items: [
-      { accent: "01", title: "Rileva le scosse", description: "Un sensore MEMS sensibile legge la vibrazione del suolo 250 volte al secondo. Abbastanza fine da distinguere un camion di passaggio da una scossa vera." },
-      { accent: "02", title: "Avvisa il telefono", description: "Quando rileva una scossa parte una notifica push. Dice cosa fare: abbassati, copriti, tieniti." },
-      { accent: "03", title: "Segue la salute dell'edificio", description: "Ogni edificio ha una frequenza naturale. Il dispositivo la segue, insieme allo smorzamento, per mesi. Uno spostamento inatteso può essere il primo segnale di un problema strutturale." },
+      { accent: "01", title: "Target di rilevamento", description: "Il progetto attuale mira a un sensore MEMS classe ADXL355 e campionamento triassiale a 250 Hz. Le affermazioni su rilevamento e prestazioni richiedono prove di banco e pilota." },
+      { accent: "02", title: "Target di notifica", description: "Il comportamento delle notifiche resta un obiettivo di validazione pilota. SismoSmart non è un servizio di emergenza né un sistema ufficiale di allerta; segui gli avvisi ufficiali." },
+      { accent: "03", title: "Evidenza strutturale", description: "Un cambiamento nelle caratteristiche di vibrazione misurate può fornire ulteriori elementi a un ingegnere. Non è una diagnosi e non determina se un edificio è sicuro." },
       { accent: "04", title: "Crea un report dopo il terremoto", description: "Accelerazione di picco, durata e risposta dell'edificio finiscono in un unico report. L'ingegnere arriva con un punto di partenza." },
       { accent: "05", title: "Legge anche temperatura e umidità", description: "Un edificio non si comporta d'inverno come d'estate. Senza dati ambientali non riesci a separare quella deriva stagionale da un danno reale." },
-      { accent: "06", title: "Più forte insieme", description: "Ogni dispositivo del quartiere alimenta il segnale comune. Più dispositivi ci sono, più veloce è la conferma e più rari sono i falsi allarmi." },
+      { accent: "06", title: "Correlazione tra dispositivi", description: "La correlazione tra più dispositivi è un obiettivo di progetto. L'effetto su tempi di conferma e falsi allarmi non è ancora dimostrato da evidenza pilota." },
     ],
   },
   demo: {
     eyebrow: "Flusso dati",
     title: "La misura parte dal dispositivo e finisce sul tuo telefono.",
     description:
-      "Il dispositivo misura, cifra e invia. L'app trasforma tutto in qualcosa di leggibile: il dispositivo è vivo, qual è stato l'ultimo evento, in che direzione sta andando il tuo edificio.",
+      "Il progetto attuale misura localmente e mira a trasferire i dati del dispositivo in modo sicuro quando c'è connettività. Sicurezza del dispositivo, report e trend restano da validare in pilota.",
     previewLabel: "Registro edificio",
     networkLabel: "Rete di quartiere",
     sensorLabel: "Dispositivo",
@@ -96,7 +96,7 @@ export const itCopy: SiteCopy = {
     eventLabel: "Ultimo evento",
     eventValue: "Registrato, rivedibile",
     bullets: [
-      "Il sensore MEMS fisso ha un rumore di fondo di 22 µg. Un telefono sta intorno ai 2.000 µg. La differenza è di circa cento volte.",
+      "Il progetto attuale mira a un sensore classe ADXL355, campionamento triassiale a 250 Hz e un obiettivo di rumore documentato; le prestazioni finali richiedono BOM congelata e prove di banco.",
       "Puoi vedere i dati di vibrazione del tuo edificio senza consegnare informazioni personali.",
       "Il dispositivo non decide al posto dell'ingegnere. Gli dà dati migliori.",
     ],
@@ -109,9 +109,9 @@ export const itCopy: SiteCopy = {
     description:
       "Prima di far crescere il prodotto vogliamo vederlo sul campo. Il feedback dei primi pilota deciderà com'è il dispositivo finito. Per ora parliamo con tre gruppi.",
     cards: [
-      { title: "Appartamenti", description: "Un dispositivo in qualche appartamento e uno nelle aree comuni. Ci accordiamo con l'amministratore e installiamo gratis per sei mesi.", highlight: "Pilota gratuito" },
+      { title: "Appartamenti", description: "Numero di dispositivi, durata, proprietà e condizioni commerciali vengono concordati caso per caso. Questa pagina non promette hardware gratuito né una durata fissa.", highlight: "Termini concordati" },
       { title: "Campus e fabbriche", description: "Strutture con più di un edificio. Un dispositivo per edificio, tutti visibili da un'unica dashboard.", highlight: "Aziendale" },
-      { title: "Università", description: "Condividiamo dati con i dipartimenti di ingegneria sismica. I ricercatori accedono a dati anonimi e noi riceviamo feedback accademico.", highlight: "Collaborazione accademica" },
+      { title: "Università", description: "L'accesso alla ricerca richiederebbe termini pilota espliciti, controlli privacy e un accordo separato di condivisione dati. Non è il flusso predefinito.", highlight: "Collaborazione accademica" },
     ],
   },
   faq: {
@@ -119,12 +119,12 @@ export const itCopy: SiteCopy = {
     title: "Domande frequenti",
     description: "Se la tua domanda è qui, c'è anche la risposta. Se non c'è, scrivi a info@sismosmart.com e ti rispondiamo. L'elenco completo è nella pagina FAQ.",
     items: [
-      { title: "Mi avvisa prima di un terremoto?", description: "Parliamo di secondi, non di minuti. Se il terremoto arriva da lontano, il dispositivo può cogliere l'onda P e avvisarti prima che arrivi l'onda S distruttiva. Se l'epicentro è vicino, quel margine si riduce quasi a zero. Non lo vendiamo come sistema di allerta precoce, perché non funziona per ogni terremoto." },
+      { title: "Mi avvisa prima di un terremoto?", description: "No. SismoSmart non è un servizio di allerta precoce e non promette un avviso anticipato. Il pilota può valutare notifiche a bassa latenza dopo il rilevamento locale; per le emergenze segui gli avvisi ufficiali." },
       { title: "Che differenza c'è con gli avvisi di Google?", description: "Google usa l'accelerometro dei telefoni. È gratis, ce l'hanno tutti e funziona bene. Ma quello che misura è l'origine del terremoto, non il tuo edificio. Noi facciamo l'opposto: come vibra il tuo edificio, come cambia con le stagioni, in che stato resta dopo il terremoto. A queste domande un telefono non risponde." },
       { title: "Un dispositivo può dirmi se il mio edificio è sicuro?", description: "Non può. Chi dichiara un edificio sicuro o non sicuro è un ingegnere, non un apparecchio. Quello che fa il dispositivo è lasciare a quell'ingegnere qualcosa di solido su cui lavorare." },
       { title: "L'installazione è difficile?", description: "Colleghi il cavo USB-C alla presa, attacchi il dispositivo al muro con l'adesivo sul retro e lo abbini dall'app. Niente trapano e niente tecnico. Cinque minuti." },
-      { title: "Cosa succede se manca corrente o internet?", description: "Se salta internet, il dispositivo continua a misurare, salva l'evento nella propria memoria e lo carica quando la connessione torna. Se salta la corrente, il supercondensatore gli dà 30-60 secondi di energia ponte, abbastanza per mandare l'ultimo evento nel cloud. Se il blackout dura di più, si spegne." },
-      { title: "Quando arriva sul mercato?", description: "I pilota partono nell'estate 2026 e puntiamo alla vendita ampia entro fine 2026. Certificazione e produzione possono spostare la data. Se ti iscrivi alla newsletter la saprai per primo." },
+      { title: "Cosa succede se manca corrente o internet?", description: "Il progetto attuale mira al buffering locale durante la perdita di rete e a un breve ponte con supercondensatore durante un blackout. Durata esatta e invio end-to-end restano da validare." },
+      { title: "Quando arriva sul mercato?", description: "Non c'è una data pubblica definitiva di vendita. SismoSmart resta in pre-lancio; evidenza pilota, maturità hardware, certificazione e produzione determineranno il calendario." },
     ],
   },
   newsletter: {

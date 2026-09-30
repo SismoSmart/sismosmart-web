@@ -5,75 +5,39 @@ export const itPages: BaseRoutePagesCopy = {
     meta: {
       title: "Il dispositivo SismoSmart",
       description:
-        "Un piccolo dispositivo di monitoraggio sismico per casa o ufficio. Rileva le scosse e registra come si comporta l'edificio dopo un terremoto.",
+        "Dispositivo sismico in fase pre-lancio per case e piccoli edifici, progettato per registrare il movimento; prestazioni, connettività e report restano soggetti a validazione pilota.",
     },
     eyebrow: "Prodotto",
     title: "Il dispositivo",
     description:
-      "Un dispositivo da parete, alimentato via USB-C, 100 x 100 x 27 mm. Pensato per misurare il movimento in modo fisso e attento, in case e piccoli edifici.",
+      "Dispositivo a parete alimentato via USB-C in fase pre-lancio. Sensore, connettività, report e prestazioni restano obiettivi di progetto.",
     deviceDescription:
-      "Nella scatola trovi il dispositivo, un cavo USB-C e una striscia biadesiva per il fissaggio. Non ti serve nessun altro attrezzo per montarlo.",
+      "La scocca pilota è pensata per il montaggio fisso a parete. Hardware e istruzioni finali saranno confermati con il dispositivo validato.",
     meterTopLabel: "Sensore",
-    meterTopValue: "MEMS preciso",
+    meterTopValue: "Target MEMS",
     meterBottomLabel: "Dati",
-    meterBottomValue: "Cifrati, minimi",
+    meterBottomValue: "Target di sicurezza",
     imageAlt: "Dispositivo SismoSmart, vista frontale",
     specs: [
-      { label: "Sensore", value: "MEMS ad alta precisione" },
-      { label: "Connessione", value: "Wi-Fi + Bluetooth" },
-      { label: "Installazione", value: "Cinque minuti, via app" },
-      { label: "Stato", value: "LED RGB + app" },
+      { label: "Sensore", value: "Target MEMS classe ADXL355" },
+      { label: "Connessione", value: "Target Wi-Fi + Bluetooth" },
+      { label: "Installazione", value: "Target setup pilota" },
+      { label: "Stato", value: "Target LED RGB + app" },
     ],
     useCases: [
-      {
-        title: "Case e appartamenti",
-        description:
-          "Un dispositivo per unità, oppure un pilota con più dispositivi insieme all'amministratore.",
-      },
-      {
-        title: "Campus e fabbriche",
-        description:
-          "Organizzazioni con più edifici li seguono da una sola dashboard.",
-      },
-      {
-        title: "Officine e uffici",
-        description:
-          "Monitoraggio accessibile e rapido da installare per piccole imprese.",
-      },
-      {
-        title: "Università",
-        description:
-          "I gruppi di ricerca sui terremoti possono accedere a dati anonimi.",
-      },
+      { title: "Case e appartamenti", description: "Contesti candidati al pilota per misure fisse; il posizionamento viene concordato per edificio." },
+      { title: "Campus e fabbriche", description: "Piloti multi-edificio possono valutare una vista centralizzata dopo la validazione del flusso." },
+      { title: "Officine e uffici", description: "L'uso in piccoli edifici è un'ipotesi pilota, non un'implementazione commerciale validata." },
+      { title: "Università", description: "L'accesso alla ricerca richiede accordi espliciti, controlli privacy e uno scopo definito di condivisione." },
     ],
     comparisonTitle: "Come si confronta",
     comparisonDescription:
-      "Sta tra un sismografo professionale e un'app per telefono. Non sostituiamo nessuno dei due: offriamo un dispositivo reale a scala domestica.",
+      "SismoSmart è progettato come dispositivo fisso tra sensori da telefono e strumentazione professionale. Sensibilità, report e costo restano ipotesi di validazione o commerciali.",
     comparisonRows: [
-      {
-        label: "Installazione",
-        sismosmart: "Cinque minuti, fai da te",
-        traditional: "Serve un ingegnere",
-        mobile: "Nessuna, solo app",
-      },
-      {
-        label: "Dispositivo fisso",
-        sismosmart: "Sì, montato sull'edificio",
-        traditional: "Sì",
-        mobile: "No, il telefono si muove",
-      },
-      {
-        label: "Lettura strutturale",
-        sismosmart: "Sì, report semplice",
-        traditional: "Sì, report esperto",
-        mobile: "No",
-      },
-      {
-        label: "Prezzo",
-        sismosmart: "Scala casa",
-        traditional: "Scala enterprise",
-        mobile: "Gratis",
-      },
+      { label: "Installazione", sismosmart: "Processo pilota", traditional: "Installazione professionale variabile", mobile: "Setup app" },
+      { label: "Dispositivo fisso", sismosmart: "Target: montato sull'edificio", traditional: "Sì", mobile: "No, il telefono si muove" },
+      { label: "Interpretazione strutturale", sismosmart: "Validazione in corso", traditional: "Flusso esperto", mobile: "Non valuta l'edificio" },
+      { label: "Prezzo", sismosmart: "Pre-lancio; nessun prezzo pubblico", traditional: "Prezzo sistema professionale", mobile: "Spesso gratis" },
     ],
     ctaLabel: "Candidati al pilota",
     ctaHref: "/pilot-program",
@@ -82,67 +46,27 @@ export const itPages: BaseRoutePagesCopy = {
     meta: {
       title: "Come funziona SismoSmart",
       description:
-        "Monti il dispositivo, lo abbini al telefono, l'edificio viene riconosciuto. Ricevi una notifica quando arriva una scossa e un report dopo.",
+        "Progetto in fase pre-lancio per misurare il movimento, conservare dati evento e preparare informazioni per validazione pilota e revisione professionale.",
     },
     eyebrow: "Come funziona",
     title: "Dispositivo, cloud, app: insieme.",
     description:
-      "Tre parti. Il dispositivo misura le vibrazioni del tuo edificio. Il cloud riceve dati cifrati e li confronta con altri dispositivi. L'app mostra solo ciò che conta.",
+      "Il progetto attuale combina misura locale, un percorso dati connesso e uno strato app/report. Rilevamento, notifiche, correlazione e report restano in validazione pilota.",
     flow: [
-      {
-        title: "Monta il dispositivo",
-        description:
-          "Su una parete interna, meglio se vicina a un elemento strutturale.",
-      },
-      {
-        title: "Abbinalo al telefono",
-        description:
-          "Lo trovi via Bluetooth dall'app. Condividi le credenziali Wi-Fi in modo sicuro.",
-      },
-      {
-        title: "L'edificio viene imparato",
-        description:
-          "Nei primi giorni il dispositivo registra il profilo normale delle vibrazioni.",
-      },
-      {
-        title: "Report quando succede qualcosa",
-        description:
-          "Ricevi una notifica quando rileva una scossa. Dopo, il report è pronto nell'app.",
-      },
+      { title: "Monta il dispositivo", description: "Il posizionamento pilota viene scelto su una superficie interna stabile in base all'edificio e all'obiettivo di misura." },
+      { title: "Abbinalo al telefono", description: "Bluetooth e Wi-Fi sono obiettivi di provisioning; la sicurezza finale dipende dalla revisione dell'implementazione." },
+      { title: "Costruisci una baseline", description: "La calibrazione pilota mira a registrare le vibrazioni quotidiane e testare la separazione dei movimenti insoliti." },
+      { title: "Registra un evento", description: "Il progetto mira a cattura locale e vista successiva in app/report; tempi e completezza restano da validare." },
     ],
     signals: [
-      {
-        title: "Rilevamento nel dispositivo",
-        description:
-          "Il dispositivo non aspetta il cloud. Quando parte una vera scossa, agisce in locale. Poi conferma con il cloud.",
-      },
-      {
-        title: "Report dopo il terremoto",
-        description:
-          "Un solo riepilogo: accelerazione di picco, durata, variazione della frequenza naturale dell'edificio.",
-      },
-      {
-        title: "Solo i dati necessari",
-        description:
-          "Non monitoriamo la tua attività. Il dispositivo condivide vibrazioni, temperatura, umidità, pressione e stato.",
-      },
+      { title: "Rilevamento nel dispositivo", description: "È un obiettivo di progetto. Soglie, falsi positivi, eventi mancati e affidabilità richiedono evidenza pilota etichettata." },
+      { title: "Report post-evento", description: "Un report futuro può riassumere grandezze validate per revisione professionale. Non determina la sicurezza." },
+      { title: "Solo i dati necessari", description: "Il flusso dati del sito è documentato a parte. La telemetria futura sarà definita prima della raccolta pilota." },
     ],
     network: [
-      {
-        title: "Rete di quartiere",
-        description:
-          "Quando tre o più dispositivi nella stessa zona si attivano insieme, l'evento viene segnato come confermato. I falsi allarmi calano molto.",
-      },
-      {
-        title: "Controllo della struttura",
-        description:
-          "Il profilo di vibrazione cambia in settimane e mesi. Un cambio improvviso può segnalare un problema.",
-      },
-      {
-        title: "Interfaccia semplice",
-        description:
-          "Il dispositivo fa il lavoro complesso in background. Tu vedi solo lo stato: verde, giallo, rosso.",
-      },
+      { title: "Correlazione tra dispositivi", description: "È un obiettivo di progetto; l'effetto su conferma e falsi allarmi non è ancora dimostrato." },
+      { title: "Evidenza strutturale nel tempo", description: "Cambiamenti misurati possono fornire elementi aggiuntivi a un ingegnere; non sono una diagnosi." },
+      { title: "Interfaccia semplice", description: "Una vista di stato chiara è un obiettivo di prodotto; stati e soglie finali dipendono dalla validazione." },
     ],
   },
   about: {
@@ -178,30 +102,10 @@ export const itPages: BaseRoutePagesCopy = {
       },
     ],
     timeline: [
-      {
-        period: "Q1 2026",
-        title: "Team e visione prodotto",
-        description:
-          "Team iniziale formato, decisioni principali prese, architettura scritta.",
-      },
-      {
-        period: "Q2 2026",
-        title: "Prototipo e preparazione pilota",
-        description:
-          "Primo prototipo hardware, base dell'app mobile, prime conversazioni con siti pilota.",
-      },
-      {
-        period: "Q3 2026",
-        title: "Prime installazioni pilota",
-        description:
-          "Cinque-dieci edifici, tre mesi di dati, feedback, prodotto finale.",
-      },
-      {
-        period: "Q4 2026 / Q1 2027",
-        title: "Certificazione e produzione",
-        description:
-          "Certificazione CE, primi 1.000 dispositivi, lancio più ampio.",
-      },
+      { period: "Completato", title: "Base di prodotto e sistema", description: "Il concetto iniziale e l'architettura di sistema sono definiti. Le affermazioni pubbliche restano vincolate dal registro delle evidenze." },
+      { period: "Attuale", title: "Validazione pilota", description: "Hardware, rilevamento, notifiche, connettività e report vengono validati prima di ampliare le affermazioni." },
+      { period: "Successivo", title: "Evidenza e congelamento del progetto", description: "BOM, algoritmi e ipotesi operative vengono congelati solo dopo la revisione delle prove di banco e campo." },
+      { period: "Più avanti", title: "Certificazione e produzione", description: "Certificazione, produzione e lancio seguono i gate di evidenza. Non è promessa una data pubblica di consegna." },
     ],
     team: [
       {
@@ -283,17 +187,17 @@ export const itPages: BaseRoutePagesCopy = {
       {
         title: "Dati che raccogliamo",
         description:
-          "Sul sito: email quando ti iscrivi, messaggi inviati dal modulo, preferenze cookie. Dal dispositivo dopo il lancio: vibrazioni, temperatura, umidità, pressione, stato del dispositivo, posizione approssimativa a livello di quartiere.",
+          "Sul sito attivo: email di iscrizione, messaggi del modulo e preferenze cookie. I dati previsti per un pilota possono includere movimento, misure ambientali, stato e posizione approssimativa; le categorie esatte vengono documentate prima della raccolta.",
       },
       {
         title: "Per cosa li usiamo",
         description:
-          "Rispondere ai messaggi, gestire candidature pilota, inviare annunci, mantenere il dispositivo online, confrontare eventi tra dispositivi, migliorare il prodotto.",
+          "I dati attuali del sito sono usati per rispondere ai messaggi, gestire candidature pilota e inviare comunicazioni consentite. Le finalità dei futuri dati del dispositivo vengono definite nell'accordo prima della raccolta.",
       },
       {
         title: "Con chi li condividiamo",
         description:
-          "Gli invii dei moduli possono passare da un provider di moduli. I dati del dispositivo sono elaborati nell'ambiente cloud scelto. Non vendiamo dati personali a terzi.",
+          "Gli invii dei moduli possono passare dal provider configurato. Processori, luoghi di trattamento, trasferimenti e conservazione dei futuri dati del dispositivo vengono definiti prima del pilota. Non vendiamo dati personali a terzi.",
       },
       {
         title: "I tuoi diritti",
@@ -320,7 +224,7 @@ export const itPages: BaseRoutePagesCopy = {
       {
         title: "Non è una garanzia",
         description:
-          "Il dispositivo è costruito per supportare la preparazione al terremoto dopo il lancio. Non sostituisce sistemi ufficiali, istruzioni di emergenza o il report di un ingegnere strutturale.",
+          "Il dispositivo è in sviluppo per supportare preparazione e revisione post-evento. Non sostituisce sistemi ufficiali, istruzioni di emergenza o il report di un ingegnere strutturale.",
       },
       {
         title: "Proprietà intellettuale",
@@ -346,7 +250,7 @@ export const itPages: BaseRoutePagesCopy = {
       {
         title: "Descrizione breve",
         description:
-          "SismoSmart costruisce un dispositivo di monitoraggio sismico per case e piccoli edifici. Il dispositivo misura continuamente l'edificio, avvisa il telefono durante un terremoto e registra lo stato dopo l'evento. Piloti nel 2026, lancio nel 2027.",
+          "SismoSmart sviluppa un dispositivo di monitoraggio sismico in fase pre-lancio per case e piccoli edifici, progettato per registrare il movimento e supportare la revisione professionale post-evento. Validazione pilota, certificazione e produzione determineranno il calendario.",
       },
       {
         title: "Contatto stampa",

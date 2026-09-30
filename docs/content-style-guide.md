@@ -37,6 +37,18 @@ Bu kalıplar metne yapay bir tat veriyor ve şu an sitede fazlasıyla var.
 
 Türkçe metinde İngilizce bırakılmaz: `embedded` yerine `gömülü yazılım`, `runway` yerine `nakit ömrü`, `deck` yerine `sunum`, `pivot` yerine `yön değişikliği`, `check-in` yerine `düzenli görüşme`. `MEMS`, `LoRa`, `SHM` gibi yerleşik teknik kısaltmalar kalır ama ilk geçtikleri yerde bir kez açıklanır.
 
+## Güncellik ve kanıt
+
+Public içerikte takvim, fiyat, pilot kapsamı, performans, sertifika, yatırım veya ürün özelliği gibi değişebilir bilgiler güncel kanıt olmadan kesin gerçek gibi yazılmaz.
+
+- Tarihi geçmiş bir yol haritası maddesi otomatik olarak gerçekleşmiş sayılmaz. Kanıt yoksa tarih kaldırılır ve durum `şimdi`, `sonraki`, `daha sonra` gibi doğrulanabilir aşamalarla anlatılır.
+- Donanım, algılama, bildirim, bağlantı, yapı sağlığı yorumu, cihaz güvenliği ve sertifikasyon iddiaları `docs/governance/technical-claims-register.md` içindeki Evidence status ve Approved wording sınırına uyar.
+- Fiyat, abonelik, pazar büyüklüğü, yatırım turu, nakit ömrü, hibe ve üretim adedi gibi ticari rakamlar yalnız güncel, tarihli ve sahibi belli bir kaynak varsa public metne girer. Aksi halde güncel bilgi doğrudan görüşmeye yönlendirilir.
+- `design target`, `planned`, `validation pending`, `may` gibi belirsizlik ifadeleri çeviride kesinliğe dönüşmez.
+- Yeni bir locale eklenirken yüksek etkili iddialar dil akıcılığı yanında kanıt modalitesi açısından da gözden geçirilir.
+
+Editoryal metin önce Türkçe hazırlanır. Claims register'daki yüksek etkili iddialar için İngilizce onaylı kontrol wording'i kanıt referansıdır; diğer locale'ler aynı kesinlik seviyesini korur.
+
 ## Yazım
 
 Düz kesme işareti kullanılır (`'`), eğri değil (`'`). Özel ada gelen ek kesme işaretiyle ayrılır: `SismoSmart'ı`, `Türkiye'de`.

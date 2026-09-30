@@ -7,7 +7,7 @@ export const enCopy: SiteCopy = {
   meta: {
     title: "Seismic monitoring for your building",
     description:
-      "SismoSmart is a small seismic monitoring device you mount on the wall. It measures how your building moves and notifies your phone when the shaking is serious. An engineer can read the recording afterwards.",
+      "SismoSmart is a pre-launch building seismic monitor designed to record motion during shaking and give qualified engineers data for post-event review.",
   },
   navigation: {
     eyebrow: "Seismic monitoring for buildings",
@@ -23,7 +23,7 @@ export const enCopy: SiteCopy = {
     badge: "Early-stage hardware startup",
     title: "How did your building move in the earthquake? We built a device that measures it.",
     description:
-      "SismoSmart plugs into a socket and mounts on the wall. It measures your building's motion continuously and notifies your phone when the shaking is serious. Its real job is the recording it keeps: when an engineer arrives, they can read how the building behaved at the time.",
+      "SismoSmart is a pre-launch wall-mounted device designed to measure and record building motion. Detection, notification, connectivity and performance remain subject to pilot validation. Its purpose is to leave qualified engineers a useful motion record after shaking.",
     primaryCta: "Apply for pilot",
     secondaryCta: "Investor brief",
     tertiaryCta: "See the technology",
@@ -33,22 +33,22 @@ export const enCopy: SiteCopy = {
     stats: [
       { label: "Mounting", value: "Wall-fixed" },
       { label: "Detection", value: "On-device" },
-      { label: "Sampling", value: "250 Hz, 3-axis" },
-      { label: "Power bridge", value: "30-60 s supercap" },
+      { label: "Sampling target", value: "250 Hz, 3-axis" },
+      { label: "Power target", value: "30-60 s supercap" },
     ],
     deviceEyebrow: "The SismoSmart device",
     deviceTitle: "100 × 100 mm. Mounts on the wall, runs off a socket.",
     deviceDescription:
       "You stick it to the wall and plug it in. You pair it from the app and give it your Wi-Fi. Everything after that happens in the background: it starts measuring the building's vibration and stays out of your way on an ordinary day.",
     deviceSpecs: [
-      "Three-axis motion sensing",
-      "Local recording during events",
-      "Encrypted Wi-Fi data",
+      "Three-axis motion sensing target",
+      "Local event-recording target",
+      "Device-data encryption target",
     ],
     meterTopLabel: "Detection",
-    meterTopValue: "On-device",
+    meterTopValue: "Validation pending",
     meterBottomLabel: "Data",
-    meterBottomValue: "Encrypted",
+    meterBottomValue: "Encryption target",
     imageAlt: "SismoSmart seismic monitoring device with status LED",
   },
   trust: {
@@ -66,7 +66,7 @@ export const enCopy: SiteCopy = {
     eyebrow: "How it works",
     title: "Setup takes a few minutes. Everything after that is in the background.",
     description:
-      "Once the device is up, there is nothing left for you to do. It spends the first few days learning your building's normal vibration profile, and after that it can pick out what isn't normal.",
+      "Pilot calibration is intended to learn a building's normal vibration profile and test whether unusual motion can be separated from everyday noise. False positives and missed events remain possible.",
     steps: [
       {
         title: "Mount it on a wall",
@@ -81,22 +81,22 @@ export const enCopy: SiteCopy = {
       {
         title: "It learns the building",
         description:
-          "For a few days the device just listens to your building's normal vibration. It learns what a passing truck does, what a windy day does. It can only spot the abnormal once it knows the normal.",
+          "Pilot calibration is intended to build a baseline from ordinary vibration such as traffic and wind. The method still needs field evidence before it can be described as reliable.",
       },
       {
         title: "It notifies you when shaking starts",
         description:
-          "When it detects serious vibration, a notification lands on your phone. If nearby devices saw the same shaking, the notification arrives marked as confirmed.",
+          "The design can issue a notification after on-device detection. Notification timing and multi-device confirmation logic remain subject to pilot validation.",
       },
       {
         title: "It records the event",
         description:
-          "The raw data from during and after the shaking is kept on the device and sent to the cloud. An engineer can read how the building responded from that recording.",
+          "The design includes local event buffering and cloud upload when connectivity is available. Pilot testing must validate the full path before it is treated as a deployed device capability.",
       },
       {
         title: "More devices, better results",
         description:
-          "With several devices in one building you can see how the floors move relative to each other. With several in one neighborhood, the odds of a false alarm drop.",
+          "Multi-device measurement may provide useful relative floor-motion and event-correlation evidence. The accuracy and false-alarm benefit still need pilot validation.",
       },
     ],
   },
@@ -104,43 +104,43 @@ export const enCopy: SiteCopy = {
     eyebrow: "What it does",
     title: "It quietly does several separate jobs at once.",
     description:
-      "Notifying you during an earthquake is only one of them. The valuable part is what happens before and after: it tracks the building's health for months, and it records what happened while the ground was moving.",
+      "The product is being designed around event recording and longer-term building-motion evidence. Notification, structural-health interpretation and other device features remain validation targets, not guaranteed outcomes.",
     items: [
       {
         accent: "01",
         title: "Detects tremors",
         description:
-          "A sensitive MEMS sensor reads ground vibration 250 times per second. Sensitive enough to tell a passing truck apart from real shaking.",
+          "The current design targets an ADXL355-class MEMS sensor and 250 Hz three-axis sampling. Bench and pilot evidence are still required for detection and performance claims.",
       },
       {
         accent: "02",
         title: "Notifies your phone",
         description:
-          "When it detects shaking, a push notification goes out. It says what to do: drop, cover, hold on.",
+          "Notification behavior is a pilot-validation target. SismoSmart is not an emergency service or an official warning system; follow official alerts and emergency guidance.",
       },
       {
         accent: "03",
         title: "Tracks your building's health",
         description:
-          "Every building has a natural frequency. The device tracks that and the damping ratio over months. An unexpected shift there can be an early sign of structural trouble.",
+          "A change in measured vibration characteristics may give engineers additional evidence over time. It is not a diagnosis and cannot determine whether a building is safe.",
       },
       {
         accent: "04",
         title: "Reports after an earthquake",
         description:
-          "Peak acceleration, duration and how your building responded end up in a single report. The engineer has a starting point before they even arrive.",
+          "The planned post-event report is intended to summarize measured motion for qualified review. Report fields and interpretation remain subject to pilot validation.",
       },
       {
         accent: "05",
         title: "Reads temperature and humidity too",
         description:
-          "A building doesn't behave the same in winter as in summer. Without environmental data you can't tell that seasonal drift apart from real damage.",
+          "Environmental sensing is a design target for helping engineers separate seasonal effects from other changes. It does not by itself identify damage.",
       },
       {
         accent: "06",
         title: "Stronger together",
         description:
-          "Every device in your neighborhood feeds the shared signal. As the count goes up, confirmation gets faster and false alarms get rarer.",
+          "Multi-device correlation is a design target. Its effect on confirmation time and false alarms has not yet been established in pilot evidence.",
       },
     ],
   },
@@ -148,7 +148,7 @@ export const enCopy: SiteCopy = {
     eyebrow: "Data flow",
     title: "Measurement starts at the device and ends on your phone.",
     description:
-      "The device measures, encrypts and sends. The app turns that into something readable: is the device alive, what was the last event, which way is your building trending.",
+      "The current design measures locally and is intended to transmit device data securely when connectivity is available. Device security, reporting and long-term trend views remain pilot-validation targets.",
     previewLabel: "Building record",
     networkLabel: "Neighborhood mesh",
     sensorLabel: "Device",
@@ -156,7 +156,7 @@ export const enCopy: SiteCopy = {
     eventLabel: "Last event",
     eventValue: "Recorded, reviewable",
     bullets: [
-      "The wall-mounted MEMS sensor has a noise floor of 22 µg. Your phone sits around 2,000 µg. The gap is roughly a hundredfold.",
+      "The current design targets an ADXL355-class sensor, 250 Hz three-axis sampling and a documented noise objective; final performance awaits a frozen bill of materials and bench evidence.",
       "You can see your building's vibration data without handing over personal information.",
       "The device doesn't decide in the engineer's place. It gives the engineer better data.",
     ],
@@ -172,8 +172,8 @@ export const enCopy: SiteCopy = {
       {
         title: "Apartments",
         description:
-          "A device in a few flats and one in the common area. We agree it with the building management and install it free for six months.",
-        highlight: "Free pilot",
+          "Pilot device count, duration, ownership and commercial terms are agreed case by case. This page does not commit to free hardware or a fixed pilot term.",
+        highlight: "Pilot terms agreed",
       },
       {
         title: "Campuses and factories",
@@ -184,7 +184,7 @@ export const enCopy: SiteCopy = {
       {
         title: "University partnerships",
         description:
-          "We share data with earthquake engineering departments. Researchers get anonymized access and we get academic feedback.",
+          "Research access would require explicit pilot terms, privacy controls and a separate data-sharing agreement. It is not the default data flow.",
         highlight: "Research collaboration",
       },
     ],
@@ -198,7 +198,7 @@ export const enCopy: SiteCopy = {
       {
         title: "Will this device warn me before an earthquake?",
         description:
-          "We're talking seconds, not minutes. If the earthquake comes from a distance, the device can catch the fast-moving P wave and send a notification before the destructive S wave arrives. If the epicenter is close, that window shrinks to almost nothing. We don't market this as an early warning system, because it won't work for every earthquake.",
+          "No. SismoSmart is not an earthquake early-warning service and does not promise advance warning. Pilot work may evaluate low-latency notifications after on-device detection, but official alerts remain the source for emergency warnings.",
       },
       {
         title: "How is this different from Google's earthquake alerts?",
@@ -218,12 +218,12 @@ export const enCopy: SiteCopy = {
       {
         title: "What happens during a power or internet outage?",
         description:
-          "If the internet goes, the device keeps measuring, saves the event to its own memory, and uploads it when the connection returns. If the power goes, the supercapacitor inside gives it 30 to 60 seconds of bridge power, which is enough to push the last event to the cloud. A longer outage shuts it down.",
+          "The current design targets local buffering during network loss and a short supercapacitor bridge during power loss. Exact duration and end-to-end upload behavior remain subject to hardware and pilot validation.",
       },
       {
         title: "When does it go on sale?",
         description:
-          "Pilots start in summer 2026 and we're aiming for broad availability by the end of 2026. Certification and manufacturing could push that back. Sign up for the newsletter and you'll hear the firm date first.",
+          "There is no firm public sale date. SismoSmart remains pre-launch; pilot evidence, hardware readiness, certification and manufacturing will determine the schedule. Subscribe for confirmed updates.",
       },
     ],
   },

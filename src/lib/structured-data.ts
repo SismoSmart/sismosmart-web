@@ -10,7 +10,7 @@ const languageNames: Record<Locale, string> = {
   pt: "Portuguese",
 };
 
-const structuredDataModifiedDate = "2026-07-20";
+const structuredDataModifiedDate = "2026-10-01";
 
 const homeLabels: Record<Locale, string> = {
   tr: "Ana Sayfa",

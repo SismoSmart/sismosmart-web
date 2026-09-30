@@ -10,69 +10,69 @@ export const trPages: BaseRoutePagesCopy = {
     eyebrow: "Ürün",
     title: "Evler ve küçük binalar için sismik izleme cihazı",
     description:
-      "Duvara sabitlenen, USB-C ile beslenen, 100 x 100 x 27 mm boyutunda bir cihaz. Ev ve küçük bina ölçeğinde sürekli hareket ölçümü yapmak için tasarladık.",
+      "Duvara sabitlenen, USB-C ile beslenen lansman öncesi bir cihaz. Sensör seçimi, bağlantı, raporlama ve performans pilot doğrulaması tamamlanana kadar tasarım hedefidir.",
     deviceDescription:
-      "Kutunun içinden cihaz, USB-C kablo ve çift taraflı montaj bandı çıkıyor. Kurulum için başka bir alete ihtiyacınız olmuyor.",
+      "Pilot kasa duvara sabitlenmek ve USB-C ile beslenmek üzere tasarlanıyor. Nihai montaj donanımı ve yönergeleri doğrulanmış cihazla birlikte kesinleşecek.",
     meterTopLabel: "Sensör",
-    meterTopValue: "Hassas MEMS",
+    meterTopValue: "ADXL355 sınıfı hedef",
     meterBottomLabel: "Veri",
-    meterBottomValue: "Şifreli, sade",
-    imageAlt: "SismoSmart cihazı, ön yüz",
+    meterBottomValue: "Güvenlik hedefi",
+    imageAlt: "SismoSmart sismik izleme cihazı, ön yüz",
     specs: [
-      { label: "Sensör", value: "Yüksek hassasiyetli MEMS" },
-      { label: "Bağlantı", value: "Wi-Fi + Bluetooth" },
-      { label: "Kurulum", value: "5 dakika, mobil uygulama ile" },
-      { label: "Durum göstergesi", value: "RGB LED + uygulama" },
+      { label: "Sensör", value: "ADXL355 sınıfı tasarım hedefi" },
+      { label: "Bağlantı", value: "Wi-Fi + Bluetooth hedefi" },
+      { label: "Kurulum", value: "Pilot kurulum hedefi" },
+      { label: "Durum göstergesi", value: "RGB LED + uygulama hedefi" },
     ],
     useCases: [
       {
         title: "Evler ve apartmanlar",
         description:
-          "Tek daire için bir cihaz yeter. Apartman yönetimiyle anlaşırsanız binanın farklı katlarına birden fazla cihaz koyabiliriz.",
+          "Sabit bina hareketi kaydı için aday pilot ortamlarıdır; cihaz yerleşimi her bina için ayrıca belirlenir.",
       },
       {
         title: "Kampüsler ve fabrikalar",
         description:
-          "Birden fazla binası olan kuruluşlar her binaya ayrı cihaz takıp hepsini tek panelden izliyor.",
+          "Çok binalı pilotlar, cihaz ve panel yolu doğrulandıktan sonra merkezi görünürlüğü değerlendirebilir.",
       },
       {
         title: "Atölyeler ve ofisler",
         description:
-          "Küçük işletmeler için hızlı kurulan ve bütçeyi zorlamayan bir izleme yolu.",
+          "Küçük bina kullanımı pilot hipotezinin parçasıdır; doğrulanmış ticari kurulum olarak sunulmaz.",
       },
       {
         title: "Üniversite ortaklıkları",
         description:
-          "Deprem araştırma grupları anonimleştirilmiş ölçüm verisine erişebiliyor.",
+          "Araştırma erişimi açık anlaşma, gizlilik kontrolü ve tanımlı veri paylaşım amacı gerektirir.",
       },
     ],
     comparisonTitle: "Diğer çözümlerle karşılaştırma",
     comparisonDescription:
-      "Profesyonel bir sismografla telefonunuzun arasında bir yerde duruyor. Bu aralık şimdiye kadar boştu: eve takılabilecek fiyatta, ama telefondan çok daha hassas, sabit bir cihaz.",
+      "SismoSmart, yalnızca telefonla yapılan ölçüm ile profesyonel enstrümantasyon arasında sabit, binaya bağlı bir ölçüm cihazı olarak tasarlanıyor. Hassasiyet, raporlama ve maliyet karşılaştırmaları doğrulama veya ticari varsayımdır.",
     comparisonRows: [
       {
         label: "Kurulum",
-        sismosmart: "5 dakika, kendiniz",
-        traditional: "Mühendis gerekir",
-        mobile: "Yok, uygulama yeterli",
+        sismosmart: "Pilot süreci",
+        traditional: "Profesyonel kurulum değişir",
+        mobile: "Uygulama kurulumu",
       },
       {
         label: "Sabit cihaz",
-        sismosmart: "Var, binaya bağlı",
+        sismosmart: "Tasarım hedefi: binaya sabit",
         traditional: "Var",
         mobile: "Yok, telefon hareket eder",
       },
       {
-        label: "Bina sağlığı takibi",
-        sismosmart: "Var, sade rapor",
-        traditional: "Var, uzman raporu",
-        mobile: "Yok",
+        label: "Yapısal yorum",
+        sismosmart: "Doğrulama bekliyor",
+        traditional: "Nitelikli uzman süreci",
+        mobile: "Bina değerlendirmesi değildir",
       },
       {
         label: "Fiyat",
-        sismosmart: "~$79 / cihaz",
-        traditional: "$2.000-10.000+",
-        mobile: "Ücretsiz",
+        sismosmart: "Lansman öncesi; halka açık fiyat yok",
+        traditional: "Profesyonel sistem fiyatlaması",
+        mobile: "Çoğu zaman ücretsiz",
       },
     ],
     ctaLabel: "Pilot için başvur",
@@ -82,66 +82,66 @@ export const trPages: BaseRoutePagesCopy = {
     meta: {
       title: "Bina Hareketi Nasıl Ölçülür? | SismoSmart",
       description:
-        "Lansman öncesi SismoSmart cihazının bina hareketini nasıl ölçtüğünü, sarsıntı kaydını nasıl sakladığını ve pilot doğrulama için rapora dönüştürdüğünü görün.",
+        "Lansman öncesi SismoSmart tasarımının bina hareketini ölçme, olay verisini tamponlama ve pilot doğrulama ile nitelikli inceleme için bilgi hazırlama yaklaşımı.",
     },
     eyebrow: "Nasıl çalışır",
     title: "SismoSmart bina hareketini nasıl ölçer ve rapora dönüştürür?",
     description:
-      "Cihaz binanın titreşimini ölçer. Bulut bu veriyi şifreli olarak alır ve yakındaki diğer cihazlarla karşılaştırır. Uygulama size sadece anlamlı olanı gösterir.",
+      "Mevcut tasarım üç parçadan oluşuyor: yerel ölçüm, bağlantılı veri yolu ve uygulama/rapor katmanı. Algılama, bildirim, bulut korelasyonu ve rapor davranışı pilot doğrulama hedefidir.",
     flow: [
       {
         title: "Cihazı yerleştir",
         description:
-          "Bina içinde sabit bir yere takıyorsunuz. Kolona yakın bir nokta ya da taşıyıcı bir duvar en iyisi.",
+          "Pilot yerleşimi bina ve ölçüm amacı dikkate alınarak sabit bir iç yüzeyde belirlenir.",
       },
       {
         title: "Telefonla eşle",
         description:
-          "Uygulama cihazı Bluetooth ile buluyor. Wi-Fi bilgileriniz cihaza şifreli olarak aktarılıyor.",
+          "Bluetooth ve Wi-Fi tanımlama tasarım hedefidir; üretim güvenlik akışı uygulama incelemesine tabidir.",
       },
       {
-        title: "Bina öğrenir",
+        title: "Taban çizgisi oluştur",
         description:
-          "İlk birkaç gün cihaz binanızın normal titreşim profilini kaydediyor. Sonradan anormali bu referansa bakarak ayırt ediyor.",
+          "Pilot kalibrasyonu gündelik titreşimi kaydetmeyi ve sıra dışı hareketin normal gürültüden ayrılıp ayrılamadığını test etmeyi hedefler.",
       },
       {
-        title: "Olay olunca rapor",
+        title: "Olayı kaydet",
         description:
-          "Sarsıntı algılandığında bildirim geliyor. Olay bittikten sonra detaylı rapor uygulamada hazır oluyor.",
+          "Tasarım yerel olay kaydı ve daha sonra uygulama/rapor görünümü hedefler. Bildirim süresi ve rapor bütünlüğü doğrulama maddesidir.",
       },
     ],
     signals: [
       {
-        title: "Sarsıntı tespiti cihazda",
+        title: "Cihaz üzerinde algılama",
         description:
-          "Cihaz buluttan cevap beklemez. Anlamlı bir titreşim algıladığı anda kendi kararını verir, doğrulamayı sonra yapar. İnternet yavaşsa ya da yoksa da bildirim üretilir.",
+          "Cihaz üzerinde algılama tasarım hedefidir. Eşikler, yanlış/kaçırılmış olaylar ve bildirim güvenilirliği etiketli pilot kanıtı gerektirir.",
       },
       {
-        title: "Deprem sonrası rapor",
+        title: "Olay sonrası rapor",
         description:
-          "Sarsıntının PGA değerini, süresini ve binanızın doğal frekansındaki kaymayı tek bir özet raporda alırsınız.",
+          "Gelecekteki rapor doğrulanmış ölçüm büyüklüklerini nitelikli inceleme için özetleyebilir. Bina güvenliği kararı vermez.",
       },
       {
-        title: "Sadece gerekli veri",
+        title: "Yalnız gerekli veri",
         description:
-          "Evdeki hareketinizi izlemiyoruz. Cihaz yalnızca titreşim, sıcaklık, nem, basınç ve kendi çalışma durumunu paylaşır.",
+          "Canlı web sitesi veri akışı ayrı olarak belgelenmiştir. Gelecekteki cihaz telemetrisi, saklama ve işleme pilot veri toplamadan önce tanımlanır.",
       },
     ],
     network: [
       {
-        title: "Mahalle ağı",
+        title: "Çoklu cihaz korelasyonu",
         description:
-          "Aynı mahallede üç veya daha fazla cihaz aynı anda tetiklendiğinde olay doğrulanmış olarak işaretlenir. Yanlış alarm ihtimali belirgin şekilde düşer.",
+          "Cihazlar arası doğrulama bir tasarım hedefidir. Süre ve yanlış alarm üzerindeki faydası henüz pilot kanıtıyla gösterilmedi.",
       },
       {
-        title: "Bina sağlığı takibi",
+        title: "Zaman içinde yapısal kanıt",
         description:
-          "Binanızın titreşim profili haftalar ve aylar içinde yavaşça değişir. Ani bir değişim yapısal bir sorunun habercisi olabilir.",
+          "Ölçülen titreşim özelliklerindeki değişiklik mühendise ek kanıt sağlayabilir; teşhis değildir.",
       },
       {
         title: "Sade arayüz",
         description:
-          "Karmaşık iş arka planda dönüyor. Uygulamada sizin gördüğünüz tek şey bir durum göstergesi: yeşil, sarı, kırmızı.",
+          "Kısa cihaz/uygulama durum görünümü ürün hedefidir. Nihai durumlar ve eşikler doğrulanmış davranışa bağlıdır.",
       },
     ],
   },
@@ -178,30 +178,10 @@ export const trPages: BaseRoutePagesCopy = {
       },
     ],
     timeline: [
-      {
-        period: "2026 Q1",
-        title: "Ekip ve ürün vizyonu",
-        description:
-          "Çekirdek ekip toplandı, ana ürün kararları verildi, sistem mimarisi yazıldı.",
-      },
-      {
-        period: "2026 Q2",
-        title: "Prototip ve pilot hazırlığı",
-        description:
-          "İlk donanım prototipi, mobil uygulama iskeleti ve ilk pilot saha görüşmeleri.",
-      },
-      {
-        period: "2026 Q3",
-        title: "İlk pilot kurulumlar",
-        description:
-          "5-10 binada kurulum ve üç aylık veri toplama. Gelen geri bildirim ürünün son halini belirleyecek.",
-      },
-      {
-        period: "2026 Q4 / 2027 Q1",
-        title: "Sertifika ve üretim",
-        description:
-          "CE sertifikasyonu, ilk 1.000 cihazın üretimi ve geniş lansman.",
-      },
+      { period: "Tamamlandı", title: "Ürün ve sistem temeli", description: "İlk ürün fikri ve sistem mimarisi oluşturuldu. Public iddialar kanıt kaydındaki sınırlarla yönetiliyor." },
+      { period: "Şimdi", title: "Pilot doğrulaması", description: "Donanım, algılama, bildirim, bağlantı ve raporlama hedefleri daha geniş iddialardan önce doğrulanıyor." },
+      { period: "Sonraki", title: "Kanıt ve tasarım dondurma", description: "BOM, algoritmalar ve işletim varsayımları ancak tezgâh ve saha kanıtı incelendikten sonra dondurulacak." },
+      { period: "Daha sonra", title: "Sertifikasyon ve üretim", description: "Sertifikasyon, üretim ve lansman kanıt kapılarından sonra gelir. Public bir teslim tarihi taahhüt edilmiyor." },
     ],
     team: [
       {
@@ -283,17 +263,17 @@ export const trPages: BaseRoutePagesCopy = {
       {
         title: "Topladığımız veriler",
         description:
-          "Web sitesinde: bültene kaydolduğunuzda e-posta adresiniz, iletişim formunu doldurduğunuzda verdiğiniz bilgiler ve çerez tercihleriniz. Cihazdan (lansmandan sonra): titreşim ölçümleri, sıcaklık, nem, basınç, cihazın çalışma durumu ve mahalle seviyesinde yaklaşık konum.",
+          "Canlı web sitesinde: bültene kaydolduğunuz e-posta adresi, iletişim formunda verdiğiniz bilgiler ve çerez tercihleriniz. Planlanan pilot cihaz verisi hareket ve çevresel ölçümleri, cihaz durumu ve yaklaşık konumu içerebilir; kesin veri kategorileri toplamadan önce belgelenir.",
       },
       {
         title: "Ne için kullanıyoruz",
         description:
-          "Mesajlarınıza yanıt vermek, pilot başvurularını değerlendirmek ve lansman duyurularını göndermek için. Cihaz tarafında ise bağlantıyı sürdürmek, bir sarsıntı olayını yakındaki cihazlarla doğrulamak ve ürünü geliştirmek için.",
+          "Mevcut web sitesi verisini mesajlara yanıt vermek, pilot başvurularını değerlendirmek ve onay verdiğiniz duyuruları göndermek için kullanıyoruz. Gelecekteki cihaz verisinin amaçları pilot veri toplamadan önce anlaşmada tanımlanır.",
       },
       {
         title: "Kimlerle paylaşıyoruz",
         description:
-          "Form gönderimleri bir form sağlayıcısından geçebilir. Cihaz verisi seçtiğimiz bulut altyapısında işlenir. Kişisel veriyi reklam veya satış amacıyla üçüncü taraflara aktarmıyoruz.",
+          "Form gönderimleri yapılandırılmış form sağlayıcısından geçebilir. Gelecekteki cihaz işleyicileri, işleme yerleri, aktarımlar ve saklama süresi pilot verisi toplanmadan önce belirlenir. Kişisel veriyi reklam veya satış amacıyla üçüncü taraflara aktarmıyoruz.",
       },
       {
         title: "Haklarınız",
@@ -321,7 +301,7 @@ export const trPages: BaseRoutePagesCopy = {
       {
         title: "Garanti değildir",
         description:
-          "Cihazı, lansmandan sonra deprem hazırlığını desteklemek için geliştiriyoruz. Resmî uyarı sistemlerinin, acil durum talimatlarının veya yapı mühendisi raporunun yerine geçmez.",
+          "Cihazı olay sonrası hazırlık ve incelemeyi desteklemek için geliştiriyoruz. Resmî uyarı sistemlerinin, acil durum talimatlarının veya yapı mühendisi raporunun yerine geçmez.",
       },
       {
         title: "Fikri mülkiyet",
@@ -347,7 +327,7 @@ export const trPages: BaseRoutePagesCopy = {
       {
         title: "Kısa tanım",
         description:
-          "SismoSmart, evlere ve küçük binalara takılan bir sismik izleme cihazı geliştiriyor. Cihaz binayı sürekli ölçer, deprem olduğunda telefona bildirim gönderir ve binanın deprem sırasında nasıl davrandığını kaydeder. Pilotlar 2026'da, lansman 2027'de.",
+          "SismoSmart, evler ve küçük binalar için lansman öncesi bir sismik izleme cihazı geliştiriyor. Amaç bina hareketini kaydedip nitelikli olay sonrası incelemeye veri sağlamak; pilot doğrulaması, sertifikasyon ve üretim lansman takvimini belirleyecek.",
       },
       {
         title: "Basın iletişimi",

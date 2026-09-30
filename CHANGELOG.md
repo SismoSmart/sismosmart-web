@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-No unreleased changes.
+- Align multilingual public product, pilot, investor, FAQ, security, about, and press copy with the technical claims register; remove stale 2026 delivery promises and undated commercial assumptions.
+- Add global `/llms.txt` discovery and permissive snippet/image-preview metadata for agent and search discovery.
+- Refresh machine-readable content dates and strengthen regression coverage for stale or unsupported public claims.
+- Rework repository documentation around the public product/content architecture and align deployment-governance wording with the current shared production-environment model.
 
 ## v0.1.2 - 2026-05-17
 

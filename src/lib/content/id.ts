@@ -5,7 +5,7 @@ export const idCopy: SiteCopy = {
   meta: {
     title: "Pemantauan seismik untuk bangunan Anda",
     description:
-      "SismoSmart adalah perangkat pemantauan seismik kecil yang dipasang di dinding. Ia mengukur gerakan bangunan Anda dan memberi notifikasi ke ponsel saat guncangannya serius. Rekamannya bisa dibaca insinyur setelah kejadian.",
+      "SismoSmart adalah monitor seismik bangunan pra-peluncuran yang dirancang untuk merekam gerakan saat guncangan dan memberi data untuk tinjauan pascakejadian oleh tenaga ahli.",
   },
   navigation: {
     eyebrow: "Pemantauan seismik untuk bangunan",
@@ -21,7 +21,7 @@ export const idCopy: SiteCopy = {
     badge: "Startup hardware tahap awal",
     title: "Bagaimana bangunan Anda bergoyang saat gempa? Kami membuat perangkat yang mengukurnya.",
     description:
-      "SismoSmart dicolokkan ke stopkontak dan ditempel di dinding. Ia mengukur gerakan bangunan Anda terus-menerus dan memberi notifikasi ke ponsel saat guncangannya serius. Tugas utamanya justru rekaman yang ia simpan: saat insinyur datang, ia bisa membaca bagaimana bangunan berperilaku saat itu.",
+      "SismoSmart adalah perangkat dinding pra-peluncuran yang dirancang untuk mengukur dan merekam gerakan bangunan. Deteksi, notifikasi, konektivitas, dan kinerja masih menunggu validasi pilot.",
     primaryCta: "Daftar pilot",
     secondaryCta: "Ringkasan investor",
     tertiaryCta: "Lihat teknologi",
@@ -31,14 +31,14 @@ export const idCopy: SiteCopy = {
     stats: [
       { label: "Pemasangan", value: "Tetap di dinding" },
       { label: "Deteksi", value: "Di perangkat" },
-      { label: "Sampling", value: "250 Hz, 3 sumbu" },
-      { label: "Cadangan daya", value: "30-60 dtk superkapasitor" },
+      { label: "Target sampling", value: "250 Hz, 3 sumbu" },
+      { label: "Target daya", value: "30-60 dtk superkapasitor" },
     ],
     deviceEyebrow: "Perangkat SismoSmart",
     deviceTitle: "100 × 100 mm. Ditempel di dinding, ditenagai dari stopkontak.",
     deviceDescription:
       "Anda menempelkannya ke dinding lalu mencolokkannya. Pasangkan lewat aplikasi dan berikan Wi-Fi Anda. Setelah itu semuanya berjalan di belakang layar: ia mulai mengukur getaran bangunan dan pada hari biasa Anda tidak akan menyadarinya.",
-    deviceSpecs: ["Sensor gerak tiga sumbu", "Rekaman lokal saat kejadian", "Data Wi-Fi terenkripsi"],
+    deviceSpecs: ["Target sensor gerak tiga sumbu", "Target rekaman lokal kejadian", "Target enkripsi data perangkat"],
     meterTopLabel: "Deteksi",
     meterTopValue: "Di perangkat",
     meterBottomLabel: "Data",
@@ -60,12 +60,12 @@ export const idCopy: SiteCopy = {
     eyebrow: "Cara kerja",
     title: "Pemasangan hanya beberapa menit, sisanya berjalan di belakang layar.",
     description:
-      "Begitu terpasang, Anda tidak perlu melakukan apa pun lagi. Beberapa hari pertama ia mempelajari profil getaran normal bangunan Anda, dan setelah itu ia bisa mengenali yang tidak normal.",
+      "Kalibrasi pilot ditujukan untuk mempelajari profil getaran normal bangunan dan menguji apakah gerakan yang tidak biasa dapat dibedakan dari kebisingan harian. Positif palsu dan kejadian terlewat masih mungkin.",
     steps: [
       { title: "Pasang di dinding", description: "Pilih dinding dalam ruangan yang stabil. Perekatnya sudah terpasang, dan ada lubang sekrup kalau Anda ingin memasangnya lebih kokoh." },
       { title: "Pasangkan dari aplikasi", description: "Aplikasi menemukan perangkat lewat Bluetooth. Anda memasukkan sandi Wi-Fi satu kali saja, selesai." },
       { title: "Ia mempelajari bangunan", description: "Selama beberapa hari perangkat mendengarkan getaran normal. Ia belajar apa yang terjadi saat truk lewat dan saat angin kencang. Ia baru bisa mengenali yang tidak normal setelah tahu yang normal." },
-      { title: "Memberi tahu saat guncangan mulai", description: "Saat mendeteksi getaran serius, notifikasi masuk ke ponsel Anda. Jika perangkat di dekatnya melihat guncangan yang sama, notifikasi datang dengan tanda terkonfirmasi." },
+      { title: "Menguji notifikasi saat guncangan", description: "Desain dapat mengirim notifikasi setelah deteksi lokal. Waktu notifikasi dan logika konfirmasi antarperangkat masih menunggu validasi pilot." },
       { title: "Merekam kejadiannya", description: "Data mentah saat dan sesudah guncangan disimpan di perangkat sekaligus dikirim ke cloud. Dari rekaman itu insinyur bisa membaca bagaimana bangunan merespons." },
       { title: "Lebih banyak perangkat, lebih baik", description: "Dengan beberapa perangkat di satu gedung, terlihat bagaimana tiap lantai bergerak relatif satu sama lain. Dengan beberapa perangkat di satu lingkungan, peluang alarm palsu menurun." },
     ],
@@ -74,21 +74,21 @@ export const idCopy: SiteCopy = {
     eyebrow: "Apa fungsinya",
     title: "Sebenarnya ia mengerjakan beberapa tugas berbeda sekaligus.",
     description:
-      "Memberi notifikasi saat gempa hanyalah salah satunya. Bagian yang berharga justru sebelum dan sesudahnya: ia memantau kesehatan bangunan selama berbulan-bulan dan merekam apa yang terjadi saat tanah bergerak.",
+      "Produk ini dirancang di sekitar rekaman kejadian dan bukti gerakan bangunan jangka lebih panjang. Notifikasi dan interpretasi kesehatan struktur adalah target validasi, bukan hasil yang dijamin.",
     items: [
-      { accent: "01", title: "Mendeteksi guncangan", description: "Sensor MEMS yang peka membaca getaran tanah 250 kali per detik. Cukup peka untuk membedakan truk yang lewat dari guncangan sungguhan." },
-      { accent: "02", title: "Memberi notifikasi ke ponsel", description: "Saat mendeteksi guncangan, notifikasi push langsung dikirim. Isinya jelas: merunduk, berlindung, bertahan." },
-      { accent: "03", title: "Memantau kesehatan bangunan", description: "Setiap bangunan punya frekuensi alami. Perangkat memantaunya bersama rasio redaman selama berbulan-bulan. Pergeseran yang tak terduga di situ bisa jadi tanda awal masalah struktur." },
+      { accent: "01", title: "Target deteksi", description: "Desain saat ini menargetkan sensor MEMS kelas ADXL355 dan sampling tiga sumbu 250 Hz. Klaim deteksi dan kinerja memerlukan bukti uji meja dan pilot." },
+      { accent: "02", title: "Target notifikasi", description: "Perilaku notifikasi masih merupakan target validasi pilot. SismoSmart bukan layanan darurat atau sistem peringatan resmi; ikuti peringatan resmi." },
+      { accent: "03", title: "Bukti struktural", description: "Perubahan karakteristik getaran yang terukur dapat memberi bukti tambahan kepada insinyur. Ini bukan diagnosis dan tidak menentukan apakah bangunan aman." },
       { accent: "04", title: "Membuat laporan setelah gempa", description: "Percepatan puncak, durasi, dan respons bangunan Anda berakhir dalam satu laporan. Insinyur sudah punya titik awal sebelum tiba di lokasi." },
       { accent: "05", title: "Membaca suhu dan kelembapan", description: "Perilaku bangunan tidak sama antara musim hujan dan musim kemarau. Tanpa data lingkungan, pergeseran musiman itu tidak bisa dipisahkan dari kerusakan nyata." },
-      { accent: "06", title: "Lebih kuat bersama", description: "Setiap perangkat di lingkungan Anda menyumbang ke sinyal bersama. Semakin banyak perangkat, konfirmasi makin cepat dan alarm palsu makin jarang." },
+      { accent: "06", title: "Korelasi antarperangkat", description: "Korelasi beberapa perangkat adalah target desain. Dampaknya pada waktu konfirmasi dan alarm palsu belum dibuktikan lewat pilot." },
     ],
   },
   demo: {
     eyebrow: "Alur data",
     title: "Pengukuran dimulai di perangkat dan berakhir di ponsel Anda.",
     description:
-      "Perangkat mengukur, mengenkripsi, lalu mengirim. Aplikasi mengubahnya jadi sesuatu yang bisa dibaca: apakah perangkat hidup, apa kejadian terakhir, dan ke mana arah tren bangunan Anda.",
+      "Desain saat ini mengukur secara lokal dan ditujukan untuk mengirim data perangkat dengan aman saat koneksi tersedia. Keamanan perangkat, laporan, dan tren masih menunggu validasi pilot.",
     previewLabel: "Rekaman bangunan",
     networkLabel: "Jaringan lingkungan",
     sensorLabel: "Perangkat",
@@ -96,7 +96,7 @@ export const idCopy: SiteCopy = {
     eventLabel: "Kejadian terakhir",
     eventValue: "Terekam, bisa ditinjau",
     bullets: [
-      "Sensor MEMS yang menempel di dinding punya noise floor 22 µg. Ponsel Anda ada di kisaran 2.000 µg. Selisihnya sekitar seratus kali lipat.",
+      "Desain saat ini menargetkan sensor kelas ADXL355, sampling tiga sumbu 250 Hz, dan sasaran kebisingan yang terdokumentasi; kinerja akhir menunggu BOM tetap dan pengujian meja.",
       "Anda bisa melihat data getaran bangunan tanpa menyerahkan informasi pribadi.",
       "Perangkat tidak mengambil keputusan menggantikan insinyur. Ia memberi insinyur data yang lebih baik.",
     ],
@@ -109,9 +109,9 @@ export const idCopy: SiteCopy = {
     description:
       "Sebelum produk ini dibesarkan, kami ingin melihatnya di lapangan. Masukan dari pilot pertama akan menentukan bentuk akhir perangkatnya. Untuk sekarang kami berbicara dengan tiga kelompok.",
     cards: [
-      { title: "Apartemen", description: "Satu perangkat di beberapa unit dan satu lagi di area bersama. Kami sepakati dengan pengelola gedung dan pasang gratis selama enam bulan.", highlight: "Pilot gratis" },
+      { title: "Apartemen", description: "Jumlah perangkat, durasi, kepemilikan, dan ketentuan komersial disepakati per lokasi. Halaman ini tidak menjanjikan perangkat gratis atau durasi pilot tetap.", highlight: "Ketentuan disepakati" },
       { title: "Kampus dan pabrik", description: "Fasilitas dengan lebih dari satu gedung. Satu perangkat per gedung, semuanya terlihat dari satu dashboard.", highlight: "Korporat" },
-      { title: "Kemitraan universitas", description: "Kami berbagi data dengan departemen teknik gempa. Peneliti mendapat akses anonim dan kami mendapat masukan akademik.", highlight: "Kolaborasi akademik" },
+      { title: "Kemitraan universitas", description: "Akses riset memerlukan ketentuan pilot yang jelas, kontrol privasi, dan perjanjian berbagi data terpisah. Ini bukan alur data bawaan.", highlight: "Kolaborasi akademik" },
     ],
   },
   faq: {
@@ -119,12 +119,12 @@ export const idCopy: SiteCopy = {
     title: "Pertanyaan yang sering diajukan",
     description: "Kalau pertanyaan Anda ada di sini, jawabannya juga ada. Kalau tidak, tulis ke info@sismosmart.com dan kami jawab. Daftar lengkapnya ada di halaman FAQ.",
     items: [
-      { title: "Apakah perangkat ini memperingatkan sebelum gempa?", description: "Kita bicara soal hitungan detik, bukan menit. Kalau gempa datang dari jauh, perangkat bisa menangkap gelombang P yang bergerak cepat dan mengirim notifikasi sebelum gelombang S yang merusak tiba. Kalau pusat gempanya dekat, jeda itu nyaris hilang. Kami tidak memasarkannya sebagai sistem peringatan dini, karena tidak berlaku untuk semua gempa." },
+      { title: "Apakah perangkat ini memperingatkan sebelum gempa?", description: "Tidak. SismoSmart bukan layanan peringatan dini dan tidak menjanjikan peringatan sebelum gempa. Pilot dapat mengevaluasi notifikasi berlatensi rendah setelah deteksi lokal; untuk keadaan darurat, ikuti peringatan resmi." },
       { title: "Apa bedanya dengan peringatan gempa Google?", description: "Google memakai akselerometer di ponsel. Gratis, sudah ada di semua orang, dan bekerja dengan baik. Tapi yang ia ukur adalah sumber gempanya, bukan bangunan Anda. Kami melakukan sebaliknya: bagaimana bangunan Anda bergetar, bagaimana ia berubah menurut musim, dan dalam kondisi apa ia setelah gempa. Ponsel tidak bisa menjawab itu." },
       { title: "Bisakah satu perangkat menyatakan bangunan saya aman?", description: "Tidak bisa. Yang berhak menyatakan sebuah bangunan aman atau tidak aman adalah insinyur, bukan perangkat. Yang dilakukan perangkat adalah meninggalkan data konkret untuk insinyur itu." },
       { title: "Apakah pemasangannya sulit?", description: "Anda colokkan kabel USB-C ke stopkontak, tempelkan perangkat ke dinding dengan perekat di belakangnya, lalu pasangkan lewat aplikasi. Tanpa bor dan tanpa teknisi. Lima menit selesai." },
-      { title: "Bagaimana jika listrik atau internet padam?", description: "Kalau internet putus, perangkat tetap mengukur, menyimpan kejadian di memorinya sendiri, dan mengirimkannya saat koneksi kembali. Kalau listrik padam, superkapasitor di dalamnya memberi daya 30 sampai 60 detik, cukup untuk mengirim kejadian terakhir ke cloud. Kalau padamnya lebih lama, perangkat mati." },
-      { title: "Kapan mulai dijual?", description: "Pilot dimulai pada pertengahan 2026 dan kami menargetkan penjualan luas pada akhir 2026. Sertifikasi dan produksi bisa menggeser tanggal itu. Daftar buletin dan Anda yang pertama tahu tanggal pastinya." },
+      { title: "Bagaimana jika listrik atau internet padam?", description: "Desain saat ini menargetkan penyimpanan lokal saat jaringan putus dan jembatan daya singkat dengan superkapasitor saat listrik padam. Durasi tepat dan pengiriman ujung-ke-ujung masih menunggu validasi." },
+      { title: "Kapan mulai dijual?", description: "Belum ada tanggal penjualan publik yang pasti. SismoSmart masih pra-peluncuran; bukti pilot, kesiapan hardware, sertifikasi, dan manufaktur akan menentukan jadwal." },
     ],
   },
   newsletter: {

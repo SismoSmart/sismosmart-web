@@ -60,6 +60,7 @@ export default async function RootLayout({
       className={`${headingFont.variable} ${bodyFont.variable} h-full antialiased`}
     >
       <head>
+        <link rel="describedby" href={withBasePath("/llms.txt")} />
         <script dangerouslySetInnerHTML={{ __html: THEME_PREPAINT_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col">

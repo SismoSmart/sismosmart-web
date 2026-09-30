@@ -93,6 +93,28 @@ test("structured data exposes canonical identity and freshness fields", () => {
   }
 });
 
+
+test("public pages advertise llms discovery and permissive snippet previews", async () => {
+  const layoutSource = readText("src/app/layout.tsx");
+  assert.match(layoutSource, /rel=["']describedby["']/);
+  assert.match(layoutSource, /llms\.txt/);
+
+  const { buildPageMetadata } = await import("../src/lib/metadata.ts");
+  const metadata = buildPageMetadata("en", "/", "Title", "Description");
+  assert.equal(metadata.robots?.index, true);
+  assert.equal(metadata.robots?.follow, true);
+  assert.equal(metadata.robots?.["max-snippet"], -1);
+  assert.equal(metadata.robots?.["max-image-preview"], "large");
+});
+
+test("machine-readable freshness dates reflect the current public content review", () => {
+  const agentDiscovery = readText("src/lib/agent-discovery.ts");
+  const structuredData = readText("src/lib/structured-data.ts");
+
+  assert.match(agentDiscovery, /agentContentLastUpdated = "2026-10-01"/);
+  assert.match(structuredData, /structuredDataModifiedDate = "2026-10-01"/);
+});
+
 test("English press metadata gives agents enough page context", () => {
   const source = readText("src/lib/page-content/en.ts");
   const match = source.match(

@@ -39,6 +39,8 @@ export function buildPageMetadata(
     robots: {
       index: true,
       follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
     },
     alternates: {
       canonical: `${siteConfig.url}${localizedPath}`,

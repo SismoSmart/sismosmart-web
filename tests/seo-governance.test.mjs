@@ -243,15 +243,46 @@ test("all locales expose equivalent safety and pre-launch notices", () => {
 test("public technical copy avoids unsupported absolute detection and residency claims", async () => {
   const pageSources = await Promise.all([
     read("src/lib/pages.ts"),
-    ...locales.map((locale) =>
+    ...locales.flatMap((locale) => [
+      read(`src/lib/content/${locale}.ts`),
+      read(`src/lib/page-content/${locale}.ts`),
       read(`src/lib/page-content/extra-pages/${locale}.ts`),
-    ),
+    ]),
   ]);
   const pages = pageSources.join("\n");
   assert.doesNotMatch(pages, /won't cross the threshold|Kapı çarpması ya da ayak sesi eşiği geçmez/);
   assert.doesNotMatch(pages, /AWS(?:'s|\'nin| de)? (?:Turkey|Türkiye|Turquía|Turki|Turchia|Turquia)/i);
+  assert.doesNotMatch(
+    pages,
+    /lab-grade|laboratuvar kalites(?:inde|indeki)|quality of laboratory|qualità di laboratorio/i,
+  );
   assert.match(pages, /false positives and missed events remain possible/);
   assert.match(pages, /Pilot data residency is not final/);
+});
+
+test("public copy does not publish expired 2026 launch promises as current commitments", async () => {
+  const pageSources = await Promise.all(
+    locales.flatMap((locale) => [
+      read(`src/lib/content/${locale}.ts`),
+      read(`src/lib/page-content/${locale}.ts`),
+      read(`src/lib/page-content/extra-pages/${locale}.ts`),
+    ]),
+  );
+  const pages = pageSources.join("\n");
+
+  for (const stale of [
+    /Pilots start in summer 2026/i,
+    /Pilotlar 2026 yazında başlıyor/i,
+    /Los pilotos empiezan en verano de 2026/i,
+    /Os pilotos começam no meio de 2026/i,
+    /I pilota partono nell'estate 2026/i,
+    /Q3 2026: five to ten pilot installations/i,
+    /2026 Q3: 5-10 pilot kurulum/i,
+    /Q1 2027: CE certification and first production run of 1,000 units/i,
+    /2027 Q1: CE sertifikası ve ilk 1\.000 cihazın üretimi/i,
+  ]) {
+    assert.doesNotMatch(pages, stale);
+  }
 });
 
 test("technical claims have an evidence and translation governance register", async () => {
@@ -411,113 +442,44 @@ test("TR how-it-works metadata and H1 describe building-motion measurement and r
   assert.match(pages.howItWorks.meta.description, /lansman|pilot/i);
 });
 
-test("ES, ID, IT, and PT commercial page metadata and H1 values remain unchanged", () => {
+test("ES, ID, IT, and PT commercial titles stay stable while claims metadata is validation-aware", () => {
   const expected = {
     es: {
-      product: {
-        meta: {
-          title: "El dispositivo SismoSmart",
-          description: "Un pequeño dispositivo de monitoreo sísmico para casa u oficina. Detecta temblores y registra cómo se comporta el edificio después de un terremoto.",
-        },
-        title: "El dispositivo",
-      },
-      technology: {
-        meta: {
-          title: "Tecnología: cómo mide SismoSmart",
-          description: "Qué hay dentro del dispositivo, cómo distingue un temblor real del ruido y cómo la medición se convierte en un informe legible.",
-        },
-        title: "Qué hay dentro del dispositivo y cómo te llega el dato",
-      },
-      howItWorks: {
-        meta: {
-          title: "Cómo funciona SismoSmart",
-          description: "Monta el dispositivo, empareja el teléfono, el edificio se reconoce. Recibes aviso cuando hay sacudida y reporte después.",
-        },
-        title: "Dispositivo, nube, app: juntos.",
-      },
+      product: ["El dispositivo SismoSmart", "El dispositivo"],
+      technology: ["Tecnología: cómo mide SismoSmart", "Qué hay dentro del dispositivo y cómo te llega el dato"],
+      howItWorks: ["Cómo funciona SismoSmart", "Dispositivo, nube, app: juntos."],
     },
     id: {
-      product: {
-        meta: {
-          title: "Perangkat SismoSmart",
-          description: "Perangkat pemantauan seismik kecil untuk rumah atau kantor. Membaca guncangan dan merekam perilaku bangunan setelah gempa.",
-        },
-        title: "Perangkat",
-      },
-      technology: {
-        meta: {
-          title: "Teknologi: bagaimana SismoSmart mengukur",
-          description: "Apa isi perangkat, bagaimana ia membedakan guncangan asli dari derau, dan bagaimana pengukuran berubah menjadi laporan yang bisa dibaca.",
-        },
-        title: "Apa yang ada di dalam perangkat, dan bagaimana datanya sampai ke Anda",
-      },
-      howItWorks: {
-        meta: {
-          title: "Cara kerja SismoSmart",
-          description: "Pasang perangkat, pasangkan ponsel, bangunan dikenali. Anda mendapat notifikasi saat guncangan terjadi, lalu laporan setelahnya.",
-        },
-        title: "Perangkat, cloud, app: bersama.",
-      },
+      product: ["Perangkat SismoSmart", "Perangkat"],
+      technology: ["Teknologi: bagaimana SismoSmart mengukur", "Apa yang ada di dalam perangkat, dan bagaimana datanya sampai ke Anda"],
+      howItWorks: ["Cara kerja SismoSmart", "Perangkat, cloud, app: bersama."],
     },
     it: {
-      product: {
-        meta: {
-          title: "Il dispositivo SismoSmart",
-          description: "Un piccolo dispositivo di monitoraggio sismico per casa o ufficio. Rileva le scosse e registra come si comporta l'edificio dopo un terremoto.",
-        },
-        title: "Il dispositivo",
-      },
-      technology: {
-        meta: {
-          title: "Tecnologia: come misura SismoSmart",
-          description: "Cosa c'è dentro il dispositivo, come distingue una scossa reale dal rumore, e come la misura diventa un report leggibile.",
-        },
-        title: "Cosa c'è dentro il dispositivo e come il dato arriva fino a te",
-      },
-      howItWorks: {
-        meta: {
-          title: "Come funziona SismoSmart",
-          description: "Monti il dispositivo, lo abbini al telefono, l'edificio viene riconosciuto. Ricevi una notifica quando arriva una scossa e un report dopo.",
-        },
-        title: "Dispositivo, cloud, app: insieme.",
-      },
+      product: ["Il dispositivo SismoSmart", "Il dispositivo"],
+      technology: ["Tecnologia: come misura SismoSmart", "Cosa c'è dentro il dispositivo e come il dato arriva fino a te"],
+      howItWorks: ["Come funziona SismoSmart", "Dispositivo, cloud, app: insieme."],
     },
     pt: {
-      product: {
-        meta: {
-          title: "O dispositivo SismoSmart",
-          description: "Um pequeno dispositivo de monitoramento sísmico para casa ou escritório. Detecta tremores e registra como o prédio se comporta depois de um terremoto.",
-        },
-        title: "O dispositivo",
-      },
-      technology: {
-        meta: {
-          title: "Tecnologia: como o SismoSmart mede",
-          description: "O que tem dentro do dispositivo, como ele separa um tremor real do ruído e como a medição vira um relatório legível.",
-        },
-        title: "O que tem dentro do dispositivo e como o dado chega até você",
-      },
-      howItWorks: {
-        meta: {
-          title: "Como o SismoSmart funciona",
-          description: "Você instala o dispositivo, pareia o celular e o prédio é reconhecido. Recebe aviso quando há tremor e um relatório depois.",
-        },
-        title: "Dispositivo, cloud, app: juntos.",
-      },
+      product: ["O dispositivo SismoSmart", "O dispositivo"],
+      technology: ["Tecnologia: como o SismoSmart mede", "O que tem dentro do dispositivo e como o dado chega até você"],
+      howItWorks: ["Como o SismoSmart funciona", "Dispositivo, cloud, app: juntos."],
     },
   };
 
+  const validationTerms = /pre|pilot|valid|target|objetiv|meta|projeto|progett|pra-peluncuran|design/i;
+
   for (const [locale, snapshot] of Object.entries(expected)) {
     const pages = getPages(locale);
-    assert.deepEqual(
-      {
-        product: { meta: pages.product.meta, title: pages.product.title },
-        technology: { meta: pages.technology.meta, title: pages.technology.title },
-        howItWorks: { meta: pages.howItWorks.meta, title: pages.howItWorks.title },
-      },
-      snapshot,
-      `${locale} commercial metadata and H1 snapshot changed`,
-    );
+    for (const [pageKey, values] of Object.entries(snapshot)) {
+      const [metaTitle, h1] = values;
+      assert.equal(pages[pageKey].meta.title, metaTitle, locale + "/" + pageKey + " meta title changed");
+      assert.equal(pages[pageKey].title, h1, locale + "/" + pageKey + " H1 changed");
+      assert.match(
+        pages[pageKey].meta.description,
+        validationTerms,
+        locale + "/" + pageKey + " meta description must expose pre-launch/validation modality",
+      );
+    }
   }
 });
 

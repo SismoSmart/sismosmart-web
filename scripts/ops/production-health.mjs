@@ -66,6 +66,9 @@ async function callOrFallback(task, fallback) {
 }
 
 export async function runProductionHealth({
+  capacityDiagnostics = String(
+    process.env.PRODUCTION_HEALTH_CAPACITY_DIAGNOSTICS || "",
+  ).toLowerCase() === "true",
   config,
   inspectRemote = inspectRemoteProduction,
   now = () => new Date(),
@@ -91,7 +94,7 @@ export async function runProductionHealth({
   );
 
   const cpanelPromise = callOrFallback(
-    () => readCpanel({ config }),
+    () => readCpanel({ config, includeDiagnostics: capacityDiagnostics }),
     () => ({
       quotaPayload: null,
       resourcePayload: null,
@@ -113,7 +116,7 @@ export async function runProductionHealth({
     ),
   ]);
   const remoteRaw = await callOrFallback(
-    () => inspectRemote({ config }),
+    () => inspectRemote({ capacityDiagnostics, config }),
     () => null,
   );
   const [cpanelRaw, workflowRuns] = await Promise.all([
@@ -143,6 +146,12 @@ export async function runProductionHealth({
   const resources = normalizeResourceUsage(cpanelRaw?.resourcePayload);
   warnings.push(...(cpanelRaw?.warnings || []));
   const capacity = buildProductionHealthCapacityResult(remoteRaw, quota, resources, warnings);
+  if (capacityDiagnostics && cpanelRaw?.diagnostics) {
+    capacity.diagnostics = {
+      ...(capacity.diagnostics || {}),
+      cpanel: cpanelRaw.diagnostics,
+    };
+  }
   const forms = buildProductionHealthFormsResult(publicRaw, remoteRaw, warnings);
 
   let workflows;

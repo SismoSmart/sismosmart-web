@@ -276,6 +276,7 @@ test("cPanel request rejects application-level UAPI failures without response de
 test("cPanel read returns secret-safe per-endpoint diagnostic classes", async () => {
   const result = await readCpanelHealth({
     config,
+    includeDiagnostics: true,
     fetchImpl: async (url) => {
       if (url.includes("/Quota/")) {
         const error = new Error("PRIVATE_TLS_DETAIL");

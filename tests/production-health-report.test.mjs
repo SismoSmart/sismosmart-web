@@ -168,3 +168,20 @@ test("safe log includes only allowlisted capacity diagnostic fields", () => {
   assert.doesNotMatch(safe, /privatePath/);
   assert.doesNotMatch(safe, /home\/private/);
 });
+
+test("safe log allowlists cPanel diagnostic classes", () => {
+  const report = sampleReport();
+  report.capacity.diagnostics = {
+    categories: {},
+    cpanel: {
+      quota: "TLS_HOSTNAME_MISMATCH",
+      resources: "HTTP_4XX",
+      privateDetail: "PRIVATE_PROVIDER_DETAIL",
+    },
+  };
+
+  const safe = formatSafeLogSummary(report);
+  assert.match(safe, /"cpanel":\{"quota":"TLS_HOSTNAME_MISMATCH","resources":"HTTP_4XX"\}/);
+  assert.doesNotMatch(safe, /PRIVATE_PROVIDER_DETAIL/);
+  assert.doesNotMatch(safe, /privateDetail/);
+});

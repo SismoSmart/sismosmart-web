@@ -16,6 +16,29 @@ function safeFailureProbe(probe) {
   };
 }
 
+const CPANEL_DIAGNOSTIC_CLASSES = new Set([
+  "CONFIG_UNAVAILABLE",
+  "HTTP_4XX",
+  "HTTP_5XX",
+  "NETWORK_OR_UNKNOWN",
+  "SUCCESS",
+  "TIMEOUT",
+  "TLS_HOSTNAME_MISMATCH",
+  "TLS_OTHER",
+  "UAPI_FAILURE",
+]);
+
+function safeCpanelDiagnosticClass(value) {
+  return CPANEL_DIAGNOSTIC_CLASSES.has(value) ? value : "NETWORK_OR_UNKNOWN";
+}
+
+function safeCpanelDiagnostics(diagnostics) {
+  return {
+    quota: safeCpanelDiagnosticClass(diagnostics?.quota),
+    resources: safeCpanelDiagnosticClass(diagnostics?.resources),
+  };
+}
+
 function safeCapacityDiagnostics(diagnostics) {
   if (!diagnostics) return null;
   const categories = diagnostics.categories || {};
@@ -31,6 +54,9 @@ function safeCapacityDiagnostics(diagnostics) {
       backups: categories.backups ?? 0,
       other: categories.other ?? 0,
     },
+    ...(diagnostics.cpanel
+      ? { cpanel: safeCpanelDiagnostics(diagnostics.cpanel) }
+      : {}),
     filesystemAvailableBytes: diagnostics.filesystemAvailableBytes ?? null,
     filesystemTotalBytes: diagnostics.filesystemTotalBytes ?? null,
     filesystemUsedBytes: diagnostics.filesystemUsedBytes ?? null,

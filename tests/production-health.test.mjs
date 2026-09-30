@@ -681,3 +681,42 @@ test("safe log summary preserves actionable evidence without infrastructure path
   assert.match(summary, /"originFailures":\[\]/);
   assert.equal(summary.includes("/home/example"), false);
 });
+
+test("runtime exposes cPanel failure classes only for manual capacity diagnostics", async () => {
+  let cpanelOptions;
+  const result = await runProductionHealth({
+    capacityDiagnostics: true,
+    config: runtimeConfig,
+    inspectRemote: async () => ({
+      ...healthyRemote,
+      capacityDiagnostics: { categories: {} },
+      formLogAvailable: true,
+    }),
+    probeOrigin: async () => healthyRouteSet(),
+    probePublic: async () => healthyRouteSet({ publicEdge: true }),
+    readCpanel: async (options) => {
+      cpanelOptions = options;
+      return {
+        diagnostics: {
+          quota: "TLS_HOSTNAME_MISMATCH",
+          resources: "HTTP_4XX",
+        },
+        quotaPayload: null,
+        resourcePayload: null,
+        warnings: [
+          "cPanel quota usage could not be read",
+          "cPanel LVE resource usage could not be read",
+        ],
+      };
+    },
+    readWorkflowRuns: async () => successfulWorkflowRuns(),
+    resolveOrigin: async () => ({ address: "192.0.2.10", family: 4, ok: true }),
+    resolvePublic: async () => ({ durationMs: 2, ok: true }),
+  });
+
+  assert.equal(cpanelOptions.includeDiagnostics, true);
+  assert.deepEqual(result.report.capacity.diagnostics.cpanel, {
+    quota: "TLS_HOSTNAME_MISMATCH",
+    resources: "HTTP_4XX",
+  });
+});

@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  classifyCpanelHealthError,
   fetchCpanelHealthResource,
   readCpanelHealth,
 } from "../scripts/ops/production-health-cpanel.mjs";
@@ -218,4 +219,77 @@ test("complete cPanel failure preserves warning order and null payloads", async 
       "cPanel LVE resource usage could not be read",
     ],
   });
+});
+
+
+test("cPanel diagnostic classifier exposes only allowlisted failure classes", () => {
+  const tlsHostname = new Error("sensitive TLS message");
+  tlsHostname.cause = { code: "ERR_TLS_CERT_ALTNAME_INVALID" };
+  assert.equal(classifyCpanelHealthError(tlsHostname), "TLS_HOSTNAME_MISMATCH");
+
+  const tlsOther = new Error("sensitive TLS message");
+  tlsOther.cause = { code: "ERR_TLS_CERT_SIGNATURE_ALGORITHM_UNSUPPORTED" };
+  assert.equal(classifyCpanelHealthError(tlsOther), "TLS_OTHER");
+
+  const timeout = new Error("sensitive timeout message");
+  timeout.cause = { code: "UND_ERR_CONNECT_TIMEOUT" };
+  assert.equal(classifyCpanelHealthError(timeout), "TIMEOUT");
+
+  assert.equal(
+    classifyCpanelHealthError(new Error("CPANEL_QUOTA_403")),
+    "HTTP_4XX",
+  );
+  assert.equal(
+    classifyCpanelHealthError(new Error("CPANEL_RESOURCEUSAGE_503")),
+    "HTTP_5XX",
+  );
+  assert.equal(
+    classifyCpanelHealthError(new Error("CPANEL_QUOTA_UAPI_FAILURE")),
+    "UAPI_FAILURE",
+  );
+  assert.equal(
+    classifyCpanelHealthError(new Error("provider-specific private detail")),
+    "NETWORK_OR_UNKNOWN",
+  );
+});
+
+test("cPanel request rejects application-level UAPI failures without response detail", async () => {
+  await assert.rejects(
+    fetchCpanelHealthResource(
+      config,
+      "Quota",
+      "get_quota_info",
+      async () =>
+        successfulResponse({
+          errors: ["PRIVATE_PROVIDER_DETAIL"],
+          status: 0,
+        }),
+    ),
+    (error) => {
+      assert.equal(error.message, "CPANEL_QUOTA_UAPI_FAILURE");
+      assert.doesNotMatch(error.message, /PRIVATE_PROVIDER_DETAIL/);
+      return true;
+    },
+  );
+});
+
+test("cPanel read returns secret-safe per-endpoint diagnostic classes", async () => {
+  const result = await readCpanelHealth({
+    config,
+    includeDiagnostics: true,
+    fetchImpl: async (url) => {
+      if (url.includes("/Quota/")) {
+        const error = new Error("PRIVATE_TLS_DETAIL");
+        error.cause = { code: "ERR_TLS_CERT_ALTNAME_INVALID" };
+        throw error;
+      }
+      return { ok: false, status: 404 };
+    },
+  });
+
+  assert.deepEqual(result.diagnostics, {
+    quota: "TLS_HOSTNAME_MISMATCH",
+    resources: "HTTP_4XX",
+  });
+  assert.doesNotMatch(JSON.stringify(result.diagnostics), /PRIVATE_TLS_DETAIL/);
 });

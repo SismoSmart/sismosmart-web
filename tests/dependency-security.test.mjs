@@ -23,7 +23,7 @@ function atLeast(version, minimum) {
 }
 
 test("direct dependencies meet the reviewed high-severity security floor", () => {
-  assert.equal(atLeast(packageJson.dependencies.next, "16.3.3"), true);
+  assert.equal(atLeast(packageJson.dependencies.next, "16.3.8"), true);
   assert.equal(atLeast(packageJson.dependencies.sharp, "0.35.4"), true);
   assert.equal(atLeast(packageJson.dependencies.react, "19.2.8"), true);
   assert.equal(atLeast(packageJson.dependencies["react-dom"], "19.2.8"), true);

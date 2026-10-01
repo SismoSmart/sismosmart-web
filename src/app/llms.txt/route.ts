@@ -45,9 +45,9 @@ export function GET(): Response {
 
   const body = `# ${siteConfig.name}
 
-> ${siteConfig.name} is a small seismic monitoring device you mount on the wall. It measures how your building moves during an earthquake, can notify a paired phone when configured thresholds are crossed, and stores a recording for qualified technical review.
+> ${siteConfig.name} is a pre-launch building seismic monitoring project developing a wall-mounted device to record building motion for qualified post-event review. Detection, notification, connectivity, performance, and certification remain design targets pending pilot validation.
 
-${siteConfig.name} is a pre-launch startup building consumer and small-building seismic monitoring. The site is published in ${locales.length} languages (${locales.join(", ")}); English is the default.
+${siteConfig.name} is being developed for homes and small buildings. The site is published in ${locales.length} languages (${locales.join(", ")}); English is the default.
 
 ## Key pages
 

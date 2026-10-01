@@ -31,6 +31,15 @@ test("llms.txt is served as cacheable plain text", async () => {
   assert.match(await response.text(), /^# SismoSmart/m);
 });
 
+test("llms.txt summary does not overstate validation-pending device capabilities", async () => {
+  const { GET } = await loadRoute("src/app/llms.txt/route.ts");
+  const body = await GET().text();
+
+  assert.match(body, /pre-launch building seismic monitoring/i);
+  assert.match(body, /design targets pending pilot validation/i);
+  assert.doesNotMatch(body, /can notify a paired phone/i);
+});
+
 test("machine-readable sitemap and full context routes are public plain text", async () => {
   const sitemapModule = await loadRoute("src/app/sitemap.md/route.ts");
   const llmsFullModule = await loadRoute("src/app/llms-full.txt/route.ts");

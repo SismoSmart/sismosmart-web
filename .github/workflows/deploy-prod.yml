@@ -1,4 +1,5 @@
 name: Deploy Production
+run-name: Deploy Production / ${{ inputs.operation }}
 
 on:
   workflow_dispatch:

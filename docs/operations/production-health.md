@@ -17,7 +17,7 @@ The audit records:
 - agreement between the `current` symlink, Passenger app root, `PassengerAppRoot` in `.htaccess`, a running `next-server` process working directory, and the active `.next/BUILD_ID`;
 - retained release count and storage, host filesystem use, account quota when available, and cPanel LVE resource usage when exposed by the provider;
 - aggregate HTTP status classes for the two form APIs from a bounded access-log tail;
-- the latest completed Deploy Production, Security, and Lighthouse workflow conclusions.
+- the latest three tagged mutation-deploy conclusions from Deploy Production, plus the latest completed Security and Lighthouse workflow conclusions. Read-only or validation operations in `deploy-prod.yml` are excluded from deploy-health streaks.
 
 ## Privacy model
 
@@ -38,7 +38,7 @@ Latency reflects a shared hosting environment and is warning-only. Lighthouse re
 | Retained release count | more than 8 | more than 12 |
 | Release storage | more than 1 GiB | more than 2 GiB |
 | Form API server errors | any sampled `5xx` | five or more `5xx` responses and at least 20% of sampled form API requests |
-| Deploy, Security, or Lighthouse history | latest completed run failed once | two consecutive completed runs failed |
+| Deploy, Security, or Lighthouse history | latest completed relevant run failed once | two consecutive completed runs failed within the relevant target history |
 
 A missing optional quota, LVE, or access-log measurement produces a warning rather than a false outage. On shared hosting, `df` reports host-filesystem pressure rather than the cPanel account quota, so even a critical host-filesystem percentage is advisory by itself. Account quota, retained release count, and release storage remain account/application-scoped blocking capacity signals. Missing release-state inspection is blocking because consistency cannot be proved safely.
 

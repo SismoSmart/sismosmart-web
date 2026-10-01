@@ -6,6 +6,18 @@ export const productionHealthWorkflowTargets = {
   security: "security.yml",
 };
 
+export const productionHealthWorkflowRunNames = {
+  deploy: "Deploy Production / deploy",
+};
+
+const productionHealthWorkflowHistoryLimits = {
+  deploy: 100,
+  lighthouse: 3,
+  security: 3,
+};
+
+const productionHealthWorkflowResultLimit = 3;
+
 export async function readTargetWorkflowRuns({
   fetchImpl = fetch,
   repository = process.env.GITHUB_REPOSITORY,
@@ -17,8 +29,9 @@ export async function readTargetWorkflowRuns({
 
   const entries = await Promise.all(
     Object.entries(productionHealthWorkflowTargets).map(async ([key, workflow]) => {
+      const historyLimit = productionHealthWorkflowHistoryLimits[key] || 3;
       const response = await fetchImpl(
-        `https://api.github.com/repos/${repository}/actions/workflows/${encodeURIComponent(workflow)}/runs?status=completed&per_page=3`,
+        `https://api.github.com/repos/${repository}/actions/workflows/${encodeURIComponent(workflow)}/runs?status=completed&per_page=${historyLimit}`,
         {
           headers: {
             Accept: "application/vnd.github+json",
@@ -33,11 +46,18 @@ export async function readTargetWorkflowRuns({
         throw new Error(`GITHUB_WORKFLOW_${key.toUpperCase()}_${response.status}`);
       }
       const payload = await response.json();
+      const requiredRunName = productionHealthWorkflowRunNames[key];
       const runs = Array.isArray(payload.workflow_runs)
-        ? payload.workflow_runs.map((run) => ({
-            conclusion: run.conclusion,
-            createdAt: run.created_at,
-          }))
+        ? payload.workflow_runs
+            .filter(
+              (run) =>
+                !requiredRunName || run.display_title === requiredRunName,
+            )
+            .slice(0, productionHealthWorkflowResultLimit)
+            .map((run) => ({
+              conclusion: run.conclusion,
+              createdAt: run.created_at,
+            }))
         : [];
       return [key, runs];
     }),

@@ -48,7 +48,7 @@ const expectedHeaders = {
 };
 
 const expectedUrls = [
-  "https://api.github.com/repos/example-org/example-repo/actions/workflows/deploy-prod.yml/runs?status=completed&per_page=3",
+  "https://api.github.com/repos/example-org/example-repo/actions/workflows/deploy-prod.yml/runs?status=completed&per_page=100",
   "https://api.github.com/repos/example-org/example-repo/actions/workflows/lighthouse.yml/runs?status=completed&per_page=3",
   "https://api.github.com/repos/example-org/example-repo/actions/workflows/security.yml/runs?status=completed&per_page=3",
 ];
@@ -95,6 +95,83 @@ test("workflow target catalog preserves keys, filenames, and insertion order", (
   ]);
 });
 
+
+test("deploy workflow publishes an operation-specific run name contract", () => {
+  const workflow = readText(".github/workflows/deploy-prod.yml");
+
+  assert.match(
+    workflow,
+    /^run-name:\s*Deploy Production \/ \$\{\{ inputs\.operation \}\}$/m,
+  );
+  assert.match(
+    readText("scripts/ops/production-health-workflows.mjs"),
+    /productionHealthWorkflowRunNames[\s\S]*deploy:\s*"Deploy Production \/ deploy"/,
+  );
+});
+
+test("deploy workflow reads keep only the latest three tagged mutation deploy runs", async () => {
+  const result = await readTargetWorkflowRuns({
+    repository,
+    token,
+    fetchImpl: async (url) => {
+      if (!url.includes("/deploy-prod.yml/")) {
+        return successfulResponse({ workflow_runs: [] });
+      }
+
+      return successfulResponse({
+        workflow_runs: [
+          {
+            conclusion: "failure",
+            created_at: "2026-10-01T01:10:00Z",
+            display_title: "Deploy Production / status",
+          },
+          {
+            conclusion: "success",
+            created_at: "2026-10-01T01:09:00Z",
+            display_title: "Deploy Production / deploy",
+          },
+          {
+            conclusion: "failure",
+            created_at: "2026-10-01T01:08:00Z",
+            display_title: "Deploy Production / validate-deploy",
+          },
+          {
+            conclusion: "failure",
+            created_at: "2026-10-01T01:07:00Z",
+            display_title: "Deploy Production / deploy",
+          },
+          {
+            conclusion: "failure",
+            created_at: "2026-10-01T01:06:00Z",
+            display_title: "Deploy Production",
+          },
+          {
+            conclusion: "success",
+            created_at: "2026-10-01T01:05:00Z",
+            display_title: "Deploy Production / reconcile",
+          },
+          {
+            conclusion: "success",
+            created_at: "2026-10-01T01:04:00Z",
+            display_title: "Deploy Production / deploy",
+          },
+          {
+            conclusion: "failure",
+            created_at: "2026-10-01T01:03:00Z",
+            display_title: "Deploy Production / deploy",
+          },
+        ],
+      });
+    },
+  });
+
+  assert.deepEqual(result.deploy, [
+    { conclusion: "success", createdAt: "2026-10-01T01:09:00Z" },
+    { conclusion: "failure", createdAt: "2026-10-01T01:07:00Z" },
+    { conclusion: "success", createdAt: "2026-10-01T01:04:00Z" },
+  ]);
+});
+
 test("workflow reads preserve URLs, headers, timeout signals, and safe projection", async () => {
   const calls = [];
   const result = await readTargetWorkflowRuns({
@@ -108,6 +185,9 @@ test("workflow reads preserve URLs, headers, timeout signals, and safe projectio
           {
             conclusion: `${key}-success`,
             created_at: `2026-07-23T15:00:0${calls.length}Z`,
+            ...(key === "deploy"
+              ? { display_title: "Deploy Production / deploy" }
+              : {}),
             id: calls.length,
             html_url: "https://example.test/not-retained",
           },
@@ -230,7 +310,11 @@ test("workflow reads start all targets before any response settles", async () =>
   responses[0].resolve(
     successfulResponse({
       workflow_runs: [
-        { conclusion: "success", created_at: "2026-07-23T15:10:00Z" },
+        {
+          conclusion: "success",
+          created_at: "2026-07-23T15:10:00Z",
+          display_title: "Deploy Production / deploy",
+        },
       ],
     }),
   );

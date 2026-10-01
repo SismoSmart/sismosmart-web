@@ -698,6 +698,37 @@ test("GitHub Actions artifact policy preserves audit health and limits storage",
   assert.match(analyticsAudit, /retention-days:\s*14/);
 });
 
+
+test("GitHub-hosted Ubuntu jobs pin the reviewed runner image", () => {
+  const workflowDir = path.join(rootDir, ".github/workflows");
+  const workflowFiles = fs
+    .readdirSync(workflowDir)
+    .filter((name) => name.endsWith(".yml") || name.endsWith(".yaml"));
+  const ubuntuJobs = [];
+
+  for (const name of workflowFiles) {
+    const workflow = readText(path.join(".github/workflows", name));
+    assert.doesNotMatch(
+      workflow,
+      /runs-on:[ \t]*ubuntu-latest/,
+      name + " must not follow the moving ubuntu-latest label",
+    );
+    for (const match of workflow.matchAll(/runs-on:[ \t]*(ubuntu-[^ \t\r\n#]+)/g)) {
+      ubuntuJobs.push([name, match[1]]);
+    }
+  }
+
+  assert.ok(ubuntuJobs.length > 0, "expected GitHub-hosted Ubuntu jobs");
+  for (const [name, runner] of ubuntuJobs) {
+    assert.equal(runner, "ubuntu-24.04", name + " uses an unreviewed Ubuntu image");
+  }
+
+  const policy = readText("docs/cicd-automation.md");
+  assert.match(policy, /ubuntu-24.04/i);
+  assert.match(policy, /Ubuntu 26/i);
+  assert.match(policy, /separate.*validat/i);
+});
+
 test("GitHub automation files are present", () => {
   const requiredFiles = [
     ".github/CODEOWNERS",

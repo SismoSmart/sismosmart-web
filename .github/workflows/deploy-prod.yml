@@ -57,7 +57,7 @@ jobs:
   status:
     name: status/production-read-only
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'status' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
       url: https://sismosmart.com
@@ -117,7 +117,7 @@ jobs:
   reconcile:
     name: reconcile/production-release
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'reconcile' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
       url: https://sismosmart.com
@@ -184,7 +184,7 @@ jobs:
   permissions:
     name: permissions/production
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'permissions' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
       url: https://sismosmart.com
@@ -251,7 +251,7 @@ jobs:
   retention:
     name: retention/production-releases
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'retention' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
       url: https://sismosmart.com
@@ -322,7 +322,7 @@ jobs:
   forms:
     name: forms/production-runtime
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'forms' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
       url: https://sismosmart.com
@@ -395,7 +395,7 @@ jobs:
   deploy:
     name: deploy/production
     if: ${{ github.event_name == 'workflow_dispatch' && (inputs.operation == 'deploy' || inputs.operation == 'validate-deploy') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: production
       url: https://sismosmart.com

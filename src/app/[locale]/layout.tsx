@@ -306,7 +306,7 @@ export default async function LocaleLayout({
           </div>
 
           <div className="mt-10 flex flex-col gap-3 border-t border-border pt-6 text-sm text-fg-subtle sm:flex-row sm:items-center sm:justify-between">
-            <p>{copy.footer.legal}</p>
+            <p>© {new Date().getFullYear()} {copy.footer.legal}</p>
             <button
               className="w-fit rounded-full border border-border px-4 py-2 text-left text-sm font-semibold text-fg-muted hover:border-[var(--primary-600)] hover:text-[var(--primary-600)]"
               data-cookie-reset=""

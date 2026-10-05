@@ -19,6 +19,21 @@ export const glossaryPagesByLocale: Record<Locale, InfoPageCopy> = {
           "The rate at which motion changes. A seismic sensor measures acceleration over time so the shape and intensity of building movement can be recorded.",
       },
       {
+        title: "Accelerometer",
+        description:
+          "A sensor that measures acceleration. In a seismic device it records how a surface speeds up and slows down along one or more axes.",
+      },
+      {
+        title: "Ambient vibration",
+        description:
+          "Small, continuous vibration caused by wind, traffic and machinery. It can reveal a building's natural frequencies without an earthquake.",
+      },
+      {
+        title: "Array",
+        description:
+          "A group of sensors installed at several points, for example on different floors, so their records can be compared.",
+      },
+      {
         title: "Building motion",
         description:
           "The movement of a building during vibration or an earthquake. It is not the same as a structural safety assessment.",
@@ -27,6 +42,31 @@ export const glossaryPagesByLocale: Record<Locale, InfoPageCopy> = {
         title: "Event recording",
         description:
           "A time-stamped series of sensor measurements captured around a detected shaking event for later technical review.",
+      },
+      {
+        title: "MEMS",
+        description:
+          "Micro-electro-mechanical system: a microscopic mechanical structure on a silicon chip. MEMS accelerometers are small, low-cost sensors that measure acceleration.",
+      },
+      {
+        title: "Modal analysis",
+        description:
+          "A way to describe a structure's vibration as separate modes, each with its own frequency and shape. Engineers use it to interpret how a building moves.",
+      },
+      {
+        title: "Mounting",
+        description:
+          "How a sensor is attached to a structure. A loose or flexible mount can add noise or its own resonance to the measurement.",
+      },
+      {
+        title: "Natural frequency",
+        description:
+          "A frequency at which a structure tends to vibrate when disturbed. It depends on mass, stiffness and geometry, and it can shift with temperature, occupancy and the amplitude of shaking.",
+      },
+      {
+        title: "Noise floor",
+        description:
+          "The smallest signal a sensor can tell apart from its own background electrical noise.",
       },
       {
         title: "P wave",
@@ -39,19 +79,39 @@ export const glossaryPagesByLocale: Record<Locale, InfoPageCopy> = {
           "The secondary seismic wave. It normally arrives after the P wave and moves material perpendicular to its direction of travel.",
       },
       {
-        title: "Sensor",
-        description:
-          "The measurement component that converts physical building movement into digital data.",
-      },
-      {
         title: "Seismic monitoring",
         description:
           "The continuous or event-based measurement of ground or building motion. Monitoring supports observation; it does not certify that a building is safe.",
       },
       {
+        title: "Seismic network",
+        description:
+          "A set of instruments, or phones, spread over an area to detect and record shaking.",
+      },
+      {
+        title: "Sensor",
+        description:
+          "The measurement component that converts physical building movement into digital data.",
+      },
+      {
+        title: "Sensor placement",
+        description:
+          "The choice of where and how sensors are installed in a building. It affects data quality and what the data can show.",
+      },
+      {
+        title: "Strong motion",
+        description:
+          "Shaking strong enough, as in an earthquake, that it is recorded by instruments built not to saturate at high acceleration.",
+      },
+      {
         title: "Structural engineer",
         description:
           "A qualified engineer who evaluates how structures behave and can interpret measurements together with inspections, plans and other evidence.",
+      },
+      {
+        title: "Time history",
+        description:
+          "A record of a measured quantity, such as acceleration, over time. Also called a time series.",
       },
     ],
   },
@@ -67,14 +127,64 @@ export const glossaryPagesByLocale: Record<Locale, InfoPageCopy> = {
       "Bu sitede kullanılan temel algılama, deprem ve mühendislik terimlerinin açıklamaları.",
     sections: [
       {
+        title: "Bina hareketi",
+        description:
+          "Titreşim veya deprem sırasında binanın hareketidir. Yapısal güvenlik değerlendirmesi ile aynı şey değildir.",
+      },
+      {
+        title: "Çevresel titreşim",
+        description:
+          "Rüzgâr, trafik ve makinelerin yol açtığı küçük ve sürekli titreşim. Deprem olmadan da binanın doğal frekanslarını ortaya çıkarabilir.",
+      },
+      {
+        title: "Dizi",
+        description:
+          "Birkaç noktaya, örneğin farklı katlara yerleştirilen sensör grubu. Kayıtların birbiriyle karşılaştırılmasını sağlar.",
+      },
+      {
+        title: "Doğal frekans",
+        description:
+          "Bir yapının bozulduğunda titreşmeye eğilimli olduğu frekans. Kütleye, rijitliğe ve geometriye bağlıdır; sıcaklık, kullanım yükü ve sarsıntının genliğiyle kayabilir.",
+      },
+      {
+        title: "Güçlü hareket",
+        description:
+          "Deprem gibi, yüksek ivmede doygunluğa ulaşmayacak şekilde yapılmış cihazlarla kaydedilen şiddetli sarsıntı.",
+      },
+      {
+        title: "Gürültü zemin değeri",
+        description:
+          "Bir sensörün kendi arka plan elektriksel gürültüsünden ayırt edebildiği en küçük sinyal.",
+      },
+      {
+        title: "İnşaat mühendisi",
+        description:
+          "Yapıların davranışını değerlendiren ve ölçümleri inceleme, proje ve diğer kanıtlarla birlikte yorumlayabilen yetkin mühendistir.",
+      },
+      {
         title: "İvme",
         description:
           "Hızın zamanla değişim oranıdır. Sismik sensör, bina hareketinin biçimini ve şiddetini kaydetmek için zaman içinde ivmeyi ölçer.",
       },
       {
-        title: "Bina hareketi",
+        title: "İvmeölçer",
         description:
-          "Titreşim veya deprem sırasında binanın hareketidir. Yapısal güvenlik değerlendirmesi ile aynı şey değildir.",
+          "İvmeyi ölçen sensör. Sismik bir cihazda, bir yüzeyin bir ya da birkaç eksende nasıl hızlanıp yavaşladığını kaydeder.",
+      },
+      {
+        title: "MEMS",
+        description:
+          "Mikro-elektro-mekanik sistem: silikon çip üzerindeki mikroskobik bir mekanik yapı. MEMS ivmeölçerler ivmeyi ölçen küçük ve düşük maliyetli sensörlerdir.",
+      },
+      {
+        title: "Modal analiz",
+        description:
+          "Bir yapının titreşimini, her birinin kendi frekansı ve biçimi olan ayrı modlara bölerek anlatma yöntemi. Mühendisler binanın nasıl hareket ettiğini yorumlamak için kullanır.",
+      },
+      {
+        title: "Montaj",
+        description:
+          "Sensörün yapıya nasıl tutturulduğu. Gevşek ya da esnek bir montaj, ölçüme gürültü veya kendi rezonansını katabilir.",
       },
       {
         title: "Olay kaydı",
@@ -97,14 +207,24 @@ export const glossaryPagesByLocale: Record<Locale, InfoPageCopy> = {
           "Fiziksel bina hareketini sayısal veriye dönüştüren ölçüm bileşenidir.",
       },
       {
+        title: "Sensör yerleşimi",
+        description:
+          "Sensörlerin binada nereye ve nasıl kurulacağına dair seçim. Veri kalitesini ve verinin neyi gösterebileceğini etkiler.",
+      },
+      {
+        title: "Sismik ağ",
+        description:
+          "Sarsıntıyı algılamak ve kaydetmek için bir alana yayılmış cihazlar ya da telefonlar topluluğu.",
+      },
+      {
         title: "Sismik izleme",
         description:
           "Zemin veya bina hareketinin sürekli ya da olay bazlı ölçümüdür. İzleme gözlem sağlar; binanın güvenli olduğunu belgelemez.",
       },
       {
-        title: "İnşaat mühendisi",
+        title: "Zaman serisi",
         description:
-          "Yapıların davranışını değerlendiren ve ölçümleri inceleme, proje ve diğer kanıtlarla birlikte yorumlayabilen yetkin mühendistir.",
+          "İvme gibi ölçülen bir büyüklüğün zaman içindeki kaydı.",
       },
     ],
   },

@@ -145,6 +145,6 @@ export const idCopy: SiteCopy = {
       "Terlalu banyak percobaan. Silakan coba lagi beberapa menit lagi.",
   },
   footer: {
-    legal: "© 2026 SismoSmart. Semua hak dilindungi.",
+    legal: "SismoSmart. Semua hak dilindungi.",
   },
 };

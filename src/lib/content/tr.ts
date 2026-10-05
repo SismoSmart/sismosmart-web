@@ -247,6 +247,6 @@ export const trCopy: SiteCopy = {
       "Çok fazla deneme yaptınız. Lütfen birkaç dakika sonra tekrar deneyin.",
   },
   footer: {
-    legal: "© 2026 SismoSmart. Tüm hakları saklıdır.",
+    legal: "SismoSmart. Tüm hakları saklıdır.",
   },
 };

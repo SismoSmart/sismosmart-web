@@ -56,3 +56,9 @@ test("OAuth helper prints a usable authorization URL", () => {
   assert.ok(helper.includes("authUrl: buildAuthUrl(),"));
   assert.doesNotMatch(helper, /printJson\(\{\s*redirectUri: getRedirectUri\(\),\s*authUrl/);
 });
+
+test("OAuth helper does not merge previously granted scopes into the token", () => {
+  const helper = readFileSync("scripts/ops/google-oauth.mjs", "utf8");
+  assert.match(helper, /include_granted_scopes: false/);
+  assert.doesNotMatch(helper, /include_granted_scopes: true/);
+});

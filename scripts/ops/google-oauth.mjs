@@ -59,7 +59,8 @@ function buildAuthUrl() {
   return client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
-    include_granted_scopes: true,
+    // Incremental authorization would merge every scope this client was ever granted into the token.
+    include_granted_scopes: false,
     scope: defaultScopes,
   });
 }

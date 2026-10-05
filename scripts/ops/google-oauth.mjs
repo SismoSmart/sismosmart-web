@@ -9,7 +9,6 @@ import {
   getCommandUsage,
   parseCliArgs,
   printJson,
-  redactSecret,
 } from "./config.mjs";
 import { GOOGLE_SCOPES } from "./google-auth.mjs";
 import { REFRESH_TOKEN_CONFIG, storeRefreshToken } from "./google-oauth-lib.mjs";
@@ -84,12 +83,20 @@ async function runScopes() {
   });
 }
 
+// The authorization URL carries the OAuth client ID, redirect URI and scopes but no
+// secret, and the operator must open it. Redacting it would make the flow unusable.
 async function runUrl() {
-  printJson({
-    redirectUri: getRedirectUri(),
-    authUrl: buildAuthUrl(),
-    note: "Open authUrl, approve access, then either use the listen command or run exchange with the returned code.",
-  });
+  console.log(
+    JSON.stringify(
+      {
+        redirectUri: getRedirectUri(),
+        authUrl: buildAuthUrl(),
+        note: "Open authUrl, approve access, then either use the listen command or run exchange with the returned code.",
+      },
+      null,
+      2,
+    ),
+  );
 }
 
 async function exchangeCode(code) {
@@ -171,12 +178,10 @@ async function runListen() {
     server.on("error", reject);
 
     server.listen(port, redirectUri.hostname, () => {
-      console.log(
-        `Listening for Google OAuth callback on ${redactSecret(getRedirectUri())}`,
-      );
+      console.log(`Listening for Google OAuth callback on ${getRedirectUri()}`);
       console.log("");
-      console.log("OAuth authorization URL generated and redacted for log safety.");
-      console.log(redactSecret(authUrl));
+      console.log("Open this URL in a browser and approve access. It holds no secret.");
+      console.log(authUrl);
       console.log("");
     });
   });

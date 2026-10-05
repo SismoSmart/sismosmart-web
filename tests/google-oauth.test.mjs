@@ -48,3 +48,11 @@ test("OAuth helper no longer writes a persistent .env file", () => {
   assert.doesNotMatch(helper, /writeFileSync|saved-to-env|"\.env"/);
   assert.match(helper, /storeRefreshToken/);
 });
+
+test("OAuth helper prints a usable authorization URL", () => {
+  const helper = readFileSync("scripts/ops/google-oauth.mjs", "utf8");
+  assert.doesNotMatch(helper, /redactSecret/);
+  assert.ok(helper.includes("console.log(authUrl);"));
+  assert.ok(helper.includes("authUrl: buildAuthUrl(),"));
+  assert.doesNotMatch(helper, /printJson\(\{\s*redirectUri: getRedirectUri\(\),\s*authUrl/);
+});

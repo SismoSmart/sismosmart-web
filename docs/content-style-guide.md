@@ -45,6 +45,7 @@ Public içerikte takvim, fiyat, pilot kapsamı, performans, sertifika, yatırım
 - Donanım, algılama, bildirim, bağlantı, yapı sağlığı yorumu, cihaz güvenliği ve sertifikasyon iddiaları `docs/governance/technical-claims-register.md` içindeki Evidence status ve Approved wording sınırına uyar.
 - Fiyat, abonelik, pazar büyüklüğü, yatırım turu, nakit ömrü, hibe ve üretim adedi gibi ticari rakamlar yalnız güncel, tarihli ve sahibi belli bir kaynak varsa public metne girer. Aksi halde güncel bilgi doğrudan görüşmeye yönlendirilir.
 - `design target`, `planned`, `validation pending`, `may` gibi belirsizlik ifadeleri çeviride kesinliğe dönüşmez.
+- Belirsizlik ifadesi her etikette ve cümlede tekrarlanmaz. Bir bölümde bir kez, kapsamı açıkça söyleyen bir cümleyle yazılır. Kısa etiketler, madde başlıkları ve rakam taşımayan satırlar sade kalır. `hedef`, `tabidir`, `doğrulama bekliyor` gibi kalıplar sayfa başına birkaç kez geçiyorsa metin ezber disklaymer gibi okunur.
 - Yeni bir locale eklenirken yüksek etkili iddialar dil akıcılığı yanında kanıt modalitesi açısından da gözden geçirilir.
 
 Editoryal metin önce Türkçe hazırlanır. Claims register'daki yüksek etkili iddialar için İngilizce onaylı kontrol wording'i kanıt referansıdır; diğer locale'ler aynı kesinlik seviyesini korur.

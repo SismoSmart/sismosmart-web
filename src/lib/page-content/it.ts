@@ -81,7 +81,7 @@ export const itPages: BaseRoutePagesCopy = {
       "Ci siamo riuniti dopo i terremoti di Kahramanmaraş del 2023 e le scosse recenti attorno a Istanbul. Volevamo capire come reagiscono le nostre case e la città. Così abbiamo costruito il dispositivo.",
     story: [
       "Dopo un grande terremoto in Turchia, i controlli degli edifici richiedono settimane, a volte mesi. Nel frattempo le famiglie non sanno se possono rientrare.",
-      "Non elimineremo del tutto l'attesa. Alla fine serve una visita dell'ingegnere. Ma prima del suo arrivo vogliamo un dato che dica: questo edificio sembra a posto, oppure è prioritario.",
+      "Non elimineremo del tutto l'attesa. Alla fine un ingegnere deve entrare nell'edificio. Ma prima del suo arrivo può esistere uno strato di dati che indichi quali edifici controllare per primi. È quello su cui stiamo lavorando.",
       "Nel team ci sono un consulente accademico in ingegneria civile, due ricercatori MSc in ingegneria civile e un fondatore su embedded e software. Siamo tutti in Turchia. Testiamo il dispositivo nelle nostre case.",
     ],
     principles: [

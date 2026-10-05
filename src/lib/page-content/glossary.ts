@@ -69,7 +69,7 @@ export const glossaryPagesByLocale: Record<Locale, InfoPageCopy> = {
       {
         title: "İvme",
         description:
-          "Hareketin değişim hızıdır. Sismik sensör, bina hareketinin biçimini ve şiddetini kaydetmek için zaman içinde ivmeyi ölçer.",
+          "Hızın zamanla değişim oranıdır. Sismik sensör, bina hareketinin biçimini ve şiddetini kaydetmek için zaman içinde ivmeyi ölçer.",
       },
       {
         title: "Bina hareketi",

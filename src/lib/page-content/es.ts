@@ -70,14 +70,14 @@ export const esPages: BaseRoutePagesCopy = {
     ],
   },
   about: {
-    meta: { title: "Acerca de", description: "Quién construye SismoSmart y por qué. El equipo, la mirada y el destino." },
+    meta: { title: "Acerca de", description: "Quién construye SismoSmart y por qué. El equipo y nuestra mirada tras los terremotos de 2023." },
     eyebrow: "Acerca de",
     title: "Vivimos en Türkiye. Queremos edificios sanos.",
     description:
-      "Nos reunimos después de los terremotos de Kahramanmaraş 2023 y Estambul 2026. Queríamos saber cómo responden nuestras casas y nuestra ciudad. Por eso hicimos el dispositivo.",
+      "Nos reunimos después de los terremotos de Kahramanmaraş de 2023 y de los temblores recientes en torno a Estambul. Queríamos saber cómo responden nuestras casas y nuestra ciudad. Por eso hicimos el dispositivo.",
     story: [
       "Después de un gran terremoto en Türkiye, revisar edificios toma semanas o meses. Mientras tanto, las familias no saben si pueden volver a casa.",
-      "No eliminaremos esa espera por completo. Al final debe visitar un ingeniero. Pero antes de eso queremos una capa de datos que diga: este edificio parece bien, o este edificio es prioridad.",
+      "No eliminaremos esa espera por completo. Al final tiene que entrar un ingeniero al edificio. Pero antes de que llegue puede existir una capa de datos que indique qué edificios conviene revisar primero. Eso es lo que estamos construyendo.",
       "El equipo tiene un asesor académico en ingeniería civil, dos investigadores MSc y un fundador en hardware y software. Estamos en Türkiye. Probamos el dispositivo en nuestras casas.",
     ],
     principles: [
@@ -88,8 +88,8 @@ export const esPages: BaseRoutePagesCopy = {
     timeline: [
       { period: "Completado", title: "Base de producto y sistema", description: "El concepto inicial y la arquitectura del sistema están definidos. Las afirmaciones públicas siguen limitadas por el registro de evidencia." },
       { period: "Actual", title: "Validación piloto", description: "Hardware, detección, notificaciones, conectividad e informes se validan antes de ampliar las afirmaciones." },
-      { period: "Siguiente", title: "Evidencia y cierre de diseño", description: "La BOM, los algoritmos y los supuestos operativos solo se congelan después de revisar evidencia de banco y campo." },
-      { period: "Después", title: "Certificación y fabricación", description: "Certificación, fabricación y lanzamiento siguen a los gates de evidencia. No hay una fecha pública comprometida." },
+      { period: "Siguiente", title: "Evidencia y cierre de diseño", description: "La lista de materiales (BOM), los algoritmos y los supuestos operativos solo se congelan después de revisar evidencia de banco y campo." },
+      { period: "Después", title: "Certificación y fabricación", description: "Certificación, fabricación y lanzamiento siguen a las etapas de evidencia. No hay una fecha pública comprometida." },
     ],
     team: [
       { name: "Fundador", role: "Hardware, software, producto", bio: "Responsable de sistemas embebidos, IoT, nube y producto." },

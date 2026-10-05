@@ -1,14 +1,14 @@
 # SismoSmart Web
 
-SismoSmart'ın çok dilli public web uygulaması, public form API'leri, machine-readable keşif yüzeyleri ve GitHub tabanlı production otomasyonları.
+SismoSmart'ın çok dilli web uygulaması, herkese açık form API'leri, makinelerin okuyabileceği keşif yüzeyleri ve GitHub tabanlı production otomasyonları.
 
 **Canlı site:** https://sismosmart.com
 
-SismoSmart, evler ve küçük binalar için lansman öncesi bir sismik izleme cihazı geliştiriyor. Public içerik ürünü acil durum servisi, resmî erken uyarı sistemi veya bina güvenliği kararı veren sistem olarak sunmaz. Donanım, algılama, bildirim, bağlantı, performans, güvenlik ve sertifikasyon ayrıntıları yalnız kanıt seviyeleri izin verdiği ölçüde yayımlanır.
+SismoSmart, evler ve küçük binalar için lansman öncesi bir sismik izleme cihazı geliştiriyor. Sitedeki içerik ürünü acil durum servisi, resmî erken uyarı sistemi ya da bina güvenliğine karar veren bir sistem olarak sunmaz. Donanım, algılama, bildirim, bağlantı, performans, güvenlik ve sertifikasyon ayrıntıları yalnızca kanıt düzeyinin izin verdiği ölçüde yayımlanır.
 
 ## Public içerik modeli
 
-Site `Next.js + TypeScript + Tailwind CSS` ile çalışır ve `tr`, `en`, `es`, `id`, `pt`, `it` locale'lerini sunar. Public metinler `src/lib/content` ve `src/lib/page-content` altında tutulur. Türkçe editoryal kaynak dildir; yüksek etkili iddialar ayrıca [`docs/governance/technical-claims-register.md`](docs/governance/technical-claims-register.md) tarafından yönetilir.
+Site `Next.js + TypeScript + Tailwind CSS` ile çalışır ve `tr`, `en`, `es`, `id`, `pt`, `it` locale'lerini sunar. Sitedeki metinler `src/lib/content` ve `src/lib/page-content` altında tutulur. Türkçe editoryal kaynak dildir; yüksek etkili iddialar ayrıca [`docs/governance/technical-claims-register.md`](docs/governance/technical-claims-register.md) tarafından yönetilir.
 
 İngilizce ve Türkçe rehberler `src/lib/guides` altındadır. Canonical URL, hreflang, sitemap, structured data ve Markdown alternatifleri aynı public kaynak içerikle hizalı kalmalıdır.
 
@@ -22,7 +22,7 @@ Public HTML yanında:
 - `/openapi.json` public contact/waitlist API sözleşmesi
 - `/AGENTS.md` public agent/repository rehberi
 
-yayımlanır. HTML sayfaları canonical, hreflang, Markdown alternatifi ve `/llms.txt` discovery ilişkisini taşır. Agent-facing içerik insanlara gösterilen public gerçeklerden daha güçlü bir iddia içeremez.
+yayımlanır. HTML sayfaları canonical, hreflang, Markdown alternatifi ve `/llms.txt` discovery ilişkisini taşır. Agent'lara yönelik içerik, insanlara gösterilen herkese açık bilgilerden daha güçlü bir iddia içeremez.
 
 ## İçerik ve güvenlik sınırları
 
@@ -31,7 +31,7 @@ yayımlanır. HTML sayfaları canonical, hreflang, Markdown alternatifi ve `/llm
 - Pilot doğrulaması bekleyen özellikler `design target`, `planned`, `validation pending` veya eşdeğer modaliteyle yazılır.
 - Tarihi geçmiş yol haritası, fiyat, yatırım, pilot veya sertifikasyon varsayımları güncel gerçek gibi yayımlanmaz.
 - Cihaz verisi, veri yerleşimi, araştırma erişimi ve cihaz güvenliği uygulanmış/onaylanmış olmadıkça gelecek veya koşullu akış olarak anlatılır.
-- Public repo'ya secret, müşteri verisi, origin adresi veya private operasyon kanıtı girmez.
+- Herkese açık repoya secret, müşteri verisi, origin adresi ya da özel operasyon kanıtı girmez.
 
 Yazım için [`docs/content-style-guide.md`](docs/content-style-guide.md), kanıt sınıfları için claims register esas alınır.
 

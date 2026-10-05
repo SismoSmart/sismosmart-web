@@ -19,7 +19,7 @@ export const itCopy: SiteCopy = {
   },
   hero: {
     badge: "Startup hardware in fase iniziale",
-    title: "Come si è mosso il tuo edificio durante il terremoto? Abbiamo costruito un dispositivo che lo misura.",
+    title: "Stiamo sviluppando un dispositivo che misura come si muove il tuo edificio durante un terremoto.",
     description:
       "SismoSmart è un dispositivo a parete in fase pre-lancio, progettato per misurare e registrare il movimento dell'edificio. Rilevamento, notifiche, connettività e prestazioni restano soggetti a validazione pilota.",
     primaryCta: "Candidati al pilota",
@@ -35,14 +35,14 @@ export const itCopy: SiteCopy = {
       { label: "Target energia", value: "30-60 s supercap" },
     ],
     deviceEyebrow: "Il dispositivo SismoSmart",
-    deviceTitle: "100 × 100 mm. Si fissa alla parete e funziona dalla presa.",
+    deviceTitle: "Un dispositivo da 100 × 100 mm che si fissa alla parete e funziona dalla presa",
     deviceDescription:
-      "Lo attacchi al muro e lo colleghi alla presa. Lo abbini dall'app e gli dai il Wi-Fi. Da lì in poi lavora sullo sfondo: inizia a misurare la vibrazione dell'edificio e in una giornata normale non ti accorgi che c'è.",
-    deviceSpecs: ["Target di misura su tre assi", "Target di registrazione locale", "Target di cifratura dei dati del dispositivo"],
+      "Lo attacchi al muro, lo colleghi alla presa, lo abbini dall'app e gli dai il Wi-Fi. Poi lavora da solo: misura la vibrazione dell'edificio senza intralciare la giornata. Le funzioni qui sotto sono ancora in fase di progetto.",
+    deviceSpecs: ["Misura del movimento su tre assi", "Registrazione locale degli eventi sul dispositivo", "Cifratura dei dati del dispositivo"],
     meterTopLabel: "Rilevamento",
-    meterTopValue: "Nel dispositivo",
+    meterTopValue: "Validazione in corso",
     meterBottomLabel: "Dati",
-    meterBottomValue: "Cifrati",
+    meterBottomValue: "Cifratura prevista",
     imageAlt: "Dispositivo SismoSmart di monitoraggio sismico con LED di stato",
   },
   trust: {
@@ -64,10 +64,10 @@ export const itCopy: SiteCopy = {
     steps: [
       { title: "Montalo a parete", description: "Scegli una parete interna stabile. L'adesivo è già applicato e ci sono i fori per le viti se preferisci fissarlo meglio." },
       { title: "Abbinalo dall'app", description: "L'app trova il dispositivo via Bluetooth. Inserisci la password del Wi-Fi una volta sola e hai finito." },
-      { title: "Impara l'edificio", description: "Per qualche giorno il dispositivo ascolta la vibrazione normale. Impara cosa succede quando passa un camion e cosa succede in una giornata di vento. Può riconoscere l'anomalia solo dopo aver conosciuto la normalità." },
-      { title: "Valuta notifiche durante la scossa", description: "Il progetto può emettere una notifica dopo il rilevamento locale. Tempi e logica di conferma tra dispositivi restano soggetti a validazione pilota." },
-      { title: "Registra l'evento", description: "I dati grezzi di durante e dopo la scossa restano sul dispositivo e vanno nel cloud. Da quella registrazione un ingegnere può leggere come ha risposto l'edificio." },
-      { title: "Più dispositivi, risultati migliori", description: "Con più dispositivi nello stesso edificio si vede come si muovono i piani l'uno rispetto all'altro. Con più dispositivi nello stesso quartiere calano i falsi allarmi." },
+      { title: "Impara l'edificio", description: "La calibrazione pilota mira a costruire una linea di base dalle vibrazioni quotidiane, come traffico e vento. Il metodo ha ancora bisogno di prove sul campo prima di poter essere definito affidabile." },
+      { title: "Notifica quando inizia la scossa", description: "Il progetto può emettere una notifica dopo il rilevamento locale. Tempi e logica di conferma tra dispositivi restano soggetti a validazione pilota." },
+      { title: "Registra l'evento", description: "Il progetto prevede la registrazione locale dell'evento e il caricamento nel cloud quando c'è connettività. L'intero percorso va validato in pilota prima di essere trattato come funzione già disponibile." },
+      { title: "Più dispositivi, risultati migliori", description: "Più dispositivi possono fornire elementi utili sul movimento relativo tra i piani e sulla correlazione degli eventi. Precisione ed effetto sui falsi allarmi richiedono ancora validazione pilota." },
     ],
   },
   features: {
@@ -79,8 +79,8 @@ export const itCopy: SiteCopy = {
       { accent: "01", title: "Target di rilevamento", description: "Il progetto attuale mira a un sensore MEMS classe ADXL355 e campionamento triassiale a 250 Hz. Le affermazioni su rilevamento e prestazioni richiedono prove di banco e pilota." },
       { accent: "02", title: "Target di notifica", description: "Il comportamento delle notifiche resta un obiettivo di validazione pilota. SismoSmart non è un servizio di emergenza né un sistema ufficiale di allerta; segui gli avvisi ufficiali." },
       { accent: "03", title: "Evidenza strutturale", description: "Un cambiamento nelle caratteristiche di vibrazione misurate può fornire ulteriori elementi a un ingegnere. Non è una diagnosi e non determina se un edificio è sicuro." },
-      { accent: "04", title: "Crea un report dopo il terremoto", description: "Accelerazione di picco, durata e risposta dell'edificio finiscono in un unico report. L'ingegnere arriva con un punto di partenza." },
-      { accent: "05", title: "Legge anche temperatura e umidità", description: "Un edificio non si comporta d'inverno come d'estate. Senza dati ambientali non riesci a separare quella deriva stagionale da un danno reale." },
+      { accent: "04", title: "Crea un report dopo il terremoto", description: "Il report post-evento previsto mira a riassumere il movimento misurato per una revisione qualificata. Campi del report e interpretazione restano soggetti a validazione pilota." },
+      { accent: "05", title: "Legge anche temperatura e umidità", description: "La misurazione ambientale è un obiettivo di progetto per aiutare a distinguere gli effetti stagionali da altri cambiamenti. Da sola non identifica i danni." },
       { accent: "06", title: "Correlazione tra dispositivi", description: "La correlazione tra più dispositivi è un obiettivo di progetto. L'effetto su tempi di conferma e falsi allarmi non è ancora dimostrato da evidenza pilota." },
     ],
   },
@@ -107,7 +107,7 @@ export const itCopy: SiteCopy = {
     eyebrow: "Percorso pilota",
     title: "Vogliamo prima provarlo in pochi edifici veri.",
     description:
-      "Prima di far crescere il prodotto vogliamo vederlo sul campo. Il feedback dei primi pilota deciderà com'è il dispositivo finito. Per ora parliamo con tre gruppi.",
+      "Prima di far crescere il prodotto vogliamo vederlo sul campo. Il feedback dei primi piloti deciderà com'è il dispositivo finito. Per ora parliamo con tre gruppi.",
     cards: [
       { title: "Appartamenti", description: "Numero di dispositivi, durata, proprietà e condizioni commerciali vengono concordati caso per caso. Questa pagina non promette hardware gratuito né una durata fissa.", highlight: "Termini concordati" },
       { title: "Campus e fabbriche", description: "Strutture con più di un edificio. Un dispositivo per edificio, tutti visibili da un'unica dashboard.", highlight: "Aziendale" },

@@ -19,7 +19,7 @@ export const esCopy: SiteCopy = {
   },
   hero: {
     badge: "Startup de hardware en etapa temprana",
-    title: "¿Cómo se movió tu edificio en el terremoto? Hicimos un dispositivo que lo mide.",
+    title: "Estamos desarrollando un dispositivo que mide cómo se mueve tu edificio en un terremoto.",
     description:
       "SismoSmart es un dispositivo de pared previo al lanzamiento, diseñado para medir y registrar el movimiento del edificio. La detección, las notificaciones, la conectividad y el rendimiento siguen sujetos a validación piloto.",
     primaryCta: "Solicitar piloto",
@@ -35,18 +35,18 @@ export const esCopy: SiteCopy = {
       { label: "Objetivo de energía", value: "30-60 s supercap" },
     ],
     deviceEyebrow: "El dispositivo SismoSmart",
-    deviceTitle: "100 × 100 mm. Se fija a la pared y funciona desde el enchufe.",
+    deviceTitle: "Un dispositivo de 100 × 100 mm que se fija a la pared y funciona desde el enchufe",
     deviceDescription:
-      "Lo pegas a la pared y lo enchufas. Lo emparejas desde la app y le das tu Wi-Fi. A partir de ahí todo ocurre en segundo plano: empieza a medir la vibración del edificio y en un día normal no lo notas.",
+      "Lo pegas a la pared, lo enchufas, lo emparejas desde la app y le das tu Wi-Fi. Después funciona solo: mide la vibración del edificio sin molestar en el día a día. Las funciones de abajo aún están en fase de diseño.",
     deviceSpecs: [
-      "Objetivo de medición en tres ejes",
-      "Objetivo de registro local de eventos",
-      "Objetivo de cifrado de datos del dispositivo",
+      "Medición en tres ejes",
+      "Registro local de eventos en el dispositivo",
+      "Cifrado de los datos del dispositivo",
     ],
     meterTopLabel: "Detección",
-    meterTopValue: "En el dispositivo",
+    meterTopValue: "Validación pendiente",
     meterBottomLabel: "Datos",
-    meterBottomValue: "Cifrados",
+    meterBottomValue: "Cifrado previsto",
     imageAlt: "Dispositivo SismoSmart de monitoreo sísmico con LED de estado",
   },
   trust: {
@@ -68,10 +68,10 @@ export const esCopy: SiteCopy = {
     steps: [
       { title: "Móntalo en una pared", description: "Elige una pared interior estable. La tira adhesiva ya viene puesta, y también hay orificios por si prefieres atornillarlo." },
       { title: "Empareja desde la app", description: "La app encuentra el dispositivo por Bluetooth. Escribes la clave del Wi-Fi una vez y ya está." },
-      { title: "Aprende el edificio", description: "Durante unos días el dispositivo escucha la vibración normal. Aprende qué pasa cuando cruza un camión y qué pasa en un día de viento. Solo puede detectar lo anormal cuando conoce lo normal." },
-      { title: "Evalúa notificaciones durante la sacudida", description: "El diseño puede emitir una notificación tras la detección local. El tiempo de aviso y la lógica de confirmación entre dispositivos siguen sujetos a validación piloto." },
+      { title: "Aprende el edificio", description: "La calibración piloto busca construir una línea base con vibraciones cotidianas, como el tráfico y el viento. El método aún necesita evidencia de campo antes de poder describirse como fiable." },
+      { title: "Notifica cuando empieza la sacudida", description: "El diseño puede emitir una notificación tras la detección local. El tiempo de aviso y la lógica de confirmación entre dispositivos siguen sujetos a validación piloto." },
       { title: "Registra el evento", description: "El diseño incluye almacenamiento local del evento y envío a la nube cuando hay conectividad. El flujo completo debe validarse en piloto antes de tratarlo como capacidad desplegada." },
-      { title: "Más dispositivos, mejor resultado", description: "Con varios equipos en un edificio se ve cómo se mueven los pisos entre sí. Con varios en un barrio, bajan las falsas alarmas." },
+      { title: "Más dispositivos, mejor resultado", description: "Varios equipos pueden aportar evidencia útil sobre el movimiento relativo entre pisos y la correlación de eventos. La precisión y el efecto sobre las falsas alarmas siguen necesitando validación piloto." },
     ],
   },
   features: {
@@ -83,7 +83,7 @@ export const esCopy: SiteCopy = {
       { accent: "01", title: "Objetivo de detección", description: "El diseño actual apunta a un sensor MEMS de clase ADXL355 y muestreo triaxial a 250 Hz. Las afirmaciones de detección y rendimiento requieren evidencia de banco y de piloto." },
       { accent: "02", title: "Objetivo de notificación", description: "Las notificaciones siguen pendientes de validación piloto. SismoSmart no es un servicio de emergencia ni un sistema oficial de alerta; sigue siempre las alertas oficiales." },
       { accent: "03", title: "Evidencia estructural", description: "Un cambio en las características de vibración medidas puede aportar evidencia adicional a un ingeniero. No es un diagnóstico ni determina si un edificio es seguro." },
-      { accent: "04", title: "Informa después del terremoto", description: "La aceleración máxima, la duración y la respuesta del edificio terminan en un solo informe. El ingeniero llega con un punto de partida." },
+      { accent: "04", title: "Informa después del terremoto", description: "El informe posterior al evento que se planea busca resumir el movimiento medido para una revisión cualificada. Los campos del informe y su interpretación siguen sujetos a validación piloto." },
       { accent: "05", title: "Objetivo ambiental", description: "La medición ambiental es un objetivo de diseño para ayudar a separar efectos estacionales de otros cambios. Por sí sola no identifica daños." },
       { accent: "06", title: "Correlación entre dispositivos", description: "La correlación entre varios dispositivos es un objetivo de diseño. Su efecto sobre la confirmación y las falsas alarmas aún no está establecido con evidencia piloto." },
     ],
@@ -100,7 +100,7 @@ export const esCopy: SiteCopy = {
     eventLabel: "Último evento",
     eventValue: "Registrado, revisable",
     bullets: [
-      "El diseño actual apunta a un sensor de clase ADXL355, muestreo triaxial a 250 Hz y un objetivo de ruido documentado; el rendimiento final requiere una BOM congelada y pruebas de banco.",
+      "El diseño actual apunta a un sensor de clase ADXL355, muestreo triaxial a 250 Hz y un objetivo de ruido documentado; el rendimiento final requiere una lista de materiales (BOM) congelada y pruebas de banco.",
       "Puedes ver los datos de vibración de tu edificio sin entregar información personal.",
       "El dispositivo no decide por el ingeniero. Le da mejores datos.",
     ],

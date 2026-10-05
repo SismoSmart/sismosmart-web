@@ -21,9 +21,9 @@ export const enCopy: SiteCopy = {
   },
   hero: {
     badge: "Early-stage hardware startup",
-    title: "How did your building move in the earthquake? We built a device that measures it.",
+    title: "We're building a device that measures how your building moves in an earthquake.",
     description:
-      "SismoSmart is a pre-launch wall-mounted device designed to measure and record building motion. Detection, notification, connectivity and performance remain subject to pilot validation. Its purpose is to leave qualified engineers a useful motion record after shaking.",
+      "SismoSmart is a wall-mounted device we're developing to measure and record building motion. It is still pre-launch: detection, notification, connectivity and performance will be validated in pilots. The goal is to leave a qualified engineer a useful motion record after shaking.",
     primaryCta: "Apply for pilot",
     secondaryCta: "Investor brief",
     tertiaryCta: "See the technology",
@@ -37,25 +37,25 @@ export const enCopy: SiteCopy = {
       { label: "Power target", value: "30-60 s supercap" },
     ],
     deviceEyebrow: "The SismoSmart device",
-    deviceTitle: "100 × 100 mm. Mounts on the wall, runs off a socket.",
+    deviceTitle: "A 100 × 100 mm device that mounts on the wall and runs off a socket",
     deviceDescription:
-      "You stick it to the wall and plug it in. You pair it from the app and give it your Wi-Fi. Everything after that happens in the background: it starts measuring the building's vibration and stays out of your way on an ordinary day.",
+      "You stick it to the wall, plug it in, pair it from the app and give it your Wi-Fi. After that it runs on its own, measuring the building's vibration without getting in your way. The features below are still at the design stage.",
     deviceSpecs: [
-      "Three-axis motion sensing target",
-      "Local event-recording target",
-      "Device-data encryption target",
+      "Three-axis motion sensing",
+      "Local event recording on the device",
+      "Encryption of device data",
     ],
     meterTopLabel: "Detection",
     meterTopValue: "Validation pending",
     meterBottomLabel: "Data",
-    meterBottomValue: "Encryption target",
+    meterBottomValue: "Encryption planned",
     imageAlt: "SismoSmart seismic monitoring device with status LED",
   },
   trust: {
     eyebrow: "Where we stand",
     title: "There are things this device cannot do.",
     description:
-      "SismoSmart is still in its pilot phase. What it does is record what happens inside your building and turn that into data you can look at afterwards. We are not competing with national alerting systems or with the structural inspection that follows an earthquake. Both of those stay where they are. We fill the gap in between.",
+      "SismoSmart is still in its pilot phase. It aims to record what happens inside your building and turn that into data you can look at afterwards. We are not competing with national alerting systems or with the structural inspection that follows an earthquake; both stay where they are. We are trying to fill the gap between them.",
     items: [
       { label: "Stage", value: "Pilot" },
       { label: "Main job", value: "Motion recording" },
@@ -64,9 +64,9 @@ export const enCopy: SiteCopy = {
   },
   howItWorks: {
     eyebrow: "How it works",
-    title: "Setup takes a few minutes. Everything after that is in the background.",
+    title: "Setup takes a few minutes. The rest runs in the background.",
     description:
-      "Pilot calibration is intended to learn a building's normal vibration profile and test whether unusual motion can be separated from everyday noise. False positives and missed events remain possible.",
+      "In pilots we are testing whether the device can learn a building's normal vibration profile and separate unusual motion from everyday noise. False positives and missed events are still possible.",
     steps: [
       {
         title: "Mount it on a wall",
@@ -81,22 +81,22 @@ export const enCopy: SiteCopy = {
       {
         title: "It learns the building",
         description:
-          "Pilot calibration is intended to build a baseline from ordinary vibration such as traffic and wind. The method still needs field evidence before it can be described as reliable.",
+          "In pilots we are trying to build a baseline from ordinary vibration such as traffic and wind. We won't call the method reliable until it has field evidence.",
       },
       {
         title: "It notifies you when shaking starts",
         description:
-          "The design can issue a notification after on-device detection. Notification timing and multi-device confirmation logic remain subject to pilot validation.",
+          "The design aims to issue a notification after on-device detection. Notification timing and multi-device confirmation will be tested in pilots.",
       },
       {
         title: "It records the event",
         description:
-          "The design includes local event buffering and cloud upload when connectivity is available. Pilot testing must validate the full path before it is treated as a deployed device capability.",
+          "In the design, an event is stored on the device and uploaded to the cloud when there is a connection. We won't present this as a working feature until pilots have tested the full path.",
       },
       {
-        title: "More devices, better results",
+        title: "More than one device",
         description:
-          "Multi-device measurement may provide useful relative floor-motion and event-correlation evidence. The accuracy and false-alarm benefit still need pilot validation.",
+          "Several devices may give useful evidence on motion between floors and on matching events. Accuracy and the effect on false alarms still need pilot data.",
       },
     ],
   },
@@ -104,7 +104,7 @@ export const enCopy: SiteCopy = {
     eyebrow: "What it does",
     title: "It quietly does several separate jobs at once.",
     description:
-      "The product is being designed around event recording and longer-term building-motion evidence. Notification, structural-health interpretation and other device features remain validation targets, not guaranteed outcomes.",
+      "The product is being designed around event recording and longer-term building-motion evidence. Notification, structural-health interpretation and other features are not yet validated. They are goals we are working toward, not guaranteed outcomes.",
     items: [
       {
         accent: "01",
@@ -116,7 +116,7 @@ export const enCopy: SiteCopy = {
         accent: "02",
         title: "Notifies your phone",
         description:
-          "Notification behavior is a pilot-validation target. SismoSmart is not an emergency service or an official warning system; follow official alerts and emergency guidance.",
+          "How notification will behave still has to be validated in pilots. SismoSmart is not an emergency service or an official warning system; follow official alerts and emergency guidance.",
       },
       {
         accent: "03",
@@ -128,19 +128,19 @@ export const enCopy: SiteCopy = {
         accent: "04",
         title: "Reports after an earthquake",
         description:
-          "The planned post-event report is intended to summarize measured motion for qualified review. Report fields and interpretation remain subject to pilot validation.",
+          "The planned post-event report aims to summarize measured motion for qualified review. Its contents and interpretation will be validated in pilots.",
       },
       {
         accent: "05",
         title: "Reads temperature and humidity too",
         description:
-          "Environmental sensing is a design target for helping engineers separate seasonal effects from other changes. It does not by itself identify damage.",
+          "Environmental sensing is designed to help engineers separate seasonal effects from other changes. It does not by itself identify damage.",
       },
       {
         accent: "06",
-        title: "Stronger together",
+        title: "Matching across devices",
         description:
-          "Multi-device correlation is a design target. Its effect on confirmation time and false alarms has not yet been established in pilot evidence.",
+          "Matching events across several devices is a design goal. Its effect on confirmation time and false alarms has not yet been shown in pilot evidence.",
       },
     ],
   },
@@ -148,7 +148,7 @@ export const enCopy: SiteCopy = {
     eyebrow: "Data flow",
     title: "Measurement starts at the device and ends on your phone.",
     description:
-      "The current design measures locally and is intended to transmit device data securely when connectivity is available. Device security, reporting and long-term trend views remain pilot-validation targets.",
+      "In the design, measurement happens on the device and data is sent securely when there is a connection. Device security, reporting and long-term trend views will be validated in pilots.",
     previewLabel: "Building record",
     networkLabel: "Neighborhood mesh",
     sensorLabel: "Device",
@@ -158,7 +158,7 @@ export const enCopy: SiteCopy = {
     bullets: [
       "The current design targets an ADXL355-class sensor, 250 Hz three-axis sampling and a documented noise objective; final performance awaits a frozen bill of materials and bench evidence.",
       "You can see your building's vibration data without handing over personal information.",
-      "The device doesn't decide in the engineer's place. It gives the engineer better data.",
+      "The device makes no decisions; it collects data for the engineer to review.",
     ],
     cta: "See the technology",
     ctaHref: "/technology",
@@ -193,7 +193,7 @@ export const enCopy: SiteCopy = {
     eyebrow: "FAQ",
     title: "Frequently asked questions",
     description:
-      "If your question is here, so is the answer. If it isn't, write to info@sismosmart.com and we'll answer it. The full list lives on the FAQ page.",
+      "If your question isn't here, write to info@sismosmart.com and we'll answer it. The full list is on the FAQ page.",
     items: [
       {
         title: "Will this device warn me before an earthquake?",
@@ -203,22 +203,22 @@ export const enCopy: SiteCopy = {
       {
         title: "How is this different from Google's earthquake alerts?",
         description:
-          "Google uses the accelerometer in people's phones. It's free, it's already on every handset, and it works well. But what it measures is the source of the earthquake, not your building. We do the opposite: how your building vibrates, how that changes with the season, what state it's in after an earthquake. A phone can't answer those questions.",
+          "Google uses the accelerometer in people's phones. It's free, it's already on every handset, and it works well. But what it measures is the source of the earthquake, not your building. We measure your building instead: how it vibrates, how that changes with the season, what state it's in after an earthquake. A phone can't answer those questions.",
       },
       {
         title: "Can a single device tell me my building is safe?",
         description:
-          "It can't. The person who gets to call a building safe or unsafe is an engineer, not a device. What the device does is leave that engineer something solid to work from.",
+          "It can't. An engineer decides whether a building is safe. The device leaves that engineer solid data to work from.",
       },
       {
         title: "Is installation difficult?",
         description:
-          "You plug the USB-C cable into a socket, stick the device to the wall with the adhesive on the back, and pair it from the app. No drill and no technician. It takes five minutes.",
+          "You plug the USB-C cable into a socket, stick the device to the wall with the adhesive on the back, and pair it from the app. No drill or technician is needed, and setup takes a few minutes.",
       },
       {
         title: "What happens during a power or internet outage?",
         description:
-          "The current design targets local buffering during network loss and a short supercapacitor bridge during power loss. Exact duration and end-to-end upload behavior remain subject to hardware and pilot validation.",
+          "The current design targets local buffering during network loss and a short supercapacitor bridge during power loss. Exact duration and end-to-end upload behavior will be confirmed through hardware and pilot testing.",
       },
       {
         title: "When does it go on sale?",

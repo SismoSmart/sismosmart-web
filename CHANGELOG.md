@@ -6,6 +6,7 @@
 - Add global `/llms.txt` discovery and permissive snippet/image-preview metadata for agent and search discovery.
 - Refresh machine-readable content dates and strengthen regression coverage for stale or unsupported public claims.
 - Rework repository documentation around the public product/content architecture and align deployment-governance wording with the current shared production-environment model.
+- Edit public copy in all six locales for natural wording: plain hero title and specs, one uncertainty statement per section instead of per label, restored claims-register modality in ES/ID/PT/IT, rewritten Turkish guides, and fixed typos and inconsistent terms.
 
 ## v0.1.2 - 2026-05-17
 

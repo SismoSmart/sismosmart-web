@@ -37,7 +37,7 @@ node scripts/doppler/run.mjs prd_ops -- npm run ops:google-auth -- listen
 
 Komut yerel bir callback sunucusu açar, Google izin URL'sini terminale (gizli değerleri maskeleyerek) yazar ve tarayıcıdan onay verildiğinde callback'i yakalar. Yalnızca URL görmek için `-- url` kullanılır.
 
-Dikkat: `ops:google-auth` şu an refresh token'ı yerel `.env` dosyasına yazıyor. Production-only modelde kalıcı `.env` desteklenmez. Betik değişene kadar bu dosyayı geçici ve gizli içerikli bir çıktı sayın: değeri korumalı Doppler arayüzünden `prd_ops` yapılandırmasına taşıyın, ardından `.env` dosyasını silin. Dosyayı commit etmeyin ve içeriğini GitHub'a veya log'a yapıştırmayın.
+Alınan refresh token yerel dosyaya yazılmaz ve terminale basılmaz. Yardımcı komut değeri Doppler CLI'a stdin ile verir ve `sismosmart-web` projesinin `prd_ops` yapılandırmasındaki `GOOGLE_OAUTH_REFRESH_TOKEN` alanına kaydeder. Bunun için yetkili bir Doppler oturumu ve `prd_ops` yazma izni gerekir. Kayıt başarılı olursa çıktıda `saved-to-doppler-prd_ops` yazar; başarısız olursa çıktıdaki uyarıyı izleyip akışı yeniden çalıştırın. Hiçbir durumda kalıcı `.env` oluşturmayın ve değeri GitHub'a veya log'a yapıştırmayın.
 
 ## Google Analytics
 

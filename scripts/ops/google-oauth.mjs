@@ -1,5 +1,4 @@
 import http from "node:http";
-import fs from "node:fs";
 import process from "node:process";
 import { URL } from "node:url";
 
@@ -13,6 +12,7 @@ import {
   redactSecret,
 } from "./config.mjs";
 import { GOOGLE_SCOPES } from "./google-auth.mjs";
+import { REFRESH_TOKEN_CONFIG, storeRefreshToken } from "./google-oauth-lib.mjs";
 
 const usage = getCommandUsage("ops:google-auth", [
   "scopes",
@@ -31,6 +31,9 @@ const defaultScopes = [
   GOOGLE_SCOPES.searchConsole,
   GOOGLE_SCOPES.siteVerification,
 ];
+
+const storeFailureWarning =
+  `Google returned a refresh token, but it could not be stored in Doppler ${REFRESH_TOKEN_CONFIG}. Check the Doppler CLI session and write access, then re-run the flow.`;
 
 function getRedirectUri() {
   return (
@@ -74,33 +77,6 @@ function parsePortFromRedirectUri() {
   return Number(redirectUri.port || 80);
 }
 
-function setEnvValue(content, key, value) {
-  const line = `${key}=${String(value).replace(/\r?\n/g, "")}`;
-  const pattern = new RegExp(`^${key}=.*$`, "m");
-
-  if (pattern.test(content)) {
-    return content.replace(pattern, line);
-  }
-
-  return `${content.replace(/\s*$/, "")}\n${line}\n`;
-}
-
-function saveRefreshToken(refreshToken) {
-  if (!refreshToken) {
-    return false;
-  }
-
-  const envPath = ".env";
-  let envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, "utf8") : "";
-
-  envContent = setEnvValue(envContent, "GOOGLE_AUTH_MODE", "oauth");
-  envContent = setEnvValue(envContent, "GOOGLE_OAUTH_REFRESH_TOKEN", refreshToken);
-
-  fs.writeFileSync(envPath, envContent.endsWith("\n") ? envContent : `${envContent}\n`);
-
-  return true;
-}
-
 async function runScopes() {
   printJson({
     redirectUri: getRedirectUri(),
@@ -119,16 +95,18 @@ async function runUrl() {
 async function exchangeCode(code) {
   const client = buildOAuthClient();
   const { tokens } = await client.getToken(code);
-  const saved = saveRefreshToken(tokens.refresh_token);
+  const saved = storeRefreshToken(tokens.refresh_token);
 
   printJson({
     redirectUri: getRedirectUri(),
-    refreshToken: saved ? "saved-to-env" : null,
+    refreshToken: saved ? `saved-to-doppler-${REFRESH_TOKEN_CONFIG}` : null,
     expiryDate: tokens.expiry_date || null,
     scope: tokens.scope || null,
-    warning: tokens.refresh_token
-      ? null
-      : "Google did not return a refresh token. Re-run the flow with prompt=consent and make sure this client has not already been granted without offline access.",
+    warning: !tokens.refresh_token
+      ? "Google did not return a refresh token. Re-run the flow with prompt=consent and make sure this client has not already been granted without offline access."
+      : saved
+        ? null
+        : storeFailureWarning,
   });
 }
 
@@ -160,7 +138,7 @@ async function runListen() {
 
         const client = buildOAuthClient();
         const { tokens } = await client.getToken(code);
-        const saved = saveRefreshToken(tokens.refresh_token);
+        const saved = storeRefreshToken(tokens.refresh_token);
 
         response.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
         response.end(
@@ -171,12 +149,14 @@ async function runListen() {
 
         printJson({
           redirectUri: getRedirectUri(),
-          refreshToken: saved ? "saved-to-env" : null,
+          refreshToken: saved ? `saved-to-doppler-${REFRESH_TOKEN_CONFIG}` : null,
           expiryDate: tokens.expiry_date || null,
           scope: tokens.scope || null,
-          warning: tokens.refresh_token
-            ? null
-            : "Google did not return a refresh token. Re-run after revoking the app or with a fresh OAuth client if needed.",
+          warning: !tokens.refresh_token
+            ? "Google did not return a refresh token. Re-run after revoking the app or with a fresh OAuth client if needed."
+            : saved
+              ? null
+              : storeFailureWarning,
         });
 
         resolve();

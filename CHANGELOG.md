@@ -8,6 +8,7 @@
 - Rework repository documentation around the public product/content architecture and align deployment-governance wording with the current shared production-environment model.
 - Edit public copy in all six locales for natural wording: plain hero title and specs, one uncertainty statement per section instead of per label, restored claims-register modality in ES/ID/PT/IT, rewritten Turkish guides, and fixed typos and inconsistent terms.
 - Add glossary entries for every term the guides link to (EN and TR), derive the footer copyright year at build time, and align `docs/ops-automation.md` with the production-only Doppler entry points.
+- Store the Google OAuth refresh token in Doppler `prd_ops` through the Doppler CLI instead of writing a local `.env` file.
 
 ## v0.1.2 - 2026-05-17
 

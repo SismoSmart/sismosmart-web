@@ -445,7 +445,7 @@ test("getGuideUiStrings returns localized strings for both EN and TR", () => {
   assert.equal(en.pilotProgram, "Pilot program");
   assert.equal(tr.pilotProgram, "Pilot program");
   assert.equal(en.breadcrumb, "Breadcrumb");
-  assert.equal(tr.breadcrumb, "Ekmek kırıntıları");
+  assert.equal(tr.breadcrumb, "Sayfa yolu");
   assert.equal(en.safetyNotice, "Safety notice");
   assert.equal(tr.safetyNotice, "Güvenlik notu");
 });

@@ -81,7 +81,7 @@ export const ptPages: BaseRoutePagesCopy = {
       "Nos reunimos depois dos terremotos de Kahramanmaraş em 2023 e de tremores recentes ao redor de Istambul. Queríamos saber como nossas casas e a cidade reagem a terremotos. Então criamos o dispositivo.",
     story: [
       "Depois de um grande terremoto na Turquia, inspeções de prédios levam semanas, às vezes meses. Nesse período, famílias não sabem se podem voltar para casa.",
-      "Não vamos eliminar essa espera por completo. No fim, um engenheiro precisa visitar. Mas antes disso queremos uma camada de dados que diga: este prédio parece bem, ou este prédio é prioridade.",
+      "Não vamos eliminar essa espera por completo. No fim, um engenheiro precisa entrar no prédio. Mas antes de ele chegar, pode existir uma camada de dados que indique quais prédios convém examinar primeiro. É nisso que estamos trabalhando.",
       "Nosso time tem um consultor acadêmico em engenharia civil, dois pesquisadores MSc em engenharia civil e um fundador em embedded e software. Estamos todos na Turquia. Testamos o dispositivo nas nossas casas.",
     ],
     principles: [
@@ -105,7 +105,7 @@ export const ptPages: BaseRoutePagesCopy = {
       { period: "Concluído", title: "Base de produto e sistema", description: "O conceito inicial e a arquitetura do sistema estão definidos. As alegações públicas continuam limitadas pelo registro de evidências." },
       { period: "Atual", title: "Validação piloto", description: "Hardware, detecção, notificações, conectividade e relatórios são validados antes de ampliar alegações." },
       { period: "Próximo", title: "Evidência e congelamento de projeto", description: "BOM, algoritmos e premissas operacionais só são congelados depois da revisão de evidência de bancada e campo." },
-      { period: "Depois", title: "Certificação e fabricação", description: "Certificação, fabricação e lançamento vêm depois dos gates de evidência. Não há data pública comprometida." },
+      { period: "Depois", title: "Certificação e fabricação", description: "Certificação, fabricação e lançamento vêm depois das etapas de evidência. Não há data pública comprometida." },
     ],
     team: [
       {

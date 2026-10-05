@@ -6,57 +6,57 @@ export const earthquakeAppVsFixedSensorTr: GuideContent = {
   slug: "deprem-uygulamasi-sabit-sensor-farki",
   title: "Deprem Uygulaması ile Sabit Sensör: Temel Farklar",
   description:
-    "Deprem uygulamaları ve sabit bina sensörlerini karşılaştırarak her birinin ne yaptığını, sabit referansın önemini ve uyarılar ile bina kayıtlarının farkını öğrenin.",
+    "Deprem uygulamalarını sabit bina sensörleriyle karşılaştırın: her birinin ne yaptığını, sabit referansın neden önemli olduğunu ve uyarı ile bina kaydı arasındaki farkı öğrenin.",
   eyebrow: "Rehberler",
   h1: "Deprem Uygulaması ile Sabit Sensör: Temel Farklar",
   summary:
-    "Deprem uygulamaları ve sabit bina sensörleri her ikisi de sismik olaylarla ilişkilidir ancak farklı amaçlara hizmet eder. Telefon uygulamaları yoğun algılama ağlarına katılabilir ve bildirim sağlayabilir, ancak kullanıcıyla birlikte hareket eder, cihaz modeline göre değişir ve binaya sabitlenmez. Kalıcı olarak monte edilmiş bir sensör, bilinen bir konumda sabit kalır, hareketi tutarlı bir şekilde kaydeder ve kullanıcının değil, binanın deneyimini tanımlayan veri üretir. Bu ayrımı anlamak, sakinlerin ve yöneticilerin her ihtiyacı için doğru aracı seçmesine yardımcı olur.",
+    "Deprem uygulamaları da sabit bina sensörleri de sismik olaylarla ilgilidir, ama farklı işlere yarar. Telefon uygulamaları yoğun algılama ağlarına katılabilir ve bildirim gönderebilir; ancak telefon kullanıcıyla birlikte hareket eder, modele göre değişir ve binaya sabitlenmez. Kalıcı olarak monte edilmiş bir sensör ise bilinen bir noktada durur, hareketi tutarlı biçimde kaydeder ve kullanıcının değil binanın yaşadığını anlatan veri üretir. Bu farkı bilmek, sakinlerin ve yöneticilerin her ihtiyaç için doğru aracı seçmesine yardımcı olur.",
   keyTakeaways: [
-    "Telefonlar yoğun algılama ağlarına katılabilir ancak kullanıcıyla birlikte hareket eder ve cihaza göre değişir.",
+    "Telefonlar yoğun algılama ağlarına katılabilir, ama kullanıcıyla birlikte hareket eder ve modelden modele değişir.",
     "Sabit sensör, tutarlı bina ölçümleri için sabit bir konum referansı sağlar.",
-    "Resmi uyarılar ve sabit bina kayıtları farklı sorunları ele alır ve birbirine karıştırılmamalıdır.",
+    "Resmî uyarılar ile sabit bina kayıtları farklı sorunlara yanıt verir; birbirine karıştırılmamalıdır.",
   ],
   sections: [
     {
       heading: "Doğrudan cevap",
       paragraphs: [
-        "Deprem uygulaması, bir akıllı telefon üzerinde çalışır ve telefonun sensörlerini, kalabalık kaynaklı verilerini veya sunucu tabanlı algılamayı kullanarak bildirim sağlar. Sabit bina sensörü ise belirli bir binanın belirli bir noktasına monte edilmiş özel bir ivmeölçerdir. Uygulama taşınabilir ve kullanıcıya yöneliktir; sensör sabittir ve yapıya yöneliktir.",
+        "Deprem uygulaması akıllı telefonda çalışır; telefonun sensörlerinden, kalabalık kaynaklı verilerden veya sunucu tarafındaki algılamadan yararlanarak bildirim gönderir. Sabit bina sensörü ise belirli bir binanın belirli bir noktasına monte edilmiş, bu iş için yapılmış bir ivmeölçerdir. Uygulama taşınabilir ve kullanıcıya yöneliktir; sensör sabittir ve yapıya yöneliktir.",
       ],
     },
     {
       heading: "Telefon uygulamalarının iyi yaptığı şeyler",
       paragraphs: [
-        "Telefon tabanlı deprem uygulamaları hızlı bildirimler verebilir, araştırma ağlarına veri katkıda bulunabilir ve farkındalık yaratabilir. Milyonlarca telefon geniş bir alana dağıldığı için, geleneksel enstrümanların seyrek olduğu yerlerde sarsıntıyı algılamaya yardımcı olabilir. Güçlü yönleri erişilebilirlik ve kapsamdır.",
+        "Telefon tabanlı deprem uygulamaları hızlı bildirim verebilir, araştırma ağlarına veri sağlayabilir ve farkındalık oluşturabilir. Milyonlarca telefon geniş bir alana dağıldığı için, geleneksel cihazların seyrek kaldığı yerlerde bile sarsıntıyı algılamaya katkı verebilir. Güçlü yanları erişilebilirlik ve kapsamdır.",
       ],
     },
     {
       heading: "Neden sabit referans önemlidir",
       paragraphs: [
-        "Sabit sensör, aynı koordinatlarda ve binanın aynı noktasında kalır. Bu tutarlılık, sensör konumu değişmediği için her kaydın doğrudan karşılaştırılabilir olduğu anlamına gelir. Mühendislerin zaman içinde yapı davranışını analiz etmesi veya olayları karşılaştırması gerektiğinde sabit bir referans noktası gereklidir.",
+        "Sabit sensör hep aynı koordinatta ve binanın aynı noktasında durur. Konumu değişmediği için kayıtların her biri doğrudan karşılaştırılabilir. Mühendislerin yapının davranışını zaman içinde çözümlemesi ya da olayları birbiriyle kıyaslaması gerektiğinde bu sabit nokta şarttır.",
       ],
     },
     {
       heading: "Uyarılar ile bina kayıtları",
       paragraphs: [
-        "Uyarılar, bir depremin olduğunu veya yaklaştığını insanlara bildirir. Bina kayıtları ise yapının aslında ne yaşadığını tanımlar. İkisi tamamlayıcıdır: biri doğrudan koruyucu eylem için, diğeri ise olay sonrası anlayış ve inceleme kararları için destek sağlar.",
+        "Uyarı, bir depremin olduğunu ya da yaklaştığını insanlara bildirir. Bina kaydı ise yapının gerçekte ne yaşadığını anlatır. İkisi birbirini tamamlar: biri hemen korunma önlemi almak için, diğeri olay sonrasında durumu anlamak ve inceleme kararlarına destek vermek için kullanılır.",
       ],
     },
     {
       heading: "Doğru aracı seçme",
       paragraphs: [
-        "Telefon uygulamaları kişisel farkındalık ve topluluk katılımı için faydalıdır. Sabit sensörler bina bazlı ölçüm, uzun vadeli izleme ve profesyonel analiz için uygundur. Bir olay sonrası yapısal tepkileri değerlendiren bir bina yöneticisi, telefonun verebileceği yaklaşık bilgi değil, sabit sensörün sağladığı veri türüne ihtiyaç duyar.",
+        "Telefon uygulamaları kişisel farkındalık ve topluluk katkısı için faydalıdır. Sabit sensörler bina bazında ölçüm, uzun vadeli izleme ve uzman analizi için uygundur. Bir olaydan sonra yapının tepkisini değerlendirmek isteyen bina yöneticisinin ihtiyacı, telefonun verebileceği yaklaşık bilgi değil, sabit sensörün sağladığı türden veridir.",
       ],
     },
   ],
   limitations: [
-    "Telefon sensörleri yapı izleme için kalibre edilmemiştir ve cihazlar arasında farklılık gösterir.",
-    "Sabit sensör, dizi kurulmadıkça tüm binayı kapsamaz.",
-    "Uygulamalar ve tekil sensörler, tanınmış ajansların resmi uyarılarının yerini almaz.",
-    "Kayıt cihazından bağımsız olarak veri yorumlaması profesyonel değerlendirme gerektirir.",
+    "Telefon sensörleri yapı izleme için kalibre edilmemiştir ve cihazdan cihaza farklılık gösterir.",
+    "Sabit sensör, birden fazla sensörden oluşan bir düzen kurulmadıkça tüm binayı kapsamaz.",
+    "Uygulamalar ve tek tek sensörler, yetkili kurumların resmî uyarılarının yerini tutmaz.",
+    "Verinin hangi cihazla kaydedildiğinden bağımsız olarak, yorumlaması uzman değerlendirmesi gerektirir.",
   ],
   sismosmartFit: [
-    "SismoSmart, bina bazlı hareket kayıtları sağlamak için sabit MEMS ivmeölçerler kullanan bir ön lansman sistemidir.",
-    "Bu sabit konum yaklaşımı, pilot doğrulama gerçek dünya koşullarında mobil alternatiflerle karşılaştırmalı performansı onaylayana kadar tasarım hedefidir.",
+    "SismoSmart, bina bazında hareket kaydı sağlamak için sabit MEMS ivmeölçerler kullanan, lansman öncesi bir sistemdir.",
+    "Bu sabit konum yaklaşımı, pilot doğrulama gerçek koşullarda mobil alternatiflerle karşılaştırmalı başarımı göstermedikçe tasarım hedefidir.",
   ],
   references: [
     {
@@ -84,10 +84,10 @@ export const earthquakeAppVsFixedSensorTr: GuideContent = {
   publishedAt: "2026-07-26",
   updatedAt: "2026-07-26",
   safetyNotice:
-    "Ne bir telefon uygulaması ne de sabit sensör binanın güvenli olup olmadığını belirler. Resmi uyarıları takip edin ve yapısal değerlendirme için yetkili bir mühendise danışın.",
+    "Ne telefon uygulaması ne de sabit sensör, binanın güvenli olup olmadığını belirler. Resmî uyarıları izleyin ve yapısal değerlendirme için yetkili bir mühendise danışın.",
   cta: {
     label: "SismoSmart hakkında bilgi alın",
     href: "/product",
-    description: "SismoSmart sabit bina izleme yaklaşımını inceleyin.",
+    description: "SismoSmart'ın sabit bina izleme yaklaşımını inceleyin.",
   },
 };

@@ -21,9 +21,9 @@ export const trCopy: SiteCopy = {
   },
   hero: {
     badge: "Erken aşama donanım girişimi",
-    title: "Binanız depremde nasıl sallandı? Bunu ölçen bir cihaz yaptık.",
+    title: "Depremde binanızın nasıl hareket ettiğini ölçen bir cihaz geliştiriyoruz.",
     description:
-      "SismoSmart, bina hareketini ölçmek ve kaydetmek için geliştirilen lansman öncesi, duvara sabit bir cihazdır. Algılama, bildirim, bağlantı ve performans davranışı pilot doğrulamasına tabidir. Amaç, sarsıntı sonrasında nitelikli mühendise inceleyebileceği bir hareket kaydı bırakmaktır.",
+      "SismoSmart, bina hareketini ölçüp kaydetmek için geliştirdiğimiz, duvara sabitlenen bir cihaz. Henüz lansman öncesi aşamada: algılama, bildirim, bağlantı ve performans pilot çalışmalarında doğrulanacak. Amacımız, sarsıntıdan sonra nitelikli bir mühendisin inceleyebileceği bir hareket kaydı bırakmak.",
     primaryCta: "Pilot için başvur",
     secondaryCta: "Yatırımcı bilgi notu",
     tertiaryCta: "Teknolojiye bak",
@@ -37,25 +37,25 @@ export const trCopy: SiteCopy = {
       { label: "Güç hedefi", value: "30-60 sn süperkapasitör" },
     ],
     deviceEyebrow: "SismoSmart cihazı",
-    deviceTitle: "100 × 100 mm. Duvara takılıyor, prizden besleniyor.",
+    deviceTitle: "Duvara sabitlenen, prizden beslenen 100 × 100 mm'lik cihaz",
     deviceDescription:
-      "Cihazı duvara yapıştırıp prize takıyorsunuz. Uygulamadan eşleyip Wi-Fi'nizi tanımlıyorsunuz. Bundan sonrası arka planda: binanın titreşimini ölçmeye başlıyor ve normal bir günde varlığını hiç hissettirmiyor.",
+      "Cihazı duvara yapıştırıp prize takıyorsunuz, uygulamadan eşleyip Wi-Fi'nizi tanımlıyorsunuz. Sonrasında kendi başına çalışıyor: bina titreşimini ölçüyor, gündelik hayatınıza karışmıyor. Aşağıdaki özellikler henüz tasarım aşamasında.",
     deviceSpecs: [
-      "3 eksenli hareket ölçümü hedefi",
-      "Yerel olay kaydı hedefi",
-      "Cihaz verisi şifreleme hedefi",
+      "3 eksende hareket ölçümü",
+      "Olayın cihazda yerel olarak kaydı",
+      "Cihaz verisinin şifrelenmesi",
     ],
     meterTopLabel: "Algılama",
     meterTopValue: "Doğrulama bekliyor",
     meterBottomLabel: "Veri",
-    meterBottomValue: "Şifreleme hedefi",
+    meterBottomValue: "Şifreleme planlı",
     imageAlt: "SismoSmart sismik izleme cihazı, durum LED'i ile",
   },
   trust: {
     eyebrow: "Konumlandırma",
     title: "Bu cihazın yapamadığı şeyler de var.",
     description:
-      "SismoSmart henüz pilot aşamasında. Yaptığı iş, binanızda olan biteni kaydetmek ve bunu sonradan inceleyebileceğiniz bir veriye dönüştürmek. AFAD'ın uyarı sistemiyle ya da deprem sonrası mühendis incelemesiyle yarışmıyoruz. İkisi de yerinde duruyor, biz aradaki boşluğu dolduruyoruz.",
+      "SismoSmart henüz pilot aşamasında. Binanızda olanı kaydedip sonradan inceleyebileceğiniz bir veriye dönüştürmeyi amaçlıyor. AFAD'ın uyarı sistemiyle ya da deprem sonrası mühendis incelemesiyle yarışmıyoruz; ikisi de yerinde duruyor. Biz aradaki boşluğu doldurmaya çalışıyoruz.",
     items: [
       { label: "Aşama", value: "Pilot" },
       { label: "Ana iş", value: "Hareket kaydı" },
@@ -64,39 +64,39 @@ export const trCopy: SiteCopy = {
   },
   howItWorks: {
     eyebrow: "Nasıl çalışır",
-    title: "Kurulumu birkaç dakika sürüyor, sonrası tamamen arka planda.",
+    title: "Kurulum birkaç dakika sürüyor, gerisi arka planda.",
     description:
-      "Pilot kalibrasyonunda binanın normal titreşim profilini öğrenmeyi ve gündelik gürültüden farklı hareketleri ayırmayı test ediyoruz. Saha doğrulaması tamamlanana kadar yanlış veya kaçırılmış algılama mümkündür.",
+      "Pilot kalibrasyonunda binanın olağan titreşim profilini öğrenmeyi ve gündelik gürültüden farklı hareketleri ayırmayı deniyoruz. Saha doğrulaması bitene kadar yanlış ya da kaçırılmış algılama olabilir.",
     steps: [
       {
-        title: "Cihazı duvara tak",
+        title: "Cihazı duvara takın",
         description:
           "İç mekânda sabit bir duvara yapıştırıyorsunuz. Arkasında çift taraflı bant hazır geliyor, isterseniz vidayla da sabitleyebilirsiniz.",
       },
       {
-        title: "Uygulamaya bağla",
+        title: "Uygulamaya bağlayın",
         description:
           "Telefonunuzdaki SismoSmart uygulaması cihazı Bluetooth ile buluyor. Wi-Fi şifrenizi bir kez giriyorsunuz, o kadar.",
       },
       {
         title: "Binayı tanır",
         description:
-          "Pilot kalibrasyonu trafik ve rüzgâr gibi gündelik titreşimlerden bir taban çizgisi çıkarmayı hedefliyor. Yöntemin güvenilirliği saha verisiyle doğrulanmadan kesin sonuç olarak sunulmuyor.",
+          "Pilot kalibrasyonunda trafik ve rüzgâr gibi gündelik titreşimlerden bir referans çizgisi çıkarmayı deniyoruz. Yöntemi saha verisiyle doğrulanana kadar güvenilir diye sunmuyoruz.",
       },
       {
         title: "Sarsıntıda haber verir",
         description:
-          "Tasarım, cihaz üzerindeki algılama sonrasında bildirim üretebilmeyi hedefliyor. Bildirim süresi ve çoklu cihaz doğrulaması pilot doğrulamasına tabidir.",
+          "Tasarım, cihazda algılama olduktan sonra bildirim üretmeyi amaçlıyor. Bildirim süresi ve birden fazla cihazla doğrulama pilotta sınanacak.",
       },
       {
         title: "Olayı kaydeder",
         description:
-          "Tasarımda yerel olay tamponu ve bağlantı olduğunda buluta aktarım bulunuyor. Bu akışın tamamı pilot testleriyle doğrulanmadan devrede bir cihaz özelliği olarak sunulmuyor.",
+          "Tasarımda olay önce cihazda saklanıyor, bağlantı olunca buluta aktarılıyor. Bu akışın tamamını pilotta denemeden çalışan bir özellik olarak sunmuyoruz.",
       },
       {
-        title: "Birden fazla cihaz daha iyi",
+        title: "Birden fazla cihaz",
         description:
-          "Birden fazla cihazın göreli kat hareketi ve olay korelasyonu için ek kanıt sağlayabileceğini test ediyoruz. Doğruluk ve yanlış alarm etkisi pilot verisi gerektiriyor.",
+          "Birden fazla cihazın, katlar arası göreli hareket ve olay eşleştirmesi için ek kanıt sağlayıp sağlamadığını test ediyoruz. Doğruluk ve yanlış alarma etkisi için pilot verisi gerekiyor.",
       },
     ],
   },
@@ -104,19 +104,19 @@ export const trCopy: SiteCopy = {
     eyebrow: "Ne yapar",
     title: "Aslında birkaç ayrı işi aynı anda yapıyor.",
     description:
-      "Ürünü olay kaydı ve daha uzun dönemli bina hareketi verisi etrafında geliştiriyoruz. Bildirim, yapı sağlığı yorumu ve diğer cihaz özellikleri doğrulama hedefidir; garanti edilen sonuçlar değildir.",
+      "Ürünü olay kaydı ve daha uzun dönemli bina hareketi verisi etrafında geliştiriyoruz. Bildirim, yapı sağlığı yorumu ve diğer özellikler henüz doğrulanmadı; bunlar garanti edilen sonuçlar değil, üzerinde çalıştığımız hedefler.",
     items: [
       {
         accent: "01",
         title: "Sarsıntıyı algılar",
         description:
-          "Mevcut tasarım ADXL355 sınıfı MEMS sensörü ve üç eksende 250 Hz örneklemeyi hedefliyor. Algılama ve performans iddiaları için tezgâh ve pilot kanıtı gerekiyor.",
+          "Şu anki tasarım ADXL355 sınıfı bir MEMS sensörü ve üç eksende 250 Hz örnekleme kullanmayı hedefliyor. Algılama ve performans için tezgâh ve pilot kanıtı gerekiyor.",
       },
       {
         accent: "02",
         title: "Telefonunuza bildirim gönderir",
         description:
-          "Bildirim davranışı pilot doğrulaması gereken bir tasarım hedefidir. SismoSmart acil durum servisi veya resmî uyarı sistemi değildir; resmî uyarıları ve acil durum talimatlarını izleyin.",
+          "Bildirimin nasıl davranacağı pilotta doğrulanması gereken bir hedef. SismoSmart acil durum servisi veya resmî uyarı sistemi değildir; resmî uyarıları ve acil durum talimatlarını izleyin.",
       },
       {
         accent: "03",
@@ -128,19 +128,19 @@ export const trCopy: SiteCopy = {
         accent: "04",
         title: "Depremden sonra rapor üretir",
         description:
-          "Planlanan olay sonrası rapor, ölçülen hareketi nitelikli inceleme için özetlemeyi hedefliyor. Rapor alanları ve yorumlama pilot doğrulamasına tabidir.",
+          "Planlanan olay sonrası rapor, ölçülen hareketi nitelikli bir inceleme için özetlemeyi amaçlıyor. Raporun içeriği ve yorumu pilotta doğrulanacak.",
       },
       {
         accent: "05",
         title: "Sıcaklık ve nem de okur",
         description:
-          "Çevresel ölçüm, mevsimsel etkileri diğer değişimlerden ayırmaya yardımcı olması için tasarım hedefidir. Tek başına hasar tespiti yapmaz.",
+          "Ortam ölçümü, mevsim etkilerini diğer değişimlerden ayırmaya yardım etmek için tasarlanıyor. Tek başına hasar tespiti yapmaz.",
       },
       {
         accent: "06",
-        title: "Birlikte daha güçlü",
+        title: "Cihazlar arası eşleştirme",
         description:
-          "Çoklu cihaz korelasyonu bir tasarım hedefidir. Doğrulama süresi ve yanlış alarm üzerindeki etkisi henüz pilot kanıtıyla gösterilmedi.",
+          "Birden fazla cihazı birbiriyle eşleştirmek bir tasarım hedefi. Doğrulama süresine ve yanlış alarma etkisi henüz pilot kanıtıyla gösterilmedi.",
       },
     ],
   },
@@ -148,7 +148,7 @@ export const trCopy: SiteCopy = {
     eyebrow: "Veri akışı",
     title: "Ölçüm cihazda başlıyor, telefonunuzda bitiyor.",
     description:
-      "Mevcut tasarım ölçümü cihazda başlatıyor ve bağlantı olduğunda veriyi güvenli biçimde aktarmayı hedefliyor. Cihaz güvenliği, raporlama ve uzun dönem eğilim ekranları pilot doğrulaması bekliyor.",
+      "Tasarımda ölçüm cihazda yapılıyor, bağlantı olduğunda veri güvenli biçimde aktarılacak. Cihaz güvenliği, raporlama ve uzun dönem eğilim ekranları pilotta doğrulanacak.",
     previewLabel: "Bina kaydı",
     networkLabel: "Mahalle ağı",
     sensorLabel: "Cihaz",
@@ -156,9 +156,9 @@ export const trCopy: SiteCopy = {
     eventLabel: "Son olay",
     eventValue: "Kayıtlı, incelenebilir",
     bullets: [
-      "Mevcut tasarım ADXL355 sınıfı sensör, üç eksende 250 Hz örnekleme ve belgelenmiş bir gürültü hedefi kullanıyor; nihai performans için dondurulmuş BOM ve tezgâh ölçümü gerekiyor.",
+      "Şu anki tasarım ADXL355 sınıfı bir sensör, üç eksende 250 Hz örnekleme ve belgelenmiş bir gürültü hedefi içeriyor; nihai performans için dondurulmuş malzeme listesi (BOM) ve tezgâh ölçümü gerekiyor.",
       "Binanızın titreşim verisini görmek için kişisel bilgi paylaşmanız gerekmiyor.",
-      "Cihaz mühendisin yerine karar vermiyor, mühendise daha iyi veri veriyor.",
+      "Cihaz karar vermez; mühendisin inceleyeceği veriyi toplar.",
     ],
     cta: "Teknolojiye bak",
     ctaHref: "/technology",
@@ -193,7 +193,7 @@ export const trCopy: SiteCopy = {
     eyebrow: "SSS",
     title: "Sık sorulanlar",
     description:
-      "Aklınıza takılan buradaysa cevabı da burada. Değilse info@sismosmart.com adresine yazın, cevaplayalım. Soruların tamamı SSS sayfasında.",
+      "Sorunuz burada yoksa info@sismosmart.com adresine yazın, yanıtlarız. Tüm sorular SSS sayfasında.",
     items: [
       {
         title: "Bu cihaz beni depremden önce uyarır mı?",
@@ -203,22 +203,22 @@ export const trCopy: SiteCopy = {
       {
         title: "Google'ın deprem uyarısından farkı ne?",
         description:
-          "Google telefonların ivmeölçerini kullanıyor. Ücretsiz, herkeste var ve iyi de çalışıyor. Ama ölçtüğü şey depremin kaynağı, sizin binanız değil. Biz tam tersini yapıyoruz: binanız nasıl titreşiyor, mevsimle nasıl değişiyor, depremden sonra hangi durumda. Bu soruların cevabı telefondan çıkmaz.",
+          "Google telefonların ivmeölçerini kullanıyor. Ücretsiz, herkeste var ve iyi de çalışıyor. Ama ölçtüğü şey depremin kaynağı, sizin binanız değil. Biz binanızı ölçüyoruz: nasıl titreşiyor, mevsimle nasıl değişiyor, depremden sonra hangi durumda. Bu soruların cevabı telefondan çıkmaz.",
       },
       {
         title: "Tek cihaz binamın güvenli olduğunu söyleyebilir mi?",
         description:
-          "Söyleyemez. Bir binaya güvenli ya da güvensiz diyecek olan mühendistir, cihaz değil. Cihazın yaptığı şey, mühendise elle tutulur bir veri bırakmak.",
+          "Söyleyemez. Bir binanın güvenli olup olmadığına mühendis karar verir. Cihaz, mühendisin dayanabileceği somut bir veri bırakır.",
       },
       {
         title: "Kurulumu zor mu?",
         description:
-          "USB-C kabloyu prize takıyorsunuz, cihazı arkasındaki bantla duvara yapıştırıyorsunuz, uygulamadan eşliyorsunuz. Matkap ya da teknisyen gerekmiyor, beş dakikada bitiyor.",
+          "USB-C kabloyu prize takıyor, cihazı arkasındaki bantla duvara yapıştırıyor, sonra uygulamadan eşliyorsunuz. Matkap ya da teknisyen gerekmiyor; kurulum birkaç dakika sürüyor.",
       },
       {
         title: "Elektrik veya internet kesilirse ne olur?",
         description:
-          "Mevcut tasarım, internet kesintisinde yerel tamponlama ve elektrik kesintisinde kısa süreli süperkapasitör köprüsü hedefliyor. Kesin süre ve uçtan uca aktarım davranışı donanım ve pilot doğrulamasına tabidir.",
+          "Mevcut tasarım, internet kesintisinde yerel tamponlama ve elektrik kesintisinde kısa süreli süperkapasitör köprüsü hedefliyor. Kesin süre ve uçtan uca aktarım davranışı donanım ve pilot testlerinde doğrulanacak.",
       },
       {
         title: "Ne zaman satışa çıkıyor?",

@@ -6,68 +6,68 @@ export const memsAccelerometersSeismicMonitoringTr: GuideContent = {
   slug: "mems-ivmeolcer-sismik-izleme",
   title: "MEMS İvmeölçerler ile Sismik İzleme: Temel Kavramlar",
   description:
-    "MEMS ivmeölçerlerin sismik izlemede nasıl çalıştığını, çözünürlük, aralık, gürültü, örnekleme ve zamanlama dahil olmak üzere öğrenin.",
+    "MEMS ivmeölçerlerin sismik izlemede nasıl çalıştığını; çözünürlük, ölçüm aralığı, gürültü, örnekleme ve zamanlama başlıklarıyla öğrenin.",
   eyebrow: "Rehberler",
   h1: "MEMS İvmeölçerler ile Sismik İzleme: Temel Kavramlar",
   summary:
-    "MEMS ivmeölçerler, silikon çip üzerindeki mikroskobik bir mekanik yapı kullanarak ivmelenmeyi ölçen kompakt ve düşük maliyetli sensörlerdir. Aralık, gürültü zemin değeri, örnekleme hızı, zamanlama doğruluğu, montaj ve kalibrasyon ölçüm hedefine uygun olduğunda sismik ve yapısal izleme için destekleyici olabilirler. Düşük maliyet tek başına mühendislik kalitesinde veri garantisi vermez. Çözünürlük, dinamik aralık ve gürültü arasındaki fedakarlıkları anlamak, bir MEMS tabanlı cihazın belirli bir uygulama için uygun olup olmadığını değerlendirmeye yardımcı olur.",
+    "MEMS ivmeölçerler, silikon çip üzerindeki mikroskobik bir mekanik yapıyla ivmeyi ölçen, küçük ve düşük maliyetli sensörlerdir. Ölçüm aralığı, gürültü zemini, örnekleme hızı, zamanlama doğruluğu, montaj ve kalibrasyon ölçüm hedefine uygunsa sismik ve yapısal izlemeye destek olabilirler. Düşük maliyet tek başına mühendislik kalitesinde veri sağlamaz. Çözünürlük, dinamik aralık ve gürültü arasındaki ödünleşimleri anlamak, bir MEMS cihazının belirli bir uygulamaya uyup uymadığını değerlendirmeye yardımcı olur.",
   keyTakeaways: [
-    "MEMS cihazları, aralık, gürültü, örnekleme ve zamanlama hedefe uygun olduğunda yapısal ve güçlü hareket uygulamalarını destekleyebilir.",
-    "Düşük maliyet tek başına mühendislik kalitesinde veri garantisi vermez; tam spesifikasyon önemlidir.",
-    "Çözünürlük, aralık, gürültü zemin değeri ve kalibrasyon birlikte değerlendirilmelidir.",
+    "Ölçüm aralığı, gürültü, örnekleme ve zamanlama hedefe uygunsa MEMS cihazları yapısal izlemeyi ve güçlü hareket uygulamalarını destekleyebilir.",
+    "Düşük maliyet tek başına mühendislik kalitesinde veri sağlamaz; tam teknik şartname önemlidir.",
+    "Çözünürlük, ölçüm aralığı, gürültü zemini ve kalibrasyon birlikte değerlendirilmelidir.",
   ],
   sections: [
     {
       heading: "Doğrudan cevap",
       paragraphs: [
-        "MEMS ivmeölçerler, silikon substrat üzerinde süspansiyonlu küçük bir kanıt kütlesi kullanır. Sensör hareket ettiğinde kanıt kütlesi yer değiştirir ve bu değişim elektriksel olarak ölçülür. Bu ilke, ivmelenmeye orantılı bir voltaj veya dijital sinyal üretir. MEMS teknolojisi, binalarda, köprülerde ve diğer yapılarda konuşlandırılabilecek küçük ve uygun maliyetli sensörleri mümkün kılar.",
+        "MEMS ivmeölçerler, silikon bir tabana asılı küçük bir kanıt kütlesi kullanır. Sensör hareket ettiğinde kütle yer değiştirir ve bu değişim elektriksel olarak ölçülür. Sonuçta ivmeyle orantılı bir gerilim ya da dijital sinyal elde edilir. MEMS teknolojisi sayesinde bina, köprü ve benzeri yapılara yerleştirilebilecek küçük ve uygun maliyetli sensörler yapmak mümkün olur.",
       ],
     },
     {
       heading: "MEMS ivme ölçümü nasıl çalışır",
       paragraphs: [
-        "MEMS elemanının içinde, kanıt kütlesi silikon substrat üzerindeki küçük elektrotlarla süspansiyona alınmıştır. İvme, kütlenin substrata göre hareket etmesine neden olur ve bu da elektrotlar arasındaki kapasitansı değiştirir. Bu kapasitans değişimi kalibre edilmiş bir ivme okumasına dönüştürülür. Üç eksenli yapı, dikey ve iki yatay yönde eş zamanlı ölçüm sağlar.",
+        "MEMS elemanının içinde kanıt kütlesi, silikon tabandaki küçük elektrotlara bağlı olarak asılıdır. İvme kütlenin tabana göre kaymasına yol açar, bu da elektrotlar arasındaki kapasitansı değiştirir. Kapasitanstaki değişim, kalibre edilmiş bir ivme okumasına dönüştürülür. Üç eksenli yapı sayesinde dikey ve iki yatay yön aynı anda ölçülür.",
       ],
     },
     {
-      heading: "Çözünürlük, aralık ve gürültü",
+      heading: "Çözünürlük, ölçüm aralığı ve gürültü",
       paragraphs: [
-        "Çözünürlük, sensörün algılayabileceği en küçük ivme değişimini tanımlar. Aralık, doyuma ulaşmadan önce ölçebileceği maksimum ivmeyi belirler. Gürültü zemin değeri, arka plan elektriksel gürültüsünün üzerine çıkabilen en küçük sinyali belirler. Güçlü hareket uygulamaları için aralık, yüksek ivme seviyelerini kırpılma olmadan karşılamalıdır. Çevresel titreşim izleme için düşük gürültü zemin değeri daha önemlidir.",
+        "Çözünürlük, sensörün algılayabildiği en küçük ivme değişimidir. Ölçüm aralığı, sensörün doyuma ulaşmadan ölçebileceği en büyük ivmedir. Gürültü zemini ise arka plandaki elektriksel gürültünün üzerine çıkabilen en küçük sinyali belirler. Güçlü hareket uygulamalarında aralığın, yüksek ivmeleri kırpılma olmadan karşılaması gerekir. Çevresel titreşim izlemede ise düşük gürültü zemini daha önemlidir.",
       ],
       bullets: [
-        "Güçlü hareket izlemesi için artı eksi birkaç g aralığı tipiktir.",
-        "Mikro-g aralığındaki gürültü zemin değeri çevresel titreşim çalışmalarını destekler.",
-        "Çözünürlük ve aralık dengelenmelidir; birini artırmak diğerini azaltabilir.",
+        "Güçlü hareket izleme için ±birkaç g aralığı tipiktir.",
+        "Mikro-g düzeyindeki gürültü zemini, çevresel titreşim çalışmalarına destek olur.",
+        "Çözünürlük ile ölçüm aralığı dengelenmelidir; birini artırmak diğerini azaltabilir.",
       ],
     },
     {
       heading: "Örnekleme ve zamanlama",
       paragraphs: [
-        "MEMS ivmeölçerler saniyede onlarca ila yüzlerce örnekleme yapar. Daha yüksek örnekleme hızları daha yüksek frekanslı hareketi yakalar. Zamanlama doğruluğu, birden fazla sensörden veri birleştirilirken veya kayıtlar harici sismik verilerle karşılaştırılırken önemlidir. Saat kayması ve senkronizasyon hataları, analizi karmaşık hale getirebilecek zaman farkları üretebilir.",
+        "MEMS ivmeölçerler saniyede onlarca ya da yüzlerce örnek alır. Örnekleme hızı yükseldikçe daha yüksek frekanslı hareket yakalanır. Birden fazla sensörün verisi birleştirilirken ya da kayıtlar dış sismik verilerle karşılaştırılırken zamanlama doğruluğu önem kazanır. Saat kayması ve senkronizasyon hataları zaman farkları yaratır; bu da analizi zorlaştırabilir.",
       ],
     },
     {
       heading: "Düşük maliyetli ölçümden yararlı veriye",
       paragraphs: [
-        "Düşük maliyetli bir MEMS sensörü, doğru şekilde monte edildiğinde, kalibre edildiğinde ve güvenilir zamanlamayla eşleştirildiğinde yararlı veri üretebilir. Ham sensör çıktısından mühendislik düzeyinde bilgiye giden yol, kurulum kalitesine, doğrulamaya ve bilinen referanslara karşı kalibrasyona dikkat gerektirir. Bu adımlar olmadan, yetenekli bir sensör bile yorumlaması zor sonuçlar üretebilir.",
+        "Düşük maliyetli bir MEMS sensörü doğru monte edilir, kalibre edilir ve güvenilir bir zamanlamayla eşleştirilirse yararlı veri üretebilir. Ham sensör çıktısından mühendislik düzeyinde bilgiye varmak için kurulum kalitesine, doğrulamaya ve bilinen referanslara göre kalibrasyona özen gerekir. Bu adımlar olmadan yetkin bir sensör bile yorumlaması zor sonuçlar verebilir.",
       ],
     },
     {
       heading: "Sınırlamalar",
       paragraphs: [
-        "MEMS sensörleri, araştırma sınıfı enstrümanlara kıyasla sınırlılıklara sahiptir. Daha yüksek gürültü zeminleri, daha dar bant genişliği veya daha az hassas zamanlama içerebilirler. Sıcaklık gibi çevresel faktörler okumaları etkileyebilir. Dikkatli spesifikasyon seçimi ve montaj uygulamaları yardımcı olur ancak bu içsel farklılıkları ortadan kaldırmaz.",
+        "MEMS sensörlerin, araştırma sınıfı cihazlara göre sınırları vardır. Gürültü zeminleri daha yüksek, bant genişlikleri daha dar ya da zamanlamaları daha az hassas olabilir. Sıcaklık gibi çevresel etkenler okumaları değiştirebilir. Teknik şartnamenin dikkatle seçilmesi ve doğru montaj bu farkları azaltır, ama tamamen ortadan kaldırmaz.",
       ],
     },
   ],
   limitations: [
-    "MEMS sensörleri genellikle araştırma düzeyindeki enstrümanlardan daha yüksek gürültü zeminlerine sahiptir.",
-    "Sıcaklık ve çevresel koşullar MEMS sensör çıkışını etkileyebilir.",
-    "Zamanlama doğruluğu, özellikle çok sensörlü dizilerde dikkatli senkronizasyon gerektirir.",
-    "Yararlı mühendislik verisi elde etmek için uygun kalibrasyon ve montaj uygulamaları gereklidir.",
+    "MEMS sensörlerin gürültü zemini genellikle araştırma düzeyindeki cihazlardan yüksektir.",
+    "Sıcaklık ve çevre koşulları MEMS sensör çıkışını etkileyebilir.",
+    "Zamanlama doğruluğu, özellikle çok sensörlü düzenlerde dikkatli senkronizasyon ister.",
+    "Yararlı mühendislik verisi için doğru kalibrasyon ve montaj uygulamaları gerekir.",
   ],
   sismosmartFit: [
-    "SismoSmart, aralık, gürültü ve örnekleme için hedef spesifikasyonlarla üç eksenli MEMS ivmeölçerler etrafında tasarlanmış bir ön lansman sistemidir.",
-    "Bu tasarım hedefleri, pilot doğrulama seçilen MEMS bileşenlerinin yerleşik binalarda gerçek dünya izleme gereksinimlerini karşıladığını onaylayana kadar tasarım hedefi olarak kalır.",
+    "SismoSmart, ölçüm aralığı, gürültü ve örnekleme için hedef değerler belirlenmiş üç eksenli MEMS ivmeölçerler etrafında tasarlanan, lansman öncesi bir sistemdir.",
+    "Bu tasarım hedefleri, pilot doğrulama seçilen MEMS bileşenlerinin gerçek binalarda izleme gereksinimlerini karşıladığını göstermedikçe tasarım hedefi olarak kalır.",
   ],
   references: [
     {
@@ -95,10 +95,10 @@ export const memsAccelerometersSeismicMonitoringTr: GuideContent = {
   publishedAt: "2026-07-26",
   updatedAt: "2026-07-26",
   safetyNotice:
-    "MEMS ivmeölçer verisi binanın güvenli olduğunu belirlemez. Sonuçlar yetkili bir mühendis tarafından yorumlanmalıdır.",
+    "MEMS ivmeölçer verisi binanın güvenli olduğunu belirlemez. Sonuçları yetkili bir mühendis yorumlamalıdır.",
   cta: {
     label: "SismoSmart hakkında bilgi alın",
     href: "/product",
-    description: "SismoSmart MEMS tabanlı izleme yaklaşımını inceleyin.",
+    description: "SismoSmart'ın MEMS tabanlı izleme yaklaşımını inceleyin.",
   },
 };

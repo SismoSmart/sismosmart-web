@@ -19,7 +19,7 @@ export const idCopy: SiteCopy = {
   },
   hero: {
     badge: "Startup hardware tahap awal",
-    title: "Bagaimana bangunan Anda bergoyang saat gempa? Kami membuat perangkat yang mengukurnya.",
+    title: "Kami sedang mengembangkan perangkat yang mengukur bagaimana bangunan Anda bergerak saat gempa.",
     description:
       "SismoSmart adalah perangkat dinding pra-peluncuran yang dirancang untuk mengukur dan merekam gerakan bangunan. Deteksi, notifikasi, konektivitas, dan kinerja masih menunggu validasi pilot.",
     primaryCta: "Daftar pilot",
@@ -35,14 +35,14 @@ export const idCopy: SiteCopy = {
       { label: "Target daya", value: "30-60 dtk superkapasitor" },
     ],
     deviceEyebrow: "Perangkat SismoSmart",
-    deviceTitle: "100 × 100 mm. Ditempel di dinding, ditenagai dari stopkontak.",
+    deviceTitle: "Perangkat 100 × 100 mm yang ditempel di dinding dan ditenagai dari stopkontak",
     deviceDescription:
-      "Anda menempelkannya ke dinding lalu mencolokkannya. Pasangkan lewat aplikasi dan berikan Wi-Fi Anda. Setelah itu semuanya berjalan di belakang layar: ia mulai mengukur getaran bangunan dan pada hari biasa Anda tidak akan menyadarinya.",
-    deviceSpecs: ["Target sensor gerak tiga sumbu", "Target rekaman lokal kejadian", "Target enkripsi data perangkat"],
+      "Anda menempelkannya ke dinding, mencolokkannya, memasangkannya lewat aplikasi, lalu memberinya Wi-Fi. Setelah itu ia bekerja sendiri: mengukur getaran bangunan tanpa mengganggu keseharian Anda. Fitur di bawah ini masih dalam tahap desain.",
+    deviceSpecs: ["Pengukuran gerak tiga sumbu", "Perekaman kejadian secara lokal di perangkat", "Enkripsi data perangkat"],
     meterTopLabel: "Deteksi",
-    meterTopValue: "Di perangkat",
+    meterTopValue: "Menunggu validasi",
     meterBottomLabel: "Data",
-    meterBottomValue: "Terenkripsi",
+    meterBottomValue: "Enkripsi direncanakan",
     imageAlt: "Perangkat pemantauan seismik SismoSmart dengan LED status",
   },
   trust: {
@@ -64,10 +64,10 @@ export const idCopy: SiteCopy = {
     steps: [
       { title: "Pasang di dinding", description: "Pilih dinding dalam ruangan yang stabil. Perekatnya sudah terpasang, dan ada lubang sekrup kalau Anda ingin memasangnya lebih kokoh." },
       { title: "Pasangkan dari aplikasi", description: "Aplikasi menemukan perangkat lewat Bluetooth. Anda memasukkan sandi Wi-Fi satu kali saja, selesai." },
-      { title: "Ia mempelajari bangunan", description: "Selama beberapa hari perangkat mendengarkan getaran normal. Ia belajar apa yang terjadi saat truk lewat dan saat angin kencang. Ia baru bisa mengenali yang tidak normal setelah tahu yang normal." },
-      { title: "Menguji notifikasi saat guncangan", description: "Desain dapat mengirim notifikasi setelah deteksi lokal. Waktu notifikasi dan logika konfirmasi antarperangkat masih menunggu validasi pilot." },
-      { title: "Merekam kejadiannya", description: "Data mentah saat dan sesudah guncangan disimpan di perangkat sekaligus dikirim ke cloud. Dari rekaman itu insinyur bisa membaca bagaimana bangunan merespons." },
-      { title: "Lebih banyak perangkat, lebih baik", description: "Dengan beberapa perangkat di satu gedung, terlihat bagaimana tiap lantai bergerak relatif satu sama lain. Dengan beberapa perangkat di satu lingkungan, peluang alarm palsu menurun." },
+      { title: "Ia mempelajari bangunan", description: "Kalibrasi pilot ditujukan untuk membangun garis dasar dari getaran sehari-hari seperti lalu lintas dan angin. Metodenya masih memerlukan bukti lapangan sebelum dapat disebut andal." },
+      { title: "Memberi notifikasi saat guncangan dimulai", description: "Desain dapat mengirim notifikasi setelah deteksi lokal. Waktu notifikasi dan logika konfirmasi antarperangkat masih menunggu validasi pilot." },
+      { title: "Merekam kejadiannya", description: "Desainnya mencakup penyimpanan kejadian secara lokal dan unggahan ke cloud saat koneksi tersedia. Alur lengkapnya harus divalidasi lewat pilot sebelum diperlakukan sebagai kemampuan perangkat yang sudah berjalan." },
+      { title: "Lebih banyak perangkat, lebih baik", description: "Beberapa perangkat dapat memberi bukti yang berguna tentang gerakan relatif antarlantai dan korelasi kejadian. Akurasi dan pengaruhnya terhadap alarm palsu masih perlu validasi pilot." },
     ],
   },
   features: {
@@ -79,8 +79,8 @@ export const idCopy: SiteCopy = {
       { accent: "01", title: "Target deteksi", description: "Desain saat ini menargetkan sensor MEMS kelas ADXL355 dan sampling tiga sumbu 250 Hz. Klaim deteksi dan kinerja memerlukan bukti uji meja dan pilot." },
       { accent: "02", title: "Target notifikasi", description: "Perilaku notifikasi masih merupakan target validasi pilot. SismoSmart bukan layanan darurat atau sistem peringatan resmi; ikuti peringatan resmi." },
       { accent: "03", title: "Bukti struktural", description: "Perubahan karakteristik getaran yang terukur dapat memberi bukti tambahan kepada insinyur. Ini bukan diagnosis dan tidak menentukan apakah bangunan aman." },
-      { accent: "04", title: "Membuat laporan setelah gempa", description: "Percepatan puncak, durasi, dan respons bangunan Anda berakhir dalam satu laporan. Insinyur sudah punya titik awal sebelum tiba di lokasi." },
-      { accent: "05", title: "Membaca suhu dan kelembapan", description: "Perilaku bangunan tidak sama antara musim hujan dan musim kemarau. Tanpa data lingkungan, pergeseran musiman itu tidak bisa dipisahkan dari kerusakan nyata." },
+      { accent: "04", title: "Membuat laporan setelah gempa", description: "Laporan pascakejadian yang direncanakan bertujuan merangkum gerakan terukur untuk tinjauan oleh tenaga ahli. Isi laporan dan interpretasinya masih menunggu validasi pilot." },
+      { accent: "05", title: "Membaca suhu dan kelembapan", description: "Pengukuran lingkungan adalah target desain untuk membantu memisahkan efek musiman dari perubahan lain. Dengan sendirinya ini tidak mengidentifikasi kerusakan." },
       { accent: "06", title: "Korelasi antarperangkat", description: "Korelasi beberapa perangkat adalah target desain. Dampaknya pada waktu konfirmasi dan alarm palsu belum dibuktikan lewat pilot." },
     ],
   },
@@ -96,7 +96,7 @@ export const idCopy: SiteCopy = {
     eventLabel: "Kejadian terakhir",
     eventValue: "Terekam, bisa ditinjau",
     bullets: [
-      "Desain saat ini menargetkan sensor kelas ADXL355, sampling tiga sumbu 250 Hz, dan sasaran kebisingan yang terdokumentasi; kinerja akhir menunggu BOM tetap dan pengujian meja.",
+      "Desain saat ini menargetkan sensor kelas ADXL355, sampling tiga sumbu 250 Hz, dan sasaran kebisingan yang terdokumentasi; kinerja akhir menunggu daftar komponen (BOM) yang dibekukan dan pengujian meja.",
       "Anda bisa melihat data getaran bangunan tanpa menyerahkan informasi pribadi.",
       "Perangkat tidak mengambil keputusan menggantikan insinyur. Ia memberi insinyur data yang lebih baik.",
     ],

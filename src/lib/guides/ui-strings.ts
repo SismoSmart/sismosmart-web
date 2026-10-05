@@ -59,7 +59,7 @@ const uiStringsByLocale: Record<GuideLocale, GuideUiStrings> = {
     faq: "SSS",
     glossary: "Sözlük",
     pilotProgram: "Pilot program",
-    breadcrumb: "Ekmek kırıntıları",
+    breadcrumb: "Sayfa yolu",
     safetyNotice: "Güvenlik notu",
   },
 };

@@ -70,13 +70,13 @@ export const idPages: BaseRoutePagesCopy = {
     ],
   },
   about: {
-    meta: { title: "Tentang", description: "Siapa yang membuat SismoSmart dan mengapa. Tim, sudut pandang, dan arah kami." },
+    meta: { title: "Tentang", description: "Siapa yang membuat SismoSmart dan mengapa. Tim dan sudut pandang kami setelah gempa 2023." },
     eyebrow: "Tentang",
     title: "Kami tinggal di Türkiye. Kami ingin bangunan kami sehat.",
-    description: "Kami berkumpul setelah gempa Kahramanmaraş 2023 dan İstanbul 2026. Kami ingin tahu bagaimana rumah dan kota kami merespons gempa. Jadi kami membuat perangkat ini.",
+    description: "Kami berkumpul setelah gempa Kahramanmaraş 2023 dan getaran terbaru di sekitar İstanbul. Kami ingin tahu bagaimana rumah dan kota kami merespons gempa. Jadi kami membuat perangkat ini.",
     story: [
       "Setelah gempa besar di Türkiye, pemeriksaan bangunan bisa memakan minggu atau bulan. Selama itu, keluarga tidak tahu apakah mereka bisa pulang.",
-      "Kami tidak menghapus masa tunggu itu sepenuhnya. Pada akhirnya, insinyur harus datang. Namun sebelum itu, kami ingin lapisan data yang menandai bangunan yang tampak baik atau harus diprioritaskan.",
+      "Kami tidak menghapus masa tunggu itu sepenuhnya. Pada akhirnya, insinyur harus masuk ke bangunan. Namun sebelum ia tiba, dapat ada lapisan data yang menunjukkan bangunan mana yang perlu diperiksa lebih dulu. Itulah yang sedang kami kerjakan.",
       "Tim kami punya penasihat akademik teknik sipil, dua peneliti MSc teknik sipil, dan pendiri di embedded dan software. Kami semua berbasis di Türkiye. Kami menguji perangkat di rumah sendiri.",
     ],
     principles: [

@@ -6,57 +6,57 @@ export const measuringBuildingMotionAfterEarthquakeTr: GuideContent = {
   slug: "deprem-sonrasi-bina-hareketi-olcumu",
   title: "Deprem Sonrası Bina Hareketi Ölçümü: Kayıttan İncelemeye",
   description:
-    "Deprem sonrası bina hareketinin nasıl ölçüldüğünü, ivme ve zaman serisi verisinin ne anlama geldiğini ve sonuçların mühendis incelemesini nasıl desteklediğini öğrenin.",
+    "Deprem sonrasında bina hareketinin nasıl ölçüldüğünü, ivme ve zaman serisi verisinin ne anlattığını ve sonuçların mühendis incelemesine nasıl destek olduğunu öğrenin.",
   eyebrow: "Rehberler",
   h1: "Deprem Sonrası Bina Hareketi Ölçümü: Kayıttan İncelemeye",
   summary:
-    "Deprem sonrasında sabit sensör veya taşınabilir ivmeölçer, yapının olay sırasında nasıl hareket ettiğini ölçebilir. Elde edilen kayıt, bilinen bir konumda ivmelenmenin zamana göre değişimini göstererek mühendislerin tepe değerleri, frekans içeriğini ve sarsıntı süresini belirlemesini sağlar. Bu ölçümler, inceleme önceliklendirme kararlarını destekler ancak yapının durumunu değil, tepkisini tanımlar. Tek başına bir kayıt, binanın güvenli veya hasarlı olduğunu doğrulamaz ve yorumlama, bina tipi, saha koşulları ve depremin özellikleriyle ilişkilidir.",
+    "Sabit bir sensör ya da taşınabilir bir ivmeölçer, yapının deprem sırasında nasıl hareket ettiğini ölçebilir. Ortaya çıkan kayıt, bilinen bir noktada ivmenin zamanla nasıl değiştiğini gösterir; mühendisler bundan tepe değerleri, frekans içeriğini ve sarsıntının süresini çıkarır. Bu ölçümler inceleme önceliğini belirlemeye yardımcı olur, ama yapının durumunu değil tepkisini anlatır. Tek bir kayıt binanın güvenli ya da hasarlı olduğunu kanıtlamaz; yorum ise bina tipine, zemin koşullarına ve depremin özelliklerine bağlıdır.",
   keyTakeaways: [
-    "Olay sonrası kayıtlar belirli bir konumda ölçülen hareketi tanımlar, yapının yapısal durumunu değil.",
-    "İvme ve zaman serisi verileri tepe değerleri, frekans içeriğini ve sarsıntı süresini gösterir.",
-    "Veriler profesyonel incelemenin önceliklendirilmesini destekler ancak onun yerini almaz.",
+    "Deprem sonrası kayıtlar belirli bir noktada ölçülen hareketi anlatır, yapının durumunu değil.",
+    "İvme ve zaman serisi verisi tepe değerleri, frekans içeriğini ve sarsıntının süresini gösterir.",
+    "Veri, uzman incelemesinin önceliklendirilmesine destek olur; incelemenin yerini tutmaz.",
   ],
   sections: [
     {
       heading: "Doğrudan cevap",
       paragraphs: [
-        "Deprem sonrası bina hareketini ölçmek, yapı içindeki bir veya daha fazla noktada ivmelenme ve yer değiştirmeyi kaydetmek demektir. Elde edilen veri, yapının olay sırasında ne kadar şiddetli ve ne kadar süre hareket ettiğinin bir resmini oluşturur. Bu bilgi, mühendislerin yapının maruz kaldığı kuvvetleri anlamasına ve daha fazla araştırmanın uygun olup olmadığına karar vermesine yardımcı olur.",
+        "Deprem sonrasında bina hareketini ölçmek, yapının bir ya da birkaç noktasında ivmeyi ve yer değiştirmeyi kaydetmek demektir. Bu veri, yapının olay sırasında ne kadar şiddetli ve ne kadar süre hareket ettiğine dair bir fikir verir. Mühendisler de yapının hangi kuvvetlere maruz kaldığını anlamak ve daha ayrıntılı bir araştırmanın gerekip gerekmediğine karar vermek için bu bilgiden yararlanır.",
       ],
     },
     {
       heading: "İvme ve zaman serisi",
       paragraphs: [
-        "Bir ivmeölçer, saniyede birçok kez örnekleme yaparak ivme değerlerinin bir zaman serisini üretir. Bu kayıttan analistler tepe ivmeyi, hareketin frekans içeriğini ve önemli sarsıntının süresini çıkarır. Bu özellikler, olayın binanın konumundaki şiddetini tanımlamaya yardımcı olur.",
+        "İvmeölçer saniyede birçok kez örnek alarak ivme değerlerinden bir zaman serisi oluşturur. Analistler bu kayıttan tepe ivmeyi, hareketin frekans içeriğini ve önemli sarsıntının süresini çıkarır. Bu özellikler, olayın binanın bulunduğu noktada ne kadar şiddetli olduğunu anlatmaya yardımcı olur.",
       ],
     },
     {
       heading: "Konumları karşılaştırma",
       paragraphs: [
-        "Birden fazla kata sensör yerleştirildiğinde, veri hareketin yapı boyunca nasıl değiştiğini ortaya koyar. Alt katlar genellikle zemin hareketini daha yakından takip ederken, üst katlar belirli frekansları güçlendirebilir. Seviyeler arası okumaları karşılaştırmak, mühendislerin yapının tüm bir sistem olarak nasıl tepki verdiğini anlamasına yardımcı olur.",
+        "Birden fazla kata sensör yerleştirildiğinde veri, hareketin yapı boyunca nasıl değiştiğini gösterir. Alt katlar çoğunlukla zemin hareketini daha yakından izler; üst katlar ise bazı frekansları güçlendirebilir. Katlar arasındaki okumaları karşılaştırmak, mühendislerin yapının bütün olarak nasıl tepki verdiğini anlamasına yardımcı olur.",
       ],
     },
     {
       heading: "Kayıttan mühendis incelemesine",
       paragraphs: [
-        "Ham ivme verisi, analizin başlangıç noktasıdır, sonucu değil. Yetkili bir yapı mühendisi, ölçümleri binanın tasarımı, inşaatı, yaşı ve bilinen kusurlarıyla ilgili bilgilerle birlikte değerlendirir. Sensör verisi ve mühendislik değerlendirmesinin birleşimi, her birinin tek başına sağlayacağından daha eksiksiz bir resim üretir.",
+        "Ham ivme verisi analizin başlangıcıdır, sonucu değildir. Yetkili bir yapı mühendisi ölçümleri binanın tasarımı, yapım biçimi, yaşı ve bilinen kusurlarıyla birlikte değerlendirir. Sensör verisi ile mühendislik değerlendirmesi bir araya geldiğinde, ikisinin tek başına verebileceğinden daha eksiksiz bir tablo çıkar.",
       ],
     },
     {
       heading: "Sınırlamalar",
       paragraphs: [
-        "Hareket kayıtları, belirli bir olay sırasında ne olduğunu tanımlar, binanın uzun vadeli durumunu değil. Sıcaklık, rüzgar ve ekipman titreşimi gibi çevresel faktörler okumaları etkileyebilir. Bir kattaki tek bir sensör, çok katlı bir yapının tüm tepkisini yakalayamaz ve veri yorumlaması profesyonel uzmanlık gerektirir.",
+        "Hareket kayıtları belirli bir olay sırasında ne olduğunu anlatır; binanın uzun vadeli durumunu anlatmaz. Sıcaklık, rüzgâr ve ekipman titreşimi gibi etkenler okumaları değiştirebilir. Bir kattaki tek sensör, çok katlı bir yapının tepkisinin tamamını yakalayamaz. Verinin yorumlanması da uzmanlık gerektirir.",
       ],
     },
   ],
   limitations: [
-    "Ölçülen hareket, belirli olay ve sensör konumunu yansıtır, genel bina durumunu değil.",
-    "Sıcaklık, rüzgar ve ekipman titreşimi gibi çevresel faktörler okumaları etkileyebilir.",
-    "Tek bir sensör, çok katlı bir yapının tam tepkisini yakalayamaz.",
-    "Yorumlama, binanın bilgisiyle birlikte profesyonel mühendislik uzmanlığı gerektirir.",
+    "Ölçülen hareket, belirli olayı ve sensörün bulunduğu noktayı yansıtır; binanın genel durumunu yansıtmaz.",
+    "Sıcaklık, rüzgâr ve ekipman titreşimi gibi etkenler okumaları etkileyebilir.",
+    "Tek bir sensör, çok katlı bir yapının tepkisini bütünüyle yakalayamaz.",
+    "Yorumlama için bina hakkında bilgi ve uzman mühendislik değerlendirmesi gerekir.",
   ],
   sismosmartFit: [
-    "SismoSmart, binadaki sabit noktalarda zaman damgalı verilerle üç eksenli ivmelenme kaydetmeyi hedefleyen bir ön lansman sistemidir.",
-    "Bu yetenekler, pilot doğrulama gerçek bina koşullarında gerçek dünya performansını onaylayana kadar tasarım hedefidir.",
+    "SismoSmart, binadaki sabit noktalarda zaman damgalı veriyle üç eksenli ivme kaydetmeyi hedefleyen, lansman öncesi bir sistemdir.",
+    "Bu yetenekler, pilot doğrulama gerçek bina koşullarında başarımı göstermedikçe tasarım hedefidir.",
   ],
   references: [
     {
@@ -84,10 +84,10 @@ export const measuringBuildingMotionAfterEarthquakeTr: GuideContent = {
   publishedAt: "2026-07-26",
   updatedAt: "2026-07-26",
   safetyNotice:
-    "Deprem sonrası hareket verisi, yetkili mühendis incelemesini destekler ancak onun yerini almaz. Bina güvenliği konusunda her zaman resmi yönergeleri takip edin ve yapısal mühendise danışın.",
+    "Deprem sonrası hareket verisi, yetkili mühendis incelemesine destek olur ama onun yerini tutmaz. Bina güvenliği konusunda resmî yönergeleri izleyin ve yapı mühendisine danışın.",
   cta: {
     label: "SismoSmart hakkında bilgi alın",
     href: "/product",
-    description: "SismoSmart olay sonrası hareket kaydı yaklaşımını inceleyin.",
+    description: "SismoSmart'ın olay sonrası hareket kaydı yaklaşımını inceleyin.",
   },
 };

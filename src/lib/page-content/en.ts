@@ -10,7 +10,7 @@ export const enPages: BaseRoutePagesCopy = {
     eyebrow: "Product",
     title: "A building seismic monitoring device for homes and small buildings",
     description:
-      "A wall-mounted, USB-C powered pre-launch device. Sensor choice, connectivity, reporting and performance remain design targets until pilot validation is complete.",
+      "A wall-mounted, USB-C powered pre-launch device. Sensor choice, connectivity, reporting and performance stay targets until pilot validation is complete.",
     deviceDescription:
       "The pilot enclosure is designed for wall mounting with USB-C power. Final installation hardware and instructions will be confirmed with the validated device.",
     meterTopLabel: "Sensor",
@@ -83,28 +83,28 @@ export const enPages: BaseRoutePagesCopy = {
     eyebrow: "How it works",
     title: "How SismoSmart measures building motion and prepares a report",
     description:
-      "The current design has three parts: local sensing, a connected data path and an app/report layer. Detection, notification, cloud correlation and report behavior remain pilot-validation targets.",
+      "The current design has three parts: local sensing, a connected data path and an app/report layer. Detection, notification, cloud correlation and report behavior will be validated in pilots.",
     flow: [
       { title: "Mount the device", description: "Pilot placement is selected on a stable indoor surface with the building and measurement objective in mind." },
-      { title: "Pair with your phone", description: "Bluetooth and Wi-Fi provisioning are design targets; the production security flow remains subject to implementation review." },
+      { title: "Pair with your phone", description: "Bluetooth and Wi-Fi setup are in the design; the production security flow will be settled after implementation review." },
       { title: "Build a baseline", description: "Pilot calibration is intended to record ordinary vibration and test whether unusual motion can be separated from everyday noise." },
       { title: "Record an event", description: "The design targets local event capture and a later app/report view. Notification timing and report completeness remain validation items." },
     ],
     signals: [
-      { title: "Detection on the device", description: "On-device detection is a design target. Thresholds, false positives, missed events and notification reliability require labelled pilot evidence." },
+      { title: "Detection on the device", description: "On-device detection is in the design. Thresholds, false positives, missed events and notification reliability need labelled pilot evidence." },
       { title: "Post-event report", description: "A future report may summarize validated measured quantities for qualified review. It is not a safety determination." },
       { title: "Only the necessary data", description: "The live website data flow is documented separately. Future device telemetry, retention and processing are defined before pilot collection begins." },
     ],
     network: [
-      { title: "Multi-device correlation", description: "Cross-device confirmation is a design target. Its timing and false-alarm benefit have not yet been established with pilot evidence." },
+      { title: "Multi-device correlation", description: "Cross-device confirmation is still a goal. Its timing and effect on false alarms have not been shown with pilot evidence." },
       { title: "Structural evidence over time", description: "Changes in measured vibration characteristics may provide additional evidence to engineers; they are not a diagnosis." },
-      { title: "Simple interface", description: "A concise device/app status view is a product target. Final states and thresholds depend on validated behavior." },
+      { title: "Simple interface", description: "We plan a short device/app status view. Final states and thresholds depend on validated behavior." },
     ],
   },
   about: {
     meta: {
       title: "About SismoSmart",
-      description: "The team behind SismoSmart, our perspective after the 2023 earthquakes, and the roadmap from pilot to launch. Based in Türkiye, testing in our own homes.",
+      description: "The team behind SismoSmart, our perspective after the 2023 earthquakes, and and how we validate the device from pilot to launch. Based in Türkiye, testing in our own homes.",
     },
     eyebrow: "About",
     title: "We live in Türkiye. We want our buildings to be sound.",

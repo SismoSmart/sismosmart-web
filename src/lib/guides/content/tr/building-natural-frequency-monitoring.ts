@@ -6,63 +6,63 @@ export const buildingNaturalFrequencyMonitoringTr: GuideContent = {
   slug: "bina-dogal-frekansi-yapisal-izleme",
   title: "Bina Doğal Frekansı İzleme: Değişimlerin Anlamı",
   description:
-    "Binalarda doğal frekansın ne anlama geldiğini, çevresel titreşim ve güçlü hareketin nasıl ortaya çıkardığını ve trend izlemenin ne zaman faydalı olduğunu öğrenin.",
+    "Binalarda doğal frekansın ne anlama geldiğini, çevresel titreşim ve güçlü hareketin bu frekansları nasıl ortaya çıkardığını ve trend izlemenin ne zaman işe yaradığını öğrenin.",
   eyebrow: "Rehberler",
   h1: "Bina Doğal Frekansı İzleme: Değişimlerin Anlamı",
   summary:
-    "Her bina, kütlesi, rijitliği ve geometrisi tarafından belirlenen titreşime eğilimli olduğu belirli doğal frekanslara sahiptir. Bu frekansları zaman içinde izlemek, yapısal davranışta değişiklikleri ortaya çıkarabilir, ancak değişimler hasardan kaynaklanabileceği gibi çevresel koşullar, kullanım yükü, hareket şiddeti veya analiz seçeneklerinden de kaynaklanabilir. Ölçülen frekanstaki bir kayma, bir şeyin değişmiş olabileceğinin sinyalidir, yapısal durumun teşhisi değildir. Frekans verisini yorumlamak mühendislik değerlendirmesi ve bağlam bilgisi gerektirir.",
+    "Her binanın kütlesi, rijitliği ve geometrisi tarafından belirlenen birkaç doğal frekansı vardır; bina en çok bu frekanslarda titreşmeye yatkındır. Bu frekansları zaman içinde izlemek yapısal davranıştaki değişimleri gösterebilir. Ancak değişimin kaynağı hasar olabileceği gibi çevre koşulları, kullanım yükü, hareketin şiddeti veya analiz seçimleri de olabilir. Ölçülen frekanstaki bir kayma, bir şeyin değişmiş olabileceğini haber verir; yapısal durumun teşhisi değildir. Frekans verisini yorumlamak için mühendislik değerlendirmesi ve binaya dair bağlam bilgisi gerekir.",
   keyTakeaways: [
-    "Dinamik özellikler, çevresel titreşim veya güçlü hareket verilerinden çıkarılabilir.",
-    "Frekans değişimleri hasardan kaynaklanabilir ancak çevre, kullanım yükü, şiddet ve analiz yöntemlerinden de kaynaklanabilir.",
-    "Frekanstaki bir değişiklik, bir inceleme sinyalidir, teşhis değildir; daha fazla araştırmaya yönlendirir.",
+    "Dinamik özellikler, çevresel titreşim ya da güçlü hareket kayıtlarından çıkarılabilir.",
+    "Frekans değişimi hasardan kaynaklanabilir. Çevre, kullanım yükü, hareketin şiddeti ve analiz yöntemi de aynı etkiyi yaratabilir.",
+    "Frekanstaki değişim bir inceleme işaretidir, teşhis değildir; daha fazla araştırmanın gerekip gerekmediğini sorgulatır.",
   ],
   sections: [
     {
       heading: "Doğrudan cevap",
       paragraphs: [
-        "Doğal frekans izleme, bir binanın tercih ettiği frekanslarda nasıl titreştiğini ölçer. Bu frekansları zaman içinde takip ederek mühendisler yapının dinamik davranışındaki değişiklikleri tespit edebilir. Değişimler yapısal değişiklik, hasar veya basitçe çevresel veya kullanım yükü koşullarındaki bir kaymayı gösterebilir.",
+        "Doğal frekans izleme, bir binanın hangi frekanslarda titreşmeye yatkın olduğunu ölçer. Mühendisler bu frekansları zaman içinde takip ederek yapının dinamik davranışındaki değişiklikleri fark edebilir. Değişimin arkasında yapısal bir değişiklik ya da hasar olabileceği gibi, çevre veya kullanım yükü koşullarındaki basit bir kayma da olabilir.",
       ],
     },
     {
       heading: "Doğal frekans ne anlama gelir",
       paragraphs: [
-        "Bir binanın doğal frekansı, serbestçe sallandığında titreştiği orandır. Kütle dağılımı, yapısal rijitlik ve geometri tarafından belirlenir. Daha kısa ve rijit binalar genellikle daha uzun ve esnek yapılardan daha yüksek doğal frekanslara sahiptir. Bu frekanslar, çevresel koşullar veya deprem olayları sırasında alınan titreşim ölçümlerinden çıkarılabilir.",
+        "Bir binanın doğal frekansı, serbest bırakıldığında kendiliğinden salındığı hızdır. Kütle dağılımı, yapısal rijitlik ve geometri bu hızı belirler. Kısa ve rijit binaların doğal frekansları genellikle yüksek ve esnek binalarınkinden daha yüksektir. Bu frekanslar, gündelik koşullarda ya da deprem sırasında alınan titreşim ölçümlerinden çıkarılabilir.",
       ],
     },
     {
       heading: "Çevresel titreşim ve güçlü hareket",
       paragraphs: [
-        "Çevresel titreşim izleme, rüzgar, trafik ve mekanik ekipman gibi günlük güçlerin binayı hareketlendirmesini kullanır. Elde edilen küçük genlikli titreşimler, deprem gerektirmeden doğal frekansları ortaya çıkarabilir. Güçlü hareket izleme, deprem olayları sırasında yapının tepkisini yakalar, bu farklı titreşim modlarını harekete geçirebilir ve daha yüksek genliklerde davranış hakkında bilgi sağlayabilir.",
+        "Çevresel titreşim izlemede rüzgâr, trafik ve mekanik ekipman gibi gündelik etkilerin binayı hafifçe sallaması kullanılır. Ortaya çıkan küçük genlikli titreşimler, deprem beklemeden doğal frekansları görünür kılabilir. Güçlü hareket izleme ise yapının deprem sırasındaki tepkisini kaydeder. Bu kayıt farklı titreşim modlarını harekete geçirebilir ve daha yüksek genliklerdeki davranış hakkında bilgi verebilir.",
       ],
     },
     {
       heading: "Frekans neden değişebilir",
       paragraphs: [
-        "Ölçülen doğal frekans sabit bir sayı değildir. Sıcaklık malzeme rijitliğini etkiler. Kullanım yükü kütle dağılımını değiştirir. Daha güçlü hareket, görünür frekansı kaydıran doğrusal olmayan yapısal davranışı devreye sokabilir. Analiz yöntemleri, pencere uzunlukları ve sinyal işleme seçenekleri de sonucu etkiler. Bu faktörler, frekans değişimlerinin beklenen olduğunu ve otomatik olarak hasar göstermediğini anlamına gelir.",
+        "Ölçülen doğal frekans sabit bir sayı değildir. Sıcaklık malzemenin rijitliğini etkiler. Kullanım yükü kütle dağılımını değiştirir. Hareket güçlendiğinde doğrusal olmayan yapısal davranış devreye girebilir ve görünen frekansı kaydırabilir. Analiz yöntemi, pencere uzunluğu ve sinyal işleme tercihleri de sonucu etkiler. Dolayısıyla frekans değişimi beklenen bir durumdur ve kendiliğinden hasar anlamına gelmez.",
       ],
     },
     {
       heading: "Trend izleme",
       paragraphs: [
-        "Frekansı haftalarca, aylarca ve yıllarca takip etmek, binanın normal davranışı için bir referans çizgisi oluşturur. Referans çizgisinden ani bir sapma veya kademeli bir eğilim daha yakından inceleme gerektirebilir. Trend izlemenin değeri, profesyonel inceleme gerektiren değişiklikleri tespit etmekte yatar, geçer veya geçersiz değerlendirmede değil.",
+        "Frekansı haftalar, aylar ve yıllar boyunca izlemek, binanın olağan davranışı için bir referans çizgisi oluşturur. Bu çizgiden ani bir sapma ya da yavaş yavaş biriken bir eğilim, daha yakından incelemeyi gerektirebilir. Trend izlemenin değeri, uzman incelemesi isteyen değişimleri fark etmesindedir; bir binaya geçti ya da kaldı notu vermesinde değil.",
       ],
     },
     {
       heading: "Sınırlamalar",
       paragraphs: [
-        "Frekans verisi tek başına bir değişikliğin nedenini belirleyemez. Birden fazla faktör benzer kaymalar üretebilir. Frekans trendlerini yorumlamak, binanın inşaatı, bakım geçmişi ve çevresel bağlamı hakkında ayrıntılı bilgi gerektirir. Tek bir frekans ölçümü veya bir dizi ölçüm bile yapısal sağlık teşhisi oluşturmaz.",
+        "Frekans verisi tek başına bir değişimin nedenini söyleyemez. Birden fazla etken benzer kaymalar üretebilir. Frekans trendlerini yorumlamak için binanın yapımı, bakım geçmişi ve çevresi hakkında ayrıntılı bilgi gerekir. Tek bir ölçüm ya da bir dizi ölçüm bile yapısal sağlık teşhisi oluşturmaz.",
       ],
     },
   ],
   limitations: [
-    "Frekans değişimleri yalnızca yapısal hasardan değil, birçok nedenle oluşabilir.",
-    "Çevresel ve kullanım yükü koşulları, yapısal durumdan bağımsız olarak ölçülen frekansı etkiler.",
-    "Trendleri yorumlamak, bina hakkında ayrıntılı bilgi ve profesyonel mühendislik değerlendirmesi gerektirir.",
-    "Frekans verisi, belirli yapısal elemanların durumunu değil, dinamik davranışı tanımlar.",
+    "Frekans değişimi yalnızca yapısal hasardan değil, birçok nedenden kaynaklanabilir.",
+    "Çevre koşulları ve kullanım yükü, yapısal durumdan bağımsız olarak ölçülen frekansı etkiler.",
+    "Trendleri yorumlamak için bina hakkında ayrıntılı bilgi ve uzman mühendislik değerlendirmesi gerekir.",
+    "Frekans verisi dinamik davranışı tanımlar; belirli yapısal elemanların durumunu göstermez.",
   ],
   sismosmartFit: [
-    "SismoSmart, zaman içinde bina doğal frekanslarının çıkarılmasında kullanılabilecek titreşim verisi kaydetmek için tasarlanmış bir ön lansman sistemidir.",
-    "Bu trend izleme yeteneği, pilot doğrulama gerçek bina koşullarında güvenilir frekans tahminini onaylayana kadar tasarım hedefidir.",
+    "SismoSmart, bina doğal frekanslarının zaman içinde çıkarılmasında kullanılabilecek titreşim verisi kaydetmek üzere tasarlanan, lansman öncesi bir sistemdir.",
+    "Bu trend izleme yeteneği, pilot doğrulama gerçek bina koşullarında güvenilir frekans tahminini göstermedikçe bir tasarım hedefidir.",
   ],
   references: [
     {
@@ -90,10 +90,10 @@ export const buildingNaturalFrequencyMonitoringTr: GuideContent = {
   publishedAt: "2026-07-26",
   updatedAt: "2026-07-26",
   safetyNotice:
-    "Doğal frekans değişimleri profesyonel inceleme gerektiren bir sinyaldir. Binanın güvenli olduğunu belirlemez; yapısal değerlendirme için yetkili bir mühendise danışın.",
+    "Doğal frekanstaki değişim, uzman incelemesi gerektiren bir işarettir. Binanın güvenli olduğunu belirlemez; yapısal değerlendirme için yetkili bir mühendise danışın.",
   cta: {
     label: "SismoSmart hakkında bilgi alın",
     href: "/product",
-    description: "SismoSmart doğal frekans izleme yaklaşımını inceleyin.",
+    description: "SismoSmart'ın doğal frekans izleme yaklaşımını inceleyin.",
   },
 };

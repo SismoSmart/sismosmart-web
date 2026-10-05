@@ -10,7 +10,7 @@ export const trPages: BaseRoutePagesCopy = {
     eyebrow: "Ürün",
     title: "Evler ve küçük binalar için sismik izleme cihazı",
     description:
-      "Duvara sabitlenen, USB-C ile beslenen lansman öncesi bir cihaz. Sensör seçimi, bağlantı, raporlama ve performans pilot doğrulaması tamamlanana kadar tasarım hedefidir.",
+      "Duvara sabitlenen, USB-C ile beslenen lansman öncesi bir cihaz. Sensör seçimi, bağlantı, raporlama ve performans pilot doğrulaması bitene kadar hedef olarak kalıyor.",
     deviceDescription:
       "Pilot kasa duvara sabitlenmek ve USB-C ile beslenmek üzere tasarlanıyor. Nihai montaj donanımı ve yönergeleri doğrulanmış cihazla birlikte kesinleşecek.",
     meterTopLabel: "Sensör",
@@ -87,25 +87,25 @@ export const trPages: BaseRoutePagesCopy = {
     eyebrow: "Nasıl çalışır",
     title: "SismoSmart bina hareketini nasıl ölçer ve rapora dönüştürür?",
     description:
-      "Mevcut tasarım üç parçadan oluşuyor: yerel ölçüm, bağlantılı veri yolu ve uygulama/rapor katmanı. Algılama, bildirim, bulut korelasyonu ve rapor davranışı pilot doğrulama hedefidir.",
+      "Mevcut tasarım üç parçadan oluşuyor: yerel ölçüm, bağlantılı veri yolu ve uygulama/rapor katmanı. Algılama, bildirim, bulut eşleştirmesi ve rapor davranışı pilotta doğrulanacak.",
     flow: [
       {
-        title: "Cihazı yerleştir",
+        title: "Cihazı yerleştirin",
         description:
           "Pilot yerleşimi bina ve ölçüm amacı dikkate alınarak sabit bir iç yüzeyde belirlenir.",
       },
       {
-        title: "Telefonla eşle",
+        title: "Telefonla eşleyin",
         description:
-          "Bluetooth ve Wi-Fi tanımlama tasarım hedefidir; üretim güvenlik akışı uygulama incelemesine tabidir.",
+          "Bluetooth ve Wi-Fi ile tanımlama tasarlanıyor; üretim güvenlik akışı uygulama incelemesinden sonra kesinleşecek.",
       },
       {
-        title: "Taban çizgisi oluştur",
+        title: "Taban çizgisini oluşturur",
         description:
           "Pilot kalibrasyonu gündelik titreşimi kaydetmeyi ve sıra dışı hareketin normal gürültüden ayrılıp ayrılamadığını test etmeyi hedefler.",
       },
       {
-        title: "Olayı kaydet",
+        title: "Olayı kaydeder",
         description:
           "Tasarım yerel olay kaydı ve daha sonra uygulama/rapor görünümü hedefler. Bildirim süresi ve rapor bütünlüğü doğrulama maddesidir.",
       },
@@ -114,7 +114,7 @@ export const trPages: BaseRoutePagesCopy = {
       {
         title: "Cihaz üzerinde algılama",
         description:
-          "Cihaz üzerinde algılama tasarım hedefidir. Eşikler, yanlış/kaçırılmış olaylar ve bildirim güvenilirliği etiketli pilot kanıtı gerektirir.",
+          "Cihaz üzerinde algılama tasarlanıyor. Eşikler, yanlış ya da kaçırılmış olaylar ve bildirim güvenilirliği için etiketli pilot kanıtı gerekiyor.",
       },
       {
         title: "Olay sonrası rapor",
@@ -131,7 +131,7 @@ export const trPages: BaseRoutePagesCopy = {
       {
         title: "Çoklu cihaz korelasyonu",
         description:
-          "Cihazlar arası doğrulama bir tasarım hedefidir. Süre ve yanlış alarm üzerindeki faydası henüz pilot kanıtıyla gösterilmedi.",
+          "Cihazların birbirini doğrulaması henüz bir hedef. Süreye ve yanlış alarma faydası pilot kanıtıyla gösterilmedi.",
       },
       {
         title: "Zaman içinde yapısal kanıt",
@@ -141,7 +141,7 @@ export const trPages: BaseRoutePagesCopy = {
       {
         title: "Sade arayüz",
         description:
-          "Kısa cihaz/uygulama durum görünümü ürün hedefidir. Nihai durumlar ve eşikler doğrulanmış davranışa bağlıdır.",
+          "Kısa bir cihaz/uygulama durum görünümü planlıyoruz. Nihai durumlar ve eşikler doğrulanmış davranışa bağlı.",
       },
     ],
   },
@@ -149,7 +149,7 @@ export const trPages: BaseRoutePagesCopy = {
     meta: {
       title: "SismoSmart Hakkında",
       description:
-        "SismoSmart'ı kim, neden geliştiriyor. 2023 depremlerinden sonra Türkiye'de kurulan ekip, pilot yolculuğu ve lansman takvimi. Cihazı kendi evimizde test ediyoruz.",
+        "SismoSmart'ı kim, neden geliştiriyor. 2023 depremlerinden sonra Türkiye'de kurulan ekip ve pilot doğrulama süreci. Cihazı kendi evimizde test ediyoruz.",
     },
     eyebrow: "Hakkımızda",
     title: "Biz de bu binalarda oturuyoruz.",
@@ -158,7 +158,7 @@ export const trPages: BaseRoutePagesCopy = {
     story: [
       "Türkiye'de büyük bir depremden sonra binaların kontrol edilmesi haftalar, bazen aylar sürüyor. O süre boyunca aileler evlerine girip giremeyeceklerini bilmiyor.",
       "Bu süreyi tamamen ortadan kaldıramayız, sonunda binaya bir mühendisin girmesi şart. Ama mühendis gelmeden önce hangi binanın öncelikli olduğunu gösteren bir veri katmanı kurulabilir. Uğraştığımız şey bu.",
-      "Ekipte bir inşaat mühendisi akademik danışman, iki yüksek lisans inşaat mühendisi ve gömülü yazılım tarafıyla ilgilenen kurucu var. Hepimiz Türkiye'de oturuyoruz ve cihazı önce kendi evimizde deniyoruz.",
+      "Ekipte akademik danışman olarak bir inşaat mühendisi, iki yüksek lisans inşaat mühendisi ve gömülü yazılımla ilgilenen bir kurucu var. Hepimiz Türkiye'de oturuyoruz ve cihazı önce kendi evimizde deniyoruz.",
     ],
     principles: [
       {
@@ -178,10 +178,10 @@ export const trPages: BaseRoutePagesCopy = {
       },
     ],
     timeline: [
-      { period: "Tamamlandı", title: "Ürün ve sistem temeli", description: "İlk ürün fikri ve sistem mimarisi oluşturuldu. Public iddialar kanıt kaydındaki sınırlarla yönetiliyor." },
+      { period: "Tamamlandı", title: "Ürün ve sistem temeli", description: "İlk ürün fikri ve sistem mimarisi oluşturuldu. Herkese açık iddialar kanıt kaydındaki sınırlarla yönetiliyor." },
       { period: "Şimdi", title: "Pilot doğrulaması", description: "Donanım, algılama, bildirim, bağlantı ve raporlama hedefleri daha geniş iddialardan önce doğrulanıyor." },
-      { period: "Sonraki", title: "Kanıt ve tasarım dondurma", description: "BOM, algoritmalar ve işletim varsayımları ancak tezgâh ve saha kanıtı incelendikten sonra dondurulacak." },
-      { period: "Daha sonra", title: "Sertifikasyon ve üretim", description: "Sertifikasyon, üretim ve lansman kanıt kapılarından sonra gelir. Public bir teslim tarihi taahhüt edilmiyor." },
+      { period: "Sonraki", title: "Kanıt ve tasarım dondurma", description: "Malzeme listesi (BOM), algoritmalar ve işletim varsayımları ancak tezgâh ve saha kanıtı incelendikten sonra dondurulacak." },
+      { period: "Daha sonra", title: "Sertifikasyon ve üretim", description: "Sertifikasyon, üretim ve lansman kanıt kapılarından sonra gelir. Herkese açık bir teslim tarihi taahhüt edilmiyor." },
     ],
     team: [
       {

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import test from "node:test";
 
 const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
@@ -7,6 +8,8 @@ const lock = JSON.parse(readFileSync("package-lock.json", "utf8"));
 const braceCompat = JSON.parse(
   readFileSync("vendor/brace-expansion-compat/package.json", "utf8"),
 );
+
+const bracesCompat = JSON.parse(readFileSync("vendor/braces-compat/package.json", "utf8"));
 
 function parts(version) {
   return String(version).replace(/^[^0-9]*/, "").split(".").slice(0, 3).map(Number);
@@ -55,4 +58,32 @@ test("brace-expansion compatibility wrapper uses the reviewed patched line", () 
     atLeast(braceCompat.dependencies["brace-expansion-upstream"], "5.0.9"),
     true,
   );
+});
+
+test("locked braces is the local wrapper over the patched brace-expansion line", () => {
+  const versions = Object.entries(lock.packages || {})
+    .filter(([name]) => name === "node_modules/braces" || name.endsWith("/node_modules/braces"))
+    .map(([, metadata]) => metadata);
+  assert.ok(versions.length > 0, "No braces instances found in lockfile");
+  for (const metadata of versions) {
+    assert.equal(metadata.resolved, "vendor/braces-compat", "braces must resolve to the local wrapper");
+  }
+  assert.equal(packageJson.overrides.braces, "$braces");
+  assert.equal(packageJson.devDependencies.braces, "file:vendor/braces-compat");
+  assert.equal(
+    atLeast(bracesCompat.dependencies["brace-expansion-upstream"], "5.0.9"),
+    true,
+  );
+});
+
+test("braces wrapper keeps the expansion behavior micromatch and fast-glob rely on", () => {
+  const braces = createRequire(import.meta.url)("../vendor/braces-compat/index.js");
+  assert.deepEqual(braces("foo/{a,b}/bar", { expand: true }), ["foo/a/bar", "foo/b/bar"]);
+  assert.deepEqual(braces("{1..3}", { expand: true }), ["1", "2", "3"]);
+  assert.deepEqual(
+    braces("a/{b,}/{c,}/*", { expand: true, nodupes: true }).sort(),
+    ["a///*", "a//c/*", "a/b//*", "a/b/c/*"],
+  );
+  assert.deepEqual(braces("foo/{a,b}/bar"), ["(foo/a/bar|foo/b/bar)"]);
+  assert.deepEqual(braces("plain/path"), ["plain/path"]);
 });

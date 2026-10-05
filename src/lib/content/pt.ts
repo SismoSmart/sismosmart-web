@@ -145,6 +145,6 @@ export const ptCopy: SiteCopy = {
       "Tentativas demais. Tente de novo daqui a alguns minutos.",
   },
   footer: {
-    legal: "© 2026 SismoSmart. Todos os direitos reservados.",
+    legal: "SismoSmart. Todos os direitos reservados.",
   },
 };

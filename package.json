@@ -15,6 +15,7 @@
     "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "axe-core": "4.11.4",
+    "braces": "file:vendor/braces-compat",
     "dotenv": "^17.4.2",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.3.5",
@@ -31,6 +32,7 @@
     "node": ">=22.13.0 <27"
   },
   "overrides": {
+    "braces": "$braces",
     "postcss": "8.5.23",
     "fast-uri": "3.1.8",
     "sharp": "$sharp",

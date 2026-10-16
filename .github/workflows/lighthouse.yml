@@ -26,6 +26,8 @@ jobs:
         shell: bash
         run: |
           urls=(
+            "https://sismosmart.com/robots.txt"
+            "https://sismosmart.com/sitemap.xml"
             "https://sismosmart.com/en"
             "https://sismosmart.com/en/product"
             "https://sismosmart.com/tr/product"

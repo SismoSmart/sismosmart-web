@@ -86,9 +86,10 @@ export function FormStatus() {
   return (
     <p
       aria-live="polite"
-      className="rounded-md border px-4 py-3 text-sm font-medium data-[state=error]:border-danger/40 data-[state=error]:bg-[color-mix(in_srgb,var(--danger)_12%,var(--surface))] data-[state=error]:text-danger data-[state=success]:border-primary-300/60 data-[state=success]:bg-[color-mix(in_srgb,var(--primary-500)_14%,var(--surface))] data-[state=success]:text-primary-700"
+      className="rounded-md border px-4 py-3 text-sm font-medium outline-none data-[state=error]:border-danger/40 data-[state=error]:bg-[color-mix(in_srgb,var(--danger)_12%,var(--surface))] data-[state=error]:text-danger data-[state=success]:border-primary-300/60 data-[state=success]:bg-[color-mix(in_srgb,var(--primary-500)_14%,var(--surface))] data-[state=success]:text-primary-700"
       data-form-status=""
       hidden
+      tabIndex={-1}
     />
   );
 }

@@ -27,7 +27,12 @@ type MobileNavigationProps = {
  */
 const CLOSE_SCRIPT = `
 (function () {
-  function close(el) { if (el) el.removeAttribute("open"); }
+  function close(el) {
+    if (!el) return;
+    el.removeAttribute("open");
+    var toggle = el.querySelector("summary");
+    if (toggle && typeof toggle.focus === "function") toggle.focus();
+  }
   document.addEventListener("click", function (event) {
     var backdrop = event.target.closest("[data-mobile-nav-backdrop]");
     if (backdrop && event.target === backdrop) return close(backdrop.closest("details"));
@@ -35,9 +40,38 @@ const CLOSE_SCRIPT = `
     if (dismiss) return close(dismiss.closest("details"));
   });
   document.addEventListener("keydown", function (event) {
-    if (event.key !== "Escape") return;
-    document.querySelectorAll("details[data-mobile-nav][open]").forEach(close);
+    var openDetails = document.querySelector("details[data-mobile-nav][open]");
+    if (!openDetails) return;
+    if (event.key === "Escape") {
+      close(openDetails);
+      return;
+    }
+    if (event.key === "Tab") {
+      var nav = openDetails.querySelector("nav");
+      if (!nav) return;
+      var focusables = nav.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
   });
+  document.addEventListener("toggle", function (event) {
+    var details = event.target;
+    if (!details || !details.matches || !details.matches("details[data-mobile-nav]")) return;
+    if (details.open) {
+      var closeBtn = details.querySelector("[data-mobile-nav-close]");
+      if (closeBtn && typeof closeBtn.focus === "function") {
+        setTimeout(function () { closeBtn.focus(); }, 15);
+      }
+    }
+  }, true);
 })();
 `;
 
@@ -94,7 +128,7 @@ export function MobileNavigation({
             <p className="font-heading text-xl tracking-normal">SismoSmart</p>
             <button
               aria-label={closeLabel}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-fg hover:border-primary-600 hover:text-primary-600"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface text-fg hover:border-primary-600 hover:text-primary-600"
               data-mobile-nav-close=""
               type="button"
             >

@@ -5,12 +5,15 @@ const script = `
   if (window.__sismosmartJsonForms) return;
   window.__sismosmartJsonForms = true;
 
-  function setStatus(form, type, message) {
+  function setStatus(form, type, message, shouldFocus) {
     const status = form.querySelector("[data-form-status]");
     if (!status) return;
     status.hidden = !message;
     status.textContent = message || "";
     status.dataset.state = type || "";
+    if (shouldFocus && message && typeof status.focus === "function") {
+      status.focus();
+    }
   }
 
   document.addEventListener("submit", async (event) => {
@@ -23,7 +26,7 @@ const script = `
 
     const endpoint = form.dataset.endpoint;
     if (!endpoint) {
-      setStatus(form, "error", form.dataset.missingEndpoint || form.dataset.error || "");
+      setStatus(form, "error", form.dataset.missingEndpoint || form.dataset.error || "", true);
       return;
     }
 
@@ -72,12 +75,12 @@ const script = `
           RATE_LIMITED: form.dataset.rateLimited,
         };
         const message = byCode[code] || form.dataset.error;
-        setStatus(form, "error", message || "");
+        setStatus(form, "error", message || "", true);
         return;
       }
 
       form.reset();
-      setStatus(form, "success", form.dataset.success || "");
+      setStatus(form, "success", form.dataset.success || "", true);
       const formType = form.dataset.analyticsForm || "unknown";
       const analytics = window.__sismosmartAnalytics;
       analytics?.track(analytics.eventNames?.formSuccess || "sismosmart_form_success", {
@@ -86,7 +89,7 @@ const script = `
         page_path: window.location.pathname,
       });
     } catch {
-      setStatus(form, "error", form.dataset.error || "");
+      setStatus(form, "error", form.dataset.error || "", true);
     } finally {
       if (submit) {
         submit.disabled = false;

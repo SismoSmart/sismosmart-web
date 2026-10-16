@@ -132,16 +132,17 @@ export function Seismogram({
         y2={MID}
       />
 
-      {/* Arrival markers */}
+      {/* Arrival markers: dashed for early P-arrival, solid for damaging S-arrival for non-color differentiation */}
       {[
-        { x: pX, label: pLabel },
-        { x: sX, label: sLabel },
+        { x: pX, label: pLabel, dashed: true },
+        { x: sX, label: sLabel, dashed: false },
       ].map((arrival) => (
         <g key={arrival.label}>
           <line
             stroke="var(--signal)"
+            strokeDasharray={arrival.dashed ? "4 4" : undefined}
             strokeWidth="1.5"
-            opacity="0.55"
+            opacity={arrival.dashed ? "0.7" : "0.55"}
             x1={arrival.x}
             x2={arrival.x}
             y1="10"

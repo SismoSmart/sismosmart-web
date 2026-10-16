@@ -201,8 +201,18 @@ function consentScript(config: {
     if (choice === "accepted") loadAnalytics();
   }
 
+  function safeGet(key) {
+    try { return window.localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function safeSet(key, val) {
+    try { window.localStorage.setItem(key, val); } catch (e) {}
+  }
+  function safeRemove(key) {
+    try { window.localStorage.removeItem(key); } catch (e) {}
+  }
+
   function track(eventName, parameters) {
-    if (!eventName || window.localStorage.getItem(config.consentKey) !== "accepted") {
+    if (!eventName || safeGet(config.consentKey) !== "accepted") {
       return false;
     }
     const eventParameters = {
@@ -233,20 +243,20 @@ function consentScript(config: {
 
   window.__sismosmartAnalytics = {
     eventNames: { formSuccess: config.formSuccessEvent },
-    getConsent: () => window.localStorage.getItem(config.consentKey),
+    getConsent: () => safeGet(config.consentKey),
     track,
   };
 
   document.addEventListener("click", (event) => {
     const resetButton = event.target.closest("[data-cookie-reset]");
     if (!resetButton) return;
-    window.localStorage.removeItem(config.consentKey);
+    safeRemove(config.consentKey);
     banner.hidden = false;
     updateGoogleConsent("necessary");
     updateClarityConsent("necessary");
   });
 
-  const stored = window.localStorage.getItem(config.consentKey);
+  const stored = safeGet(config.consentKey);
   if (stored === "accepted" || stored === "necessary") {
     applyChoice(stored);
     return;
@@ -258,7 +268,7 @@ function consentScript(config: {
     if (!button) return;
     const choice = button.dataset.cookieChoice;
     if (choice !== "accepted" && choice !== "necessary") return;
-    window.localStorage.setItem(config.consentKey, choice);
+    safeSet(config.consentKey, choice);
     applyChoice(choice);
     banner.hidden = true;
   });

@@ -37,7 +37,7 @@ export function ThemeToggle({ label }: { label: string }) {
       <button
         aria-label={label}
         aria-pressed="false"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white/80 hover:border-white/50 hover:text-white"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white/80 hover:border-white/50 hover:text-white"
         data-theme-toggle=""
         title={label}
         type="button"

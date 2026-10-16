@@ -6,11 +6,17 @@ export type FormForwardResult =
   | { ok: true }
   | { code: "FORM_ENDPOINT_MISSING" | "FORM_FORWARD_FAILED"; ok: false };
 
-export function normalizeFormEndpoint(endpoint: string | undefined) {
+export function normalizeFormEndpoint(
+  endpoint: string | undefined,
+  allowInsecureHttp = process.env.NODE_ENV !== "production",
+) {
   if (!endpoint) return null;
   try {
     const url = new URL(endpoint);
-    return url.protocol === "https:" || url.protocol === "http:"
+    const isHttps = url.protocol === "https:";
+    const isLocalHttp =
+      (url.hostname === "127.0.0.1" || url.hostname === "localhost") && url.protocol === "http:";
+    return isHttps || isLocalHttp || (url.protocol === "http:" && allowInsecureHttp)
       ? url.toString()
       : null;
   } catch {

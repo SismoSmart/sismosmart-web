@@ -159,6 +159,10 @@ export class RateLimiter {
 
     const existing = this.store.get(key);
     if (!existing || existing.resetAt <= now) {
+      if (this.store.size >= 5000) {
+        const oldestKey = this.store.keys().next().value;
+        if (oldestKey !== undefined) this.store.delete(oldestKey);
+      }
       this.store.set(key, { count: 1, resetAt: now + rateLimitWindowMs });
       return false;
     }

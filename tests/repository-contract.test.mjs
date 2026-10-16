@@ -329,7 +329,7 @@ test("analytics observability uses canonical public config and fail-closed conse
     "GTM must own the primary production loading path",
   );
   const gtmBranch = consent.match(
-    /if \(config\.gtmId\) \{([\s\S]*?)\n      return;\n    \}/,
+    /if \(config\.gtmId\) \{([\s\S]*?)\r?\n      return;\r?\n    \}/,
   )?.[1];
   assert.ok(gtmBranch, "GTM loading branch must remain explicit");
   assert.match(

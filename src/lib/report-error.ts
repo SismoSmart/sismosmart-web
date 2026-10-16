@@ -18,7 +18,11 @@ export function reportError(error: unknown, context: ErrorContext = {}): void {
   const where = context.routePath ? ` at ${context.routePath}` : "";
   console.error(`[sismosmart] unhandled error${where}`, error, context);
 
-  // Sentry (or another provider) goes here once SENTRY_DSN is set. Kept inert
-  // until then so nothing ships to a service that isn't configured:
-  //   if (process.env.SENTRY_DSN) Sentry.captureException(error, { extra: context });
+  if (typeof window === "undefined" && process.env.SENTRY_DSN) {
+    import("@sentry/nextjs")
+      .then((Sentry) => {
+        Sentry.captureException(error, { extra: context });
+      })
+      .catch(() => {});
+  }
 }

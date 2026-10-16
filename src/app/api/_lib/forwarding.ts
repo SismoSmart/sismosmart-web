@@ -14,8 +14,9 @@ export function normalizeFormEndpoint(
   try {
     const url = new URL(endpoint);
     const isHttps = url.protocol === "https:";
-    const isLocal = url.hostname === "127.0.0.1" || url.hostname === "localhost";
-    return isHttps || (isLocal && allowInsecureHttp) || (url.protocol === "http:" && allowInsecureHttp)
+    const isLocalHttp =
+      (url.hostname === "127.0.0.1" || url.hostname === "localhost") && url.protocol === "http:";
+    return isHttps || isLocalHttp || (url.protocol === "http:" && allowInsecureHttp)
       ? url.toString()
       : null;
   } catch {

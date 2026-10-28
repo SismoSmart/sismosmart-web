@@ -1,11 +1,10 @@
 name: Analytics Observability
 
+# Public-only scheduled consent/analytics audit. Privileged administrative
+# analytics verification is maintained in sismosmart-dev/sismosmart-web and
+# uses its manual, main-scoped Doppler workflow. Do not give this scheduled
+# legacy workflow the Doppler main token (it can read hosting/FTP secrets).
 on:
-  workflow_run:
-    workflows:
-      - Deploy Production
-    types:
-      - completed
   schedule:
     - cron: "27 5 * * 0"
   workflow_dispatch:
@@ -19,20 +18,18 @@ concurrency:
 
 env:
   NODE_VERSION: "22.18.0"
-  DOPPLER_PROJECT: "sismosmart-web"
-  DOPPLER_CONFIG: "prd_ops"
 
 jobs:
   audit:
-    name: ops/analytics-observability
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    name: ops/analytics-observability-public
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout audited revision
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6.4.0
@@ -40,41 +37,22 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@014df23b1329b615816a38eb5f473bb9000700b1  # v3
-
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate read-only operations inventory
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
-        run: npm run doppler:check -- --doppler prd_ops
-
-      - name: Record canonical configuration status
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
+      - name: Record public-only configuration status
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p .artifacts/analytics
-          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" -- npm run --silent ops:status > .artifacts/analytics/ops-status.json
-          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" -- npm run --silent ops:clarity -- status > .artifacts/analytics/clarity-status.json
-
-      - name: Verify Google administrative resources
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
-        run: >-
-          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" --
-          npm run ops:analytics-admin-audit -- --output-dir .artifacts/analytics
+          npm run --silent ops:status > .artifacts/analytics/ops-status.json
+          npm run --silent ops:clarity -- status > .artifacts/analytics/clarity-status.json
 
       - name: Audit consent, tag loading, and form events in every locale
         env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRD_OPS }}
           ANALYTICS_AUDIT_BASE_URL: https://sismosmart.com
           PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
         run: >-
-          doppler run --project "$DOPPLER_PROJECT" --config "$DOPPLER_CONFIG" --
           npm run ops:analytics-audit --
           --output .artifacts/analytics/browser-audit.json
 

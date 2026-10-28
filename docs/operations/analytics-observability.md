@@ -6,13 +6,13 @@ This runbook covers the production GA4, Google Tag Manager, Microsoft Clarity, S
 
 ## Canonical configuration
 
-Public resource identifiers are not credentials. Their canonical public source is `config/analytics.json`. The read-only operations configuration is Doppler project `sismosmart-web`, config `prd_ops`; environment values from that config may override committed public identifiers for controlled diagnostics. `npm run ops:status` reports the source of each value without printing unredacted identifiers.
+Public resource identifiers are not credentials. Their canonical public source is `config/analytics.json`. This legacy repository’s scheduled observability audit reads only that committed public configuration and the public site; it has **no Doppler token or protected credentials**. The canonical repository `sismosmart-dev/sismosmart-web` uses Doppler project `sismosmart-web`, config `main` for explicitly dispatched privileged administrative diagnostics. `npm run ops:status` reports the source of each public value without printing private credentials.
 
 Production and CI explicitly set `NEXT_PUBLIC_ANALYTICS_ENABLED=true`. The project has no staging target, so only production and local test traffic are relevant.
 
 ## Secret credentials
 
-Google OAuth refresh token credentials, optional service-account credentials, Measurement Protocol authentication, and Clarity credentials remain in Doppler `prd_ops`. GitHub stores only the config-scoped read-only bootstrap secret `DOPPLER_TOKEN_PRD_OPS`; it does not duplicate the individual analytics credential inventory.
+Google OAuth refresh token credentials and other administrative analytics credentials are managed centrally in Doppler `main` for the canonical repository. Older `prd_ops` values and its legacy GitHub secret remain available for other consumers pending independently verified retirement, **but this workflow no longer reads either**. Do not attach a `main` service token to a weekly scheduled job: it also grants access to production SSH, cPanel and FTP values.
 
 Use read-only Google scopes for routine status and audit operations. Edit or publish scopes are only appropriate for an explicit administrative operation. Rotate OAuth client secrets and refresh tokens after suspected exposure, operator removal, or at least annually. Revoke the old token only after the replacement passes `ops:ga`, `ops:gtm`, and `ops:search-console` status checks.
 
@@ -57,24 +57,24 @@ npm run ops:clarity -- status
 npm run ops:analytics-audit -- --base-url https://sismosmart.com --output .artifacts/analytics-observability.json
 ```
 
-The `Analytics Observability` GitHub workflow runs manually, weekly, and after a successful production deployment. It installs the pinned official Doppler CLI action, validates the names-only `prd_ops` inventory, and executes every operational command with explicit `--project sismosmart-web --config prd_ops` selection. It:
+The legacy `Analytics Observability` GitHub workflow runs manually and weekly as a **tokenless public-only** browser audit. The post-deploy `workflow_run` trigger and all `prd_ops` references were removed to prevent the old repository from automatically fetching privileged secrets. The private GA4/GTM/Search Console administrative API audit is available from the manually dispatched, `main`-scoped workflow in the canonical `sismosmart-dev/sismosmart-web` repository. The legacy job:
 
-1. validates GA4, GTM, Search Console, and Clarity resource access;
+1. reports public analytics and Clarity readiness without authentication;
 2. checks all six locales with a real Chrome browser;
 3. confirms no analytics requests before consent or under necessary-only consent;
-4. confirms one GTM loader element, one GA config command, one logical GA page view, bounded network fanout, and one Clarity loader after acceptance;
-5. verifies the consent command ordering, reset behavior, and form-success event;
-6. uploads a redacted JSON artifact.
+4. checks GTM and GA loader/configuration behavior after consent;
+5. validates consent reset, event naming, and bounded request fanout;
+6. uploads a redacted JSON artifact retained for 14 days.
 
 Browser reports contain request classes and event names only. They do not store client IDs, cookie values, OAuth tokens, or complete request URLs.
 
 ### Administrative credential degradation
 
-The browser consent and network audit is the production hard gate. Google Admin API access is a separate control-plane check:
+The browser consent and network audit is the public hard gate. The separate canonical-repository manual workflow is responsible for authenticated Google Admin API access:
 
 - an expired, revoked, or missing Google credential is recorded as `auth-degraded`; the administrative audit fails while the browser audit still runs and uploads its evidence;
 - successful authentication followed by a GA4, GTM, or Search Console resource mismatch remains a hard failure;
-- the workflow uploads `admin-audit.json` even when a later step fails;
+- the canonical privileged workflow uploads `admin-audit.json` even when a later step fails; this legacy public-only job does not create that administrative artifact;
 - credential rotation is tracked in issue #81 and must never place refresh-token values in logs or artifacts.
 
 This distinction prevents a stale operator credential from hiding real production consent regressions while preserving visibility of the credential defect.
